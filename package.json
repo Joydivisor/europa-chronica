@@ -1,0 +1,23 @@
+{
+  "name": "europa-chronica",
+  "version": "3.0.0",
+  "private": true,
+  "description": "欧洲历史交互舆图",
+  "license": "GPL-3.0-only",
+  "author": "Joydivisor",
+  "homepage": "https://joydivisor.github.io/europa-chronica/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joydivisor/europa-chronica.git"
+  },
+  "bugs": "https://github.com/Joydivisor/europa-chronica/issues",
+  "scripts": {
+    "start": "python3 -m http.server 8000 --directory dist",
+    "test": "node scripts/validate.mjs && node scripts/interaction-tests.cjs && node scripts/motion-tests.cjs",
+    "test:data": "node scripts/validate.mjs",
+    "test:interaction": "node scripts/interaction-tests.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}

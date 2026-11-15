@@ -1,0 +1,872 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-15",
+  "scope": "Bounded editorial audit of three known source overruns and one adjacent Trebizond tail; not an audit of all Cliopatria polygons. Original GeoJSON remains unchanged.",
+  "matching": "Match exact properties.original strings, including parentheses and capitalization; recordIds only where specified.",
+  "yearPolicy": "Hard-invalid tails start in the calendar year AFTER the authoritative endpoint, so annual selection does not invent a within-year date. transitionYears additionally supports after-event views in the endpoint year. The Carolingian rule chooses post-Verdun constituent-kingdom display, not an extinction date.",
+  "selectionOrder": [
+    "Select source interval candidates",
+    "Apply exact-name editorial hide rules",
+    "Apply optional after-event hides for transition year",
+    "Recompute the set of remaining original names",
+    "Suppress memberOf children only if a referenced parent is still present",
+    "Do not auto-fill removed geometry or propagate an excluded parent to its children"
+  ],
+  "sources": {
+    "almohad-getty": {
+      "title": "Getty Research Institute, Art & Architecture Thesaurus: Almohad",
+      "url": "https://www.getty.edu/vow/AATFullDisplay?find=archaeological+Park&logic=AND&note=&subjectid=300021528",
+      "supports": "穆瓦希德统治的终止年1269，马林王朝攻取马拉喀什。"
+    },
+    "verdun-cambridge": {
+      "title": "Costambeys, Innes & MacLean, The Carolingian World, chapter 8",
+      "url": "https://www.cambridge.org/core/books/abs/carolingian-world/sustaining-the-carolingian-empire-politics-and-government-840888/08F8DE8C2992F780AC03E849C82FA4E3",
+      "doi": "10.1017/CBO9780511973987.010",
+      "supports": "843年凡尔登分治为西、中、东三份；不支持将843直接等同于加洛林皇帝名号或王朝的终结。"
+    },
+    "reunion-loc": {
+      "title": "Library of Congress authority record: Charles III, Holy Roman Emperor",
+      "url": "https://lccn.loc.gov/n2003037040",
+      "supports": "查理三世至884年重新统治多个王国，887年被废，888年去世；因此843后的分治不是一条不可逆的简单终结线。"
+    },
+    "byzantium-met": {
+      "title": "The Metropolitan Museum of Art: Byzantium, Faith and Power",
+      "url": "https://www.metmuseum.org/exhibitions/listings/2004/byzantium-faith-and-power",
+      "supports": "1261年君士坦丁堡恢复帝国统治；1453年帝国陷落。"
+    },
+    "trebizond-met": {
+      "title": "The Metropolitan Museum of Art: Cassone depicting the Conquest of Trebizond",
+      "url": "https://www.metmuseum.org/art/collection/search/192693",
+      "supports": "1453年君士坦丁堡被奥斯曼攻陷；特拉比松是独立后继政权，1461年陷落。"
+    }
+  },
+  "rules": [
+    {
+      "id": "almohad-tail",
+      "exactOriginal": [
+        "Almohad Caliphate"
+      ],
+      "action": "hide",
+      "fromYear": 1270,
+      "toYear": 2024,
+      "historicalEndpointYear": 1269,
+      "sourceIds": [
+        "almohad-getty"
+      ],
+      "reasonZh": "原始几何记录延伸到1343年，超过1269年王朝终止，删除确定错误的后续显示；不将其领土自动赋给马林王朝。"
+    },
+    {
+      "id": "byzantine-tail",
+      "exactOriginal": [
+        "Byzantine Empire"
+      ],
+      "action": "hide",
+      "fromYear": 1454,
+      "toYear": 2024,
+      "historicalEndpointYear": 1453,
+      "sourceIds": [
+        "byzantium-met",
+        "trebizond-met"
+      ],
+      "reasonZh": "君士坦丁堡帝国1453年终结，原始记录延伸到1474年；仅精确匹配该名称，不误删特拉比松等单独政权。"
+    },
+    {
+      "id": "carolingian-aggregate-after-partition",
+      "exactOriginal": [
+        "(Carolingian Empire)",
+        "(Allegiance of East Franks to Carolingian Empire)"
+      ],
+      "action": "hide",
+      "fromYear": 843,
+      "toYear": 2024,
+      "sourceIds": [
+        "verdun-cambridge",
+        "reunion-loc"
+      ],
+      "reasonZh": "自凡尔登分治起，普通政治地图选择呈现王国分区，隐藏会压过分区的帝国及效忠关系聚合层。这是显示层级选择，不宣称843年加洛林皇统或王朝终结。884—887年共主重聚另见说明。"
+    },
+    {
+      "id": "unpartitioned-franks-gap-843-849",
+      "exactOriginal": [
+        "(Kingdom of the Franks)",
+        "Kingdom of the Franks"
+      ],
+      "recordIds": [
+        3115,
+        3121
+      ],
+      "action": "hide",
+      "fromYear": 843,
+      "toYear": 849,
+      "sourceIds": [
+        "verdun-cambridge"
+      ],
+      "reasonZh": "源数据840—849区间未表达843年分治。仅去除Carolingian聚合后会冒出仍然统一的Kingdom of the Franks层，所以同时抑制这两条旧图；缺失843—849年分区暂留空，不拿850年几何无依据回填。"
+    },
+    {
+      "id": "trebizond-adjacent-tail",
+      "exactOriginal": [
+        "Empire of Trebizond"
+      ],
+      "action": "hide",
+      "fromYear": 1462,
+      "toYear": 2024,
+      "historicalEndpointYear": 1461,
+      "sourceIds": [
+        "trebizond-met"
+      ],
+      "reasonZh": "相关核查发现其末条记录延至1462；保留1454—1461年的独立特拉比松记录，仅去除1461年陷落后的尾段。"
+    }
+  ],
+  "transitionYears": [
+    {
+      "year": 843,
+      "entityOriginal": [
+        "(Carolingian Empire)",
+        "(Kingdom of the Franks)",
+        "Kingdom of the Franks"
+      ],
+      "displayNoteZh": "843年为凡尔登分治年；图层按分治后叙述，源数据缺843—849年三分几何。",
+      "afterEventHide": true
+    },
+    {
+      "year": 1269,
+      "entityOriginal": [
+        "Almohad Caliphate"
+      ],
+      "displayNoteZh": "1269年为穆瓦希德王朝终止年；若画面表示马拉喀什陷落之后，应隐藏此政权。若仅显示年份全年的概略，不把它说成已延续至年末。",
+      "afterEventHide": true
+    },
+    {
+      "year": 1453,
+      "date": "1453-05-29",
+      "entityOriginal": [
+        "Byzantine Empire"
+      ],
+      "displayNoteZh": "1453年5月29日君士坦丁堡陷落；若由该事件跳转，按事件后状态隐藏拜占庭帝国，保留独立的特拉比松政权。",
+      "afterEventHide": true
+    },
+    {
+      "year": 1461,
+      "entityOriginal": [
+        "Empire of Trebizond"
+      ],
+      "displayNoteZh": "1461年特拉比松陷落；事件后画面应隐藏此政权。",
+      "afterEventHide": true
+    }
+  ],
+  "labelNotes": [
+    {
+      "original": "West Franks",
+      "nameZh": "西法兰克",
+      "fromYear": 850,
+      "noteZh": "数据从850年才出现其独立几何，不代表西法兰克创立于850年。843年分治是史实。"
+    },
+    {
+      "original": "Middle Franks",
+      "nameZh": "中法兰克",
+      "fromYear": 850,
+      "noteZh": "源图850—859年为粗采样区间，855年普吕姆分割仍需另行核验，不把整段当作恒定精确边界。"
+    },
+    {
+      "original": "East Franks",
+      "nameZh": "东法兰克",
+      "fromYear": 850,
+      "noteZh": "数据从850年才出现其独立几何，不代表东法兰克创立于850年。"
+    },
+    {
+      "fromYear": 884,
+      "toYear": 887,
+      "noteZh": "查理三世短暂汇集多个法兰克王国的统治。分区展示并不否认这一共主关系；不要写843年后帝国再未重聚。",
+      "sourceIds": [
+        "reunion-loc"
+      ]
+    }
+  ],
+  "verifiedDataConsequences": {
+    "843": "No East/West/Middle Franks source candidates until850. Filtering alone leaves a gap; it does not produce a843 map.",
+    "850": "Filtering both Carolingian aggregates first restores existing East/West/Middle Franks children.",
+    "888": "Filtering restores East Franks, West Franks, Upper Burgundy.",
+    "1270": "No Marinid source candidate in this year in current European extract; Hafsid Dynasty and Zayyanid dynasty already independent and remain. Do not invent a Marinid fill.",
+    "1454": "Byzantine removal leaves Ottoman Empire and Empire of Trebizond untouched. Territory does not automatically transfer to Ottoman geometry.",
+    "1462": "Trebizond source tail also needs removal after1461."
+  },
+  "affectedRecords": [
+    {
+      "recordId": 5922,
+      "original": "Almohad Caliphate",
+      "fromYear": 1285,
+      "toYear": 1343,
+      "sourceRecords": [
+        5922,
+        6273
+      ],
+      "rules": [
+        "almohad-tail"
+      ]
+    },
+    {
+      "recordId": 7187,
+      "original": "Byzantine Empire",
+      "fromYear": 1440,
+      "toYear": 1467,
+      "sourceRecords": [
+        7187
+      ],
+      "rules": [
+        "byzantine-tail"
+      ]
+    },
+    {
+      "recordId": 7329,
+      "original": "Empire of Trebizond",
+      "fromYear": 1459,
+      "toYear": 1462,
+      "sourceRecords": [
+        7329
+      ],
+      "rules": [
+        "trebizond-adjacent-tail"
+      ]
+    },
+    {
+      "recordId": 7416,
+      "original": "Byzantine Empire",
+      "fromYear": 1468,
+      "toYear": 1474,
+      "sourceRecords": [
+        7416
+      ],
+      "rules": [
+        "byzantine-tail"
+      ]
+    },
+    {
+      "recordId": 5753,
+      "original": "Almohad Caliphate",
+      "fromYear": 1260,
+      "toYear": 1284,
+      "sourceRecords": [
+        5753
+      ],
+      "rules": [
+        "almohad-tail"
+      ]
+    },
+    {
+      "recordId": 3110,
+      "original": "(Carolingian Empire)",
+      "fromYear": 840,
+      "toYear": 849,
+      "sourceRecords": [
+        3110
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3115,
+      "original": "Kingdom of the Franks",
+      "fromYear": 840,
+      "toYear": 849,
+      "sourceRecords": [
+        3115
+      ],
+      "rules": [
+        "unpartitioned-franks-gap-843-849"
+      ]
+    },
+    {
+      "recordId": 3121,
+      "original": "(Kingdom of the Franks)",
+      "fromYear": 840,
+      "toYear": 849,
+      "sourceRecords": [
+        3121
+      ],
+      "rules": [
+        "unpartitioned-franks-gap-843-849"
+      ]
+    },
+    {
+      "recordId": 3158,
+      "original": "(Carolingian Empire)",
+      "fromYear": 850,
+      "toYear": 859,
+      "sourceRecords": [
+        3158
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3169,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 850,
+      "toYear": 859,
+      "sourceRecords": [
+        3169
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3188,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 860,
+      "toYear": 865,
+      "sourceRecords": [
+        3188
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3195,
+      "original": "(Carolingian Empire)",
+      "fromYear": 860,
+      "toYear": 865,
+      "sourceRecords": [
+        3195
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3220,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 866,
+      "toYear": 869,
+      "sourceRecords": [
+        3220
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3230,
+      "original": "(Carolingian Empire)",
+      "fromYear": 866,
+      "toYear": 869,
+      "sourceRecords": [
+        3230
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3268,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 870,
+      "toYear": 874,
+      "sourceRecords": [
+        3268
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3278,
+      "original": "(Carolingian Empire)",
+      "fromYear": 870,
+      "toYear": 874,
+      "sourceRecords": [
+        3278
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3289,
+      "original": "(Carolingian Empire)",
+      "fromYear": 875,
+      "toYear": 875,
+      "sourceRecords": [
+        3289
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3299,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 875,
+      "toYear": 875,
+      "sourceRecords": [
+        3299
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3335,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 876,
+      "toYear": 877,
+      "sourceRecords": [
+        3335
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3338,
+      "original": "(Carolingian Empire)",
+      "fromYear": 876,
+      "toYear": 877,
+      "sourceRecords": [
+        3338
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3342,
+      "original": "(Carolingian Empire)",
+      "fromYear": 878,
+      "toYear": 879,
+      "sourceRecords": [
+        3342
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3351,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 878,
+      "toYear": 879,
+      "sourceRecords": [
+        3351
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3378,
+      "original": "(Carolingian Empire)",
+      "fromYear": 880,
+      "toYear": 881,
+      "sourceRecords": [
+        3378
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3381,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 880,
+      "toYear": 881,
+      "sourceRecords": [
+        3381
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3386,
+      "original": "(Carolingian Empire)",
+      "fromYear": 882,
+      "toYear": 883,
+      "sourceRecords": [
+        3386
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3400,
+      "original": "(Carolingian Empire)",
+      "fromYear": 884,
+      "toYear": 885,
+      "sourceRecords": [
+        3400
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3432,
+      "original": "(Carolingian Empire)",
+      "fromYear": 886,
+      "toYear": 886,
+      "sourceRecords": [
+        3432
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3445,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 887,
+      "toYear": 887,
+      "sourceRecords": [
+        3445
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3448,
+      "original": "(Carolingian Empire)",
+      "fromYear": 887,
+      "toYear": 887,
+      "sourceRecords": [
+        3448
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3453,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 888,
+      "toYear": 891,
+      "sourceRecords": [
+        3453
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3457,
+      "original": "(Carolingian Empire)",
+      "fromYear": 888,
+      "toYear": 891,
+      "sourceRecords": [
+        3457
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3474,
+      "original": "(Carolingian Empire)",
+      "fromYear": 892,
+      "toYear": 895,
+      "sourceRecords": [
+        3474
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3479,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 892,
+      "toYear": 895,
+      "sourceRecords": [
+        3479
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3484,
+      "original": "(Carolingian Empire)",
+      "fromYear": 896,
+      "toYear": 897,
+      "sourceRecords": [
+        3484
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3489,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 896,
+      "toYear": 897,
+      "sourceRecords": [
+        3489
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3530,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 898,
+      "toYear": 898,
+      "sourceRecords": [
+        3530
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3539,
+      "original": "(Carolingian Empire)",
+      "fromYear": 898,
+      "toYear": 898,
+      "sourceRecords": [
+        3539
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3554,
+      "original": "(Carolingian Empire)",
+      "fromYear": 899,
+      "toYear": 899,
+      "sourceRecords": [
+        3554
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3560,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 899,
+      "toYear": 899,
+      "sourceRecords": [
+        3560
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3566,
+      "original": "(Carolingian Empire)",
+      "fromYear": 900,
+      "toYear": 910,
+      "sourceRecords": [
+        3566
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3573,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 900,
+      "toYear": 910,
+      "sourceRecords": [
+        3573
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3639,
+      "original": "(Allegiance of East Franks to Carolingian Empire)",
+      "fromYear": 911,
+      "toYear": 921,
+      "sourceRecords": [
+        3639
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3652,
+      "original": "(Carolingian Empire)",
+      "fromYear": 911,
+      "toYear": 921,
+      "sourceRecords": [
+        3652
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3696,
+      "original": "(Carolingian Empire)",
+      "fromYear": 922,
+      "toYear": 925,
+      "sourceRecords": [
+        3696
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3718,
+      "original": "(Carolingian Empire)",
+      "fromYear": 926,
+      "toYear": 935,
+      "sourceRecords": [
+        3718
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3781,
+      "original": "(Carolingian Empire)",
+      "fromYear": 936,
+      "toYear": 959,
+      "sourceRecords": [
+        3781
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    },
+    {
+      "recordId": 3888,
+      "original": "(Carolingian Empire)",
+      "fromYear": 960,
+      "toYear": 989,
+      "sourceRecords": [
+        3888,
+        3975
+      ],
+      "rules": [
+        "carolingian-aggregate-after-partition"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "year": 842,
+      "removed": [],
+      "restoredChildren": []
+    },
+    {
+      "year": 843,
+      "removed": [
+        "(Carolingian Empire)"
+      ],
+      "restoredChildren": []
+    },
+    {
+      "year": 844,
+      "removed": [
+        "(Carolingian Empire)"
+      ],
+      "restoredChildren": []
+    },
+    {
+      "year": 850,
+      "removed": [
+        "(Allegiance of East Franks to Carolingian Empire)",
+        "(Carolingian Empire)"
+      ],
+      "restoredChildren": [
+        "East Franks",
+        "Middle Franks",
+        "West Franks"
+      ]
+    },
+    {
+      "year": 888,
+      "removed": [
+        "(Allegiance of East Franks to Carolingian Empire)",
+        "(Carolingian Empire)"
+      ],
+      "restoredChildren": [
+        "East Franks",
+        "Upper Burgundy",
+        "West Franks"
+      ]
+    },
+    {
+      "year": 1269,
+      "removed": [],
+      "restoredChildren": []
+    },
+    {
+      "year": 1270,
+      "removed": [
+        "Almohad Caliphate"
+      ],
+      "restoredChildren": []
+    },
+    {
+      "year": 1343,
+      "removed": [
+        "Almohad Caliphate"
+      ],
+      "restoredChildren": []
+    },
+    {
+      "year": 1452,
+      "removed": [],
+      "restoredChildren": []
+    },
+    {
+      "year": 1453,
+      "removed": [],
+      "restoredChildren": []
+    },
+    {
+      "year": 1454,
+      "removed": [
+        "Byzantine Empire"
+      ],
+      "restoredChildren": []
+    },
+    {
+      "year": 1461,
+      "removed": [
+        "Byzantine Empire"
+      ],
+      "restoredChildren": []
+    },
+    {
+      "year": 1462,
+      "removed": [
+        "Byzantine Empire",
+        "Empire of Trebizond"
+      ],
+      "restoredChildren": []
+    },
+    {
+      "year": 1468,
+      "removed": [
+        "Byzantine Empire"
+      ],
+      "restoredChildren": []
+    },
+    {
+      "year": 1474,
+      "removed": [
+        "Byzantine Empire"
+      ],
+      "restoredChildren": []
+    }
+  ]
+}

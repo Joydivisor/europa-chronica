@@ -1,0 +1,1312 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-15",
+  "title": "Additional editorial display rules for misleading labels around 1200",
+  "input": {
+    "dataset": "Cliopatria v0.2.1",
+    "sourceCommit": "5f433377139a6eeaeacbdc894b70f8805b72c8b5",
+    "geometryModified": false
+  },
+  "intervalSemantics": "Both endpoints inclusive. Rule dates are display applicability, not automatically lifespans. Historical event years are discussed separately.",
+  "applicationOrder": [
+    "Select source records with fromYear <= chosenYear <= toYear.",
+    "Apply existing corrections and these exactOriginal rules. Hide only matching records in the stated year range.",
+    "Retain original, source date range, geometry and sourceRecords. Store nameZh as a display override for rename rules.",
+    "Compute parent names from the remaining records, using exact originals. Then suppress children whose stated parent actually remains.",
+    "A missing polygon is missing or withheld evidence; do not repaint it as a modern country or an assumed successor."
+  ],
+  "rules": [
+    {
+      "id": "great-seljuk-overrun",
+      "exactOriginal": [
+        "Great Seljuk Empire"
+      ],
+      "fromYear": 1195,
+      "toYear": 2024,
+      "action": "hide",
+      "basis": "documented-latest-end",
+      "historicalEndYear": 1194,
+      "reason": "源记录延续到 1201 年，超过伊朗、伊拉克塞尔柱政权最晚的 1194 年终点；仅隐藏这个原名，保留鲁姆苏丹国。",
+      "sources": [
+        "iranica-isfahan-1194"
+      ]
+    },
+    {
+      "id": "hamdanid-overrun",
+      "exactOriginal": [
+        "Hamdanid Emirates"
+      ],
+      "fromYear": 1005,
+      "toYear": 2024,
+      "action": "hide",
+      "basis": "documented-latest-end",
+      "historicalEndYear": 1004,
+      "reason": "原始记录链接的是叙利亚和北美索不达米亚的 Hamdanid dynasty（Wikidata Q837187），不是也门同名王朝；源记录延续到 1249 年，1004 年后不应继续填作哈姆丹政权。",
+      "sources": [
+        "getty-hamdanid",
+        "met-islamic-rulers"
+      ]
+    },
+    {
+      "id": "viking-settlement-category",
+      "exactOriginal": [
+        "Viking settlements"
+      ],
+      "fromYear": 793,
+      "toYear": 1332,
+      "action": "hide",
+      "basis": "political-layer-selection",
+      "reason": "这是横跨多个地区的北欧人聚居分布，不是同一统治机构的领土。在政权填色层排除；可在未来有独立图例和考古证据的聚居层呈现。不声称这些聚落在 1066 年消失。",
+      "sources": [
+        "vikings-scotland-museum"
+      ]
+    },
+    {
+      "id": "brythonic-aggregate-high-medieval",
+      "exactOriginal": [
+        "(Brythonic Kingdoms)"
+      ],
+      "fromYear": 1000,
+      "toYear": 1284,
+      "action": "hide",
+      "basis": "political-layer-selection",
+      "reason": "文化和语言关系的汇总层不作为一个统一王国。先隐藏此汇总项，再依据剩余原名计算父子遮蔽，恢复源数据中的 Gwynedd、Powys 等真实命名政权。1000 是本项核验的展示范围起点，不是某国灭亡年。",
+      "sources": [
+        "cadw-medieval-wales",
+        "cambridge-british-contexts"
+      ]
+    },
+    {
+      "id": "brythons-high-medieval",
+      "exactOriginal": [
+        "Brythons"
+      ],
+      "fromYear": 1000,
+      "toYear": 1235,
+      "action": "hide",
+      "basis": "unresolved-ethnonym-in-political-layer",
+      "reason": "本名为布立吞人的族群类称谓。1200 年记录包含威尔士及更北区域，缺乏可据以改成一个具体国家的对应关系，故从本次核验的高、中晚期中世纪政权层排除。此规则既非族群消亡断言，也不认证 1000 年之前的多边形。",
+      "sources": [
+        "cadw-medieval-wales",
+        "cambridge-british-contexts"
+      ]
+    },
+    {
+      "id": "halych-occupation-quarantine",
+      "exactOriginal": [
+        "Halych-Volhynia occupation"
+      ],
+      "fromYear": 1056,
+      "toYear": 1240,
+      "action": "hide",
+      "basis": "unverified-occupation-extent",
+      "reason": "联合公国建于 1199 年；源数据却从 1056 年起使用这一占领区名称，且 1200 年多边形远伸至黑海草原。本次没有找到能验证这一具体范围与区间的权威边界来源。隔离这组记录，不把它直接改名为联合公国，也不以现代国界或推测补齐空白。",
+      "sources": [
+        "ieu-galicia-volhynia"
+      ]
+    },
+    {
+      "id": "serbia-pre-kingdom-title",
+      "exactOriginal": [
+        "Kingdom of Serbia"
+      ],
+      "fromYear": 1188,
+      "toYear": 1216,
+      "action": "rename",
+      "nameZh": "塞尔维亚大公国（拉什卡）",
+      "nameEn": "Grand Principality of Serbia (Rascia)",
+      "basis": "documented-title-change",
+      "reason": "1217 年王冠加冕前不能称塞尔维亚王国。保留原始几何和 original，不提前王国称号；现代塞尔维亚王国的同名记录不受影响。",
+      "sources": [
+        "kalic-serbia-coronation",
+        "serbian-academy-chronology"
+      ]
+    },
+    {
+      "id": "halych-union-label-1200",
+      "exactOriginal": [
+        "Principality of Halych"
+      ],
+      "fromYear": 1200,
+      "toYear": 1201,
+      "action": "rename",
+      "nameZh": "加利奇—沃里尼亚公国·加利奇",
+      "nameEn": "Galicia-Volhynia (Halych component)",
+      "basis": "documented-union-label",
+      "reason": "1199 年后已由罗曼联合统治。仅把 1200–1201 年原有几何标为联合公国的组成区域，不声称两个独立国家；1202 年起源数据已有 Principality of Galicia-Volhynia。未将其几何倒推至 1199 年。",
+      "sources": [
+        "ieu-galicia-volhynia"
+      ]
+    },
+    {
+      "id": "volhynia-union-label-1200",
+      "exactOriginal": [
+        "Principality of Volhynia"
+      ],
+      "fromYear": 1200,
+      "toYear": 1201,
+      "action": "rename",
+      "nameZh": "加利奇—沃里尼亚公国·沃里尼亚",
+      "nameEn": "Galicia-Volhynia (Volhynia component)",
+      "basis": "documented-union-label",
+      "reason": "1199 年后已由罗曼联合统治。只作区域名称注记；不修改、不合并、不补画原始多边形。",
+      "sources": [
+        "ieu-galicia-volhynia"
+      ]
+    }
+  ],
+  "transitionYearNotes": [
+    {
+      "year": 1004,
+      "original": "Hamdanid Emirates",
+      "note": "终结事件发生在该年；本硬性尾部过滤从 1005 年开始。"
+    },
+    {
+      "year": 1194,
+      "original": "Great Seljuk Empire",
+      "note": "图格里勒于该年 3 月战死；年内早期与晚期情况不同。硬性尾部过滤从 1195 年开始。"
+    },
+    {
+      "year": 1199,
+      "originals": [
+        "Principality of Halych",
+        "Principality of Volhynia"
+      ],
+      "note": "该年发生联合。本补丁只为明确在联合之后的 1200–1201 年更改区域注记；1199 年需要事件日期或年内状态说明。"
+    },
+    {
+      "year": 1217,
+      "original": "Kingdom of Serbia",
+      "note": "该年发生王冠加冕；1217 年以前不显示王国称号，不能推断 1217 年 1 月 1 日已经加冕。"
+    }
+  ],
+  "limits": [
+    "This is a bounded label/time audit, not a validation of every Cliopatria boundary.",
+    "The 1158–1194 Great Seljuk label can conflate successor branches; this patch only removes the incontrovertible post-1194 tail and does not certify the earlier geometry.",
+    "Brythons and Brythonic Kingdoms rules beginning in 1000 are a political-layer selection within the reviewed period, not historical extinction dates. Earlier records remain outside this audit.",
+    "The Viking and Halych occupation removals are category/verification decisions, not claims that Norse communities or all Galician-Volhynian campaigns were absent.",
+    "Retained Gwynedd/Powys/Rum and Galicia-Volhynia component polygons are existing source records; this audit does not independently certify their exact borders."
+  ],
+  "sources": [
+    {
+      "id": "iranica-isfahan-1194",
+      "title": "Hossein Kamaly, ISFAHAN vi. MEDIEVAL PERIOD, Encyclopaedia Iranica",
+      "url": "https://www.iranicaonline.org/articles/isfahan-vi-medieval-period/",
+      "publication": "Vol. XIII, Fasc. 6, pp. 641–650; 2006, updated 2012",
+      "verifiedClaim": "1194 年 3 月，花剌子模沙塔卡什在雷伊击杀图格里勒·本·阿尔斯兰，伊朗东部及中部的最后一位塞尔柱统治者。",
+      "qualification": "这是保守的最晚截止点，不把大塞尔柱东部主支在 1157 年结束后的诸支都说成一个统一帝国。鲁姆苏丹国不适用此规则。"
+    },
+    {
+      "id": "getty-hamdanid",
+      "title": "Getty Research Institute, Art & Architecture Thesaurus: Hamdanid (300021556)",
+      "url": "https://www.getty.edu/vow/AATFullDisplay?find=&logic=AND&note=earthenware&subjectid=300021556",
+      "verifiedClaim": "条目将伊拉克北部及叙利亚哈姆丹王朝的时期列为 890–1004 年。"
+    },
+    {
+      "id": "met-islamic-rulers",
+      "title": "The Metropolitan Museum of Art, List of Rulers of the Islamic World",
+      "url": "https://www.metmuseum.org/pt/toah/hd/isru/hd_isru.htm",
+      "verifiedClaim": "分别列出摩苏尔与阿勒颇的哈姆丹支系，阿勒颇支系的末年为 1004；另列萨那哈姆丹王朝 1098–1173，不能混为同一条记录。"
+    },
+    {
+      "id": "vikings-scotland-museum",
+      "title": "Monica Callaghan, Hunterian Museum & Art Gallery, University of Glasgow: The Vikings in Scotland",
+      "publisher": "The Viking Ship Museum, Roskilde",
+      "url": "https://www.vikingeskibsmuseet.dk/en/professions/education/the-viking-age-geography/the-vikings-in-the-west/scotland",
+      "verifiedClaim": "讨论考古聚落与北欧移民；传统维京时代结束之后，斯堪的纳维亚统治及影响仍在苏格兰岛屿延续。",
+      "qualification": "支持将聚居分布与统一政权分开，不支持以 1066 年作为所有北欧社区或统治的终止年。"
+    },
+    {
+      "id": "cadw-medieval-wales",
+      "title": "Cadw / Welsh Government, Medieval Wales",
+      "url": "https://cadw.gov.wales/learn/sites-through-centuries/medieval-wales",
+      "verifiedClaim": "中世纪威尔士由多个王国和独立王公组成；圭内斯在 13 世纪取得主导地位。",
+      "qualification": "没有证据支持把源数据中的语言文化汇总项 Brythonic Kingdoms 当作 1200 年的一个统一国家。其几何还包括北方区域，不能直接改名为威尔士。"
+    },
+    {
+      "id": "cambridge-british-contexts",
+      "title": "The Cambridge Companion to Bede, British and Irish contexts",
+      "url": "https://www.cambridge.org/core/books/abs/cambridge-companion-to-bede/british-and-irish-contexts/86CAB3E06FA8BEE30DE482F17FB5A319",
+      "verifiedClaim": "将不列颠人诸区域分别讨论为 Dumnonia、Gwynedd、Powys、Strathclyde 等不同王国；语言文化类称谓不能等同一个持续存在的统一国家。",
+      "qualification": "仅支持分类说明，不据此杜撰布立吞人或斯特拉斯克莱德的精确消亡年份。"
+    },
+    {
+      "id": "ieu-galicia-volhynia",
+      "title": "Internet Encyclopedia of Ukraine, Galicia-Volhynia, Principality of",
+      "publisher": "Canadian Institute of Ukrainian Studies, University of Alberta",
+      "url": "https://www.encyclopediaofukraine.com/display.asp?linkpath=pagesGAGalicia6VolhyniaPrincipalityof.htm",
+      "verifiedClaim": "罗曼·姆斯季斯拉维奇于 1199 年联合加利奇和沃里尼亚；百科另将他占领基辅及其辖地列于 1202 年。",
+      "qualification": "该条目不提供支持源数据 Halych-Volhynia occupation 巨大多边形及 1056–1240 适用区间的依据，故不拿它认证或重画该边界。"
+    },
+    {
+      "id": "kalic-serbia-coronation",
+      "title": "Jovanka Kalić, The First Coronation Churches of Medieval Serbia",
+      "publisher": "Balcanica XLVIII (2017), 7–18; Serbian Academy of Sciences and Arts",
+      "doi": "10.2298/BALC1748007K",
+      "url": "https://balcanica.rs/index.php/journal/article/view/114",
+      "verifiedClaim": "斯特凡·尼曼雅之子斯特凡在 1217 年加冕为王；论文讨论其加冕地点。",
+      "qualification": "只用于避免把王国称号提前到 1200 年，不把加冕仪式或地点的所有学术问题说成已无争议。"
+    },
+    {
+      "id": "serbian-academy-chronology",
+      "title": "Processes of Byzantinisation and Serbian Archaeology (2016), Chronology",
+      "publisher": "Institute for Byzantine Studies, Serbian Academy of Sciences and Arts; copy hosted by Austrian Academy of Sciences",
+      "url": "https://dpp.oeaw.ac.at/repository/MPopovicMedievalSerbianOecumene.pdf",
+      "verifiedClaim": "年表区分尼曼雅的大茹潘统治与 1217 年斯特凡的王冠加冕。"
+    }
+  ],
+  "affectedRecords": [
+    {
+      "rule": "great-seljuk-overrun",
+      "recordId": 5195,
+      "sourceRecords": [
+        5195
+      ],
+      "original": "Great Seljuk Empire",
+      "sourceFromYear": 1192,
+      "sourceToYear": 1201,
+      "effectiveFromYear": 1195,
+      "effectiveToYear": 1201
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 4068,
+      "sourceRecords": [
+        4068
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 990,
+      "sourceToYear": 1027,
+      "effectiveFromYear": 1005,
+      "effectiveToYear": 1027
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 4278,
+      "sourceRecords": [
+        4278
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1028,
+      "sourceToYear": 1033,
+      "effectiveFromYear": 1028,
+      "effectiveToYear": 1033
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 4291,
+      "sourceRecords": [
+        4291
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1034,
+      "sourceToYear": 1045,
+      "effectiveFromYear": 1034,
+      "effectiveToYear": 1045
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 4425,
+      "sourceRecords": [
+        4425
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1046,
+      "sourceToYear": 1055,
+      "effectiveFromYear": 1046,
+      "effectiveToYear": 1055
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 4473,
+      "sourceRecords": [
+        4473
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1056,
+      "sourceToYear": 1065,
+      "effectiveFromYear": 1056,
+      "effectiveToYear": 1065
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 4549,
+      "sourceRecords": [
+        4549
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1066,
+      "sourceToYear": 1125,
+      "effectiveFromYear": 1066,
+      "effectiveToYear": 1125
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 4829,
+      "sourceRecords": [
+        4829
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1126,
+      "sourceToYear": 1138,
+      "effectiveFromYear": 1126,
+      "effectiveToYear": 1138
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 5192,
+      "sourceRecords": [
+        5192
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1192,
+      "sourceToYear": 1201,
+      "effectiveFromYear": 1192,
+      "effectiveToYear": 1201
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 5206,
+      "sourceRecords": [
+        5206
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1202,
+      "sourceToYear": 1205,
+      "effectiveFromYear": 1202,
+      "effectiveToYear": 1205
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 5299,
+      "sourceRecords": [
+        5299
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1206,
+      "sourceToYear": 1209,
+      "effectiveFromYear": 1206,
+      "effectiveToYear": 1209
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 5337,
+      "sourceRecords": [
+        5337
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1210,
+      "sourceToYear": 1215,
+      "effectiveFromYear": 1210,
+      "effectiveToYear": 1215
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 5390,
+      "sourceRecords": [
+        5390,
+        5492
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1216,
+      "sourceToYear": 1226,
+      "effectiveFromYear": 1216,
+      "effectiveToYear": 1226
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 5528,
+      "sourceRecords": [
+        5528
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1227,
+      "sourceToYear": 1235,
+      "effectiveFromYear": 1227,
+      "effectiveToYear": 1235
+    },
+    {
+      "rule": "hamdanid-overrun",
+      "recordId": 5585,
+      "sourceRecords": [
+        5585
+      ],
+      "original": "Hamdanid Emirates",
+      "sourceFromYear": 1236,
+      "sourceToYear": 1249,
+      "effectiveFromYear": 1236,
+      "effectiveToYear": 1249
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 2974,
+      "sourceRecords": [
+        2974
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 793,
+      "sourceToYear": 799,
+      "effectiveFromYear": 793,
+      "effectiveToYear": 799
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3001,
+      "sourceRecords": [
+        3001
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 800,
+      "sourceToYear": 805,
+      "effectiveFromYear": 800,
+      "effectiveToYear": 805
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3013,
+      "sourceRecords": [
+        3013
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 806,
+      "sourceToYear": 813,
+      "effectiveFromYear": 806,
+      "effectiveToYear": 813
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3042,
+      "sourceRecords": [
+        3042
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 814,
+      "sourceToYear": 824,
+      "effectiveFromYear": 814,
+      "effectiveToYear": 824
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3070,
+      "sourceRecords": [
+        3070
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 825,
+      "sourceToYear": 839,
+      "effectiveFromYear": 825,
+      "effectiveToYear": 839
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3129,
+      "sourceRecords": [
+        3129
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 840,
+      "sourceToYear": 849,
+      "effectiveFromYear": 840,
+      "effectiveToYear": 849
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3139,
+      "sourceRecords": [
+        3139
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 850,
+      "sourceToYear": 859,
+      "effectiveFromYear": 850,
+      "effectiveToYear": 859
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3216,
+      "sourceRecords": [
+        3216
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 860,
+      "sourceToYear": 865,
+      "effectiveFromYear": 860,
+      "effectiveToYear": 865
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3246,
+      "sourceRecords": [
+        3246
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 866,
+      "sourceToYear": 869,
+      "effectiveFromYear": 866,
+      "effectiveToYear": 869
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3261,
+      "sourceRecords": [
+        3261
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 870,
+      "sourceToYear": 874,
+      "effectiveFromYear": 870,
+      "effectiveToYear": 874
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3314,
+      "sourceRecords": [
+        3314
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 875,
+      "sourceToYear": 875,
+      "effectiveFromYear": 875,
+      "effectiveToYear": 875
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3329,
+      "sourceRecords": [
+        3329
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 876,
+      "sourceToYear": 877,
+      "effectiveFromYear": 876,
+      "effectiveToYear": 877
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3360,
+      "sourceRecords": [
+        3360
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 878,
+      "sourceToYear": 879,
+      "effectiveFromYear": 878,
+      "effectiveToYear": 879
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3368,
+      "sourceRecords": [
+        3368
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 880,
+      "sourceToYear": 881,
+      "effectiveFromYear": 880,
+      "effectiveToYear": 881
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3391,
+      "sourceRecords": [
+        3391
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 882,
+      "sourceToYear": 885,
+      "effectiveFromYear": 882,
+      "effectiveToYear": 885
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3419,
+      "sourceRecords": [
+        3419
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 886,
+      "sourceToYear": 891,
+      "effectiveFromYear": 886,
+      "effectiveToYear": 891
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3468,
+      "sourceRecords": [
+        3468
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 892,
+      "sourceToYear": 910,
+      "effectiveFromYear": 892,
+      "effectiveToYear": 910
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3625,
+      "sourceRecords": [
+        3625
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 911,
+      "sourceToYear": 921,
+      "effectiveFromYear": 911,
+      "effectiveToYear": 921
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3666,
+      "sourceRecords": [
+        3666
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 922,
+      "sourceToYear": 925,
+      "effectiveFromYear": 922,
+      "effectiveToYear": 925
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3736,
+      "sourceRecords": [
+        3736
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 926,
+      "sourceToYear": 935,
+      "effectiveFromYear": 926,
+      "effectiveToYear": 935
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3753,
+      "sourceRecords": [
+        3753
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 936,
+      "sourceToYear": 946,
+      "effectiveFromYear": 936,
+      "effectiveToYear": 946
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 3802,
+      "sourceRecords": [
+        3802
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 947,
+      "sourceToYear": 979,
+      "effectiveFromYear": 947,
+      "effectiveToYear": 979
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 4001,
+      "sourceRecords": [
+        4001
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 980,
+      "sourceToYear": 999,
+      "effectiveFromYear": 980,
+      "effectiveToYear": 999
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 4095,
+      "sourceRecords": [
+        4095
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 1000,
+      "sourceToYear": 1002,
+      "effectiveFromYear": 1000,
+      "effectiveToYear": 1002
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 4103,
+      "sourceRecords": [
+        4103
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 1003,
+      "sourceToYear": 1017,
+      "effectiveFromYear": 1003,
+      "effectiveToYear": 1017
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 4230,
+      "sourceRecords": [
+        4230
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 1018,
+      "sourceToYear": 1027,
+      "effectiveFromYear": 1018,
+      "effectiveToYear": 1027
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 4253,
+      "sourceRecords": [
+        4253
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 1028,
+      "sourceToYear": 1325,
+      "effectiveFromYear": 1028,
+      "effectiveToYear": 1325
+    },
+    {
+      "rule": "viking-settlement-category",
+      "recordId": 6249,
+      "sourceRecords": [
+        6249
+      ],
+      "original": "Viking settlements",
+      "sourceFromYear": 1326,
+      "sourceToYear": 1332,
+      "effectiveFromYear": 1326,
+      "effectiveToYear": 1332
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 3987,
+      "sourceRecords": [
+        3987
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 980,
+      "sourceToYear": 1033,
+      "effectiveFromYear": 1000,
+      "effectiveToYear": 1033
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 4324,
+      "sourceRecords": [
+        4324
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1034,
+      "sourceToYear": 1039,
+      "effectiveFromYear": 1034,
+      "effectiveToYear": 1039
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 4341,
+      "sourceRecords": [
+        4341
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1040,
+      "sourceToYear": 1045,
+      "effectiveFromYear": 1040,
+      "effectiveToYear": 1045
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 4390,
+      "sourceRecords": [
+        4390
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1046,
+      "sourceToYear": 1055,
+      "effectiveFromYear": 1046,
+      "effectiveToYear": 1055
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 4495,
+      "sourceRecords": [
+        4495
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1056,
+      "sourceToYear": 1065,
+      "effectiveFromYear": 1056,
+      "effectiveToYear": 1065
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 4535,
+      "sourceRecords": [
+        4535
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1066,
+      "sourceToYear": 1071,
+      "effectiveFromYear": 1066,
+      "effectiveToYear": 1071
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 4592,
+      "sourceRecords": [
+        4592
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1072,
+      "sourceToYear": 1084,
+      "effectiveFromYear": 1072,
+      "effectiveToYear": 1084
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 4655,
+      "sourceRecords": [
+        4655
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1085,
+      "sourceToYear": 1098,
+      "effectiveFromYear": 1085,
+      "effectiveToYear": 1098
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 4737,
+      "sourceRecords": [
+        4737
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1099,
+      "sourceToYear": 1168,
+      "effectiveFromYear": 1099,
+      "effectiveToYear": 1168
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 5027,
+      "sourceRecords": [
+        5027
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1169,
+      "sourceToYear": 1209,
+      "effectiveFromYear": 1169,
+      "effectiveToYear": 1209
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 5377,
+      "sourceRecords": [
+        5377
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1210,
+      "sourceToYear": 1215,
+      "effectiveFromYear": 1210,
+      "effectiveToYear": 1215
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 5439,
+      "sourceRecords": [
+        5439
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1216,
+      "sourceToYear": 1235,
+      "effectiveFromYear": 1216,
+      "effectiveToYear": 1235
+    },
+    {
+      "rule": "brythonic-aggregate-high-medieval",
+      "recordId": 5606,
+      "sourceRecords": [
+        5606,
+        5898
+      ],
+      "original": "(Brythonic Kingdoms)",
+      "sourceFromYear": 1236,
+      "sourceToYear": 1284,
+      "effectiveFromYear": 1236,
+      "effectiveToYear": 1284
+    },
+    {
+      "rule": "brythons-high-medieval",
+      "recordId": 3980,
+      "sourceRecords": [
+        3980
+      ],
+      "original": "Brythons",
+      "sourceFromYear": 980,
+      "sourceToYear": 1033,
+      "effectiveFromYear": 1000,
+      "effectiveToYear": 1033
+    },
+    {
+      "rule": "brythons-high-medieval",
+      "recordId": 4315,
+      "sourceRecords": [
+        4315
+      ],
+      "original": "Brythons",
+      "sourceFromYear": 1034,
+      "sourceToYear": 1039,
+      "effectiveFromYear": 1034,
+      "effectiveToYear": 1039
+    },
+    {
+      "rule": "brythons-high-medieval",
+      "recordId": 4336,
+      "sourceRecords": [
+        4336
+      ],
+      "original": "Brythons",
+      "sourceFromYear": 1040,
+      "sourceToYear": 1084,
+      "effectiveFromYear": 1040,
+      "effectiveToYear": 1084
+    },
+    {
+      "rule": "brythons-high-medieval",
+      "recordId": 4643,
+      "sourceRecords": [
+        4643
+      ],
+      "original": "Brythons",
+      "sourceFromYear": 1085,
+      "sourceToYear": 1098,
+      "effectiveFromYear": 1085,
+      "effectiveToYear": 1098
+    },
+    {
+      "rule": "brythons-high-medieval",
+      "recordId": 4747,
+      "sourceRecords": [
+        4747
+      ],
+      "original": "Brythons",
+      "sourceFromYear": 1099,
+      "sourceToYear": 1226,
+      "effectiveFromYear": 1099,
+      "effectiveToYear": 1226
+    },
+    {
+      "rule": "brythons-high-medieval",
+      "recordId": 5523,
+      "sourceRecords": [
+        5523
+      ],
+      "original": "Brythons",
+      "sourceFromYear": 1227,
+      "sourceToYear": 1235,
+      "effectiveFromYear": 1227,
+      "effectiveToYear": 1235
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 4446,
+      "sourceRecords": [
+        4446
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1056,
+      "sourceToYear": 1065,
+      "effectiveFromYear": 1056,
+      "effectiveToYear": 1065
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 4573,
+      "sourceRecords": [
+        4573
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1066,
+      "sourceToYear": 1071,
+      "effectiveFromYear": 1066,
+      "effectiveToYear": 1071
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 4625,
+      "sourceRecords": [
+        4625
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1072,
+      "sourceToYear": 1084,
+      "effectiveFromYear": 1072,
+      "effectiveToYear": 1084
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 4675,
+      "sourceRecords": [
+        4675
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1085,
+      "sourceToYear": 1093,
+      "effectiveFromYear": 1085,
+      "effectiveToYear": 1093
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 4688,
+      "sourceRecords": [
+        4688
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1094,
+      "sourceToYear": 1146,
+      "effectiveFromYear": 1094,
+      "effectiveToYear": 1146
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 4907,
+      "sourceRecords": [
+        4907
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1147,
+      "sourceToYear": 1187,
+      "effectiveFromYear": 1147,
+      "effectiveToYear": 1187
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 5187,
+      "sourceRecords": [
+        5187
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1192,
+      "sourceToYear": 1205,
+      "effectiveFromYear": 1192,
+      "effectiveToYear": 1205
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 5131,
+      "sourceRecords": [
+        5131
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1188,
+      "sourceToYear": 1191,
+      "effectiveFromYear": 1188,
+      "effectiveToYear": 1191
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 5328,
+      "sourceRecords": [
+        5328
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1206,
+      "sourceToYear": 1235,
+      "effectiveFromYear": 1206,
+      "effectiveToYear": 1235
+    },
+    {
+      "rule": "halych-occupation-quarantine",
+      "recordId": 5553,
+      "sourceRecords": [
+        5553
+      ],
+      "original": "Halych-Volhynia occupation",
+      "sourceFromYear": 1236,
+      "sourceToYear": 1240,
+      "effectiveFromYear": 1236,
+      "effectiveToYear": 1240
+    },
+    {
+      "rule": "serbia-pre-kingdom-title",
+      "recordId": 5103,
+      "sourceRecords": [
+        5103
+      ],
+      "original": "Kingdom of Serbia",
+      "sourceFromYear": 1188,
+      "sourceToYear": 1191,
+      "effectiveFromYear": 1188,
+      "effectiveToYear": 1191
+    },
+    {
+      "rule": "serbia-pre-kingdom-title",
+      "recordId": 5189,
+      "sourceRecords": [
+        5189
+      ],
+      "original": "Kingdom of Serbia",
+      "sourceFromYear": 1192,
+      "sourceToYear": 1201,
+      "effectiveFromYear": 1192,
+      "effectiveToYear": 1201
+    },
+    {
+      "rule": "serbia-pre-kingdom-title",
+      "recordId": 5210,
+      "sourceRecords": [
+        5210
+      ],
+      "original": "Kingdom of Serbia",
+      "sourceFromYear": 1202,
+      "sourceToYear": 1205,
+      "effectiveFromYear": 1202,
+      "effectiveToYear": 1205
+    },
+    {
+      "rule": "serbia-pre-kingdom-title",
+      "recordId": 5304,
+      "sourceRecords": [
+        5304
+      ],
+      "original": "Kingdom of Serbia",
+      "sourceFromYear": 1206,
+      "sourceToYear": 1209,
+      "effectiveFromYear": 1206,
+      "effectiveToYear": 1209
+    },
+    {
+      "rule": "serbia-pre-kingdom-title",
+      "recordId": 5340,
+      "sourceRecords": [
+        5340
+      ],
+      "original": "Kingdom of Serbia",
+      "sourceFromYear": 1210,
+      "sourceToYear": 1215,
+      "effectiveFromYear": 1210,
+      "effectiveToYear": 1215
+    },
+    {
+      "rule": "serbia-pre-kingdom-title",
+      "recordId": 5393,
+      "sourceRecords": [
+        5393
+      ],
+      "original": "Kingdom of Serbia",
+      "sourceFromYear": 1216,
+      "sourceToYear": 1219,
+      "effectiveFromYear": 1216,
+      "effectiveToYear": 1216
+    },
+    {
+      "rule": "halych-union-label-1200",
+      "recordId": 5172,
+      "sourceRecords": [
+        5172
+      ],
+      "original": "Principality of Halych",
+      "sourceFromYear": 1192,
+      "sourceToYear": 1201,
+      "effectiveFromYear": 1200,
+      "effectiveToYear": 1201
+    },
+    {
+      "rule": "volhynia-union-label-1200",
+      "recordId": 4448,
+      "sourceRecords": [
+        4448,
+        5182
+      ],
+      "original": "Principality of Volhynia",
+      "sourceFromYear": 1056,
+      "sourceToYear": 1201,
+      "effectiveFromYear": 1200,
+      "effectiveToYear": 1201
+    }
+  ],
+  "checks": {
+    "year1200BeforeCount": 65,
+    "year1200AfterCount": 63,
+    "year1200Hidden": [
+      "(Brythonic Kingdoms)",
+      "Great Seljuk Empire",
+      "Halych-Volhynia occupation",
+      "Hamdanid Emirates",
+      "Viking settlements"
+    ],
+    "year1200RestoredChildren": [
+      "Kingdom of Gwynedd",
+      "Kingdom of Powys Fadog",
+      "Kingdom of Powys Wenwynwyn"
+    ],
+    "year1200Renames": [
+      {
+        "original": "Principality of Volhynia",
+        "nameZh": "加利奇—沃里尼亚公国·沃里尼亚"
+      },
+      {
+        "original": "Principality of Halych",
+        "nameZh": "加利奇—沃里尼亚公国·加利奇"
+      },
+      {
+        "original": "Kingdom of Serbia",
+        "nameZh": "塞尔维亚大公国（拉什卡）"
+      }
+    ],
+    "transitionChecks": [
+      {
+        "year": 1004,
+        "original": "Hamdanid Emirates",
+        "visibleAfterExtraRules": true,
+        "passed": true
+      },
+      {
+        "year": 1005,
+        "original": "Hamdanid Emirates",
+        "visibleAfterExtraRules": false,
+        "passed": true
+      },
+      {
+        "year": 1194,
+        "original": "Great Seljuk Empire",
+        "visibleAfterExtraRules": true,
+        "passed": true
+      },
+      {
+        "year": 1195,
+        "original": "Great Seljuk Empire",
+        "visibleAfterExtraRules": false,
+        "passed": true
+      },
+      {
+        "year": 1200,
+        "original": "Kingdom of Serbia",
+        "earlyTitleRenamed": true,
+        "passed": true
+      },
+      {
+        "year": 1216,
+        "original": "Kingdom of Serbia",
+        "earlyTitleRenamed": true,
+        "passed": true
+      },
+      {
+        "year": 1217,
+        "original": "Kingdom of Serbia",
+        "earlyTitleRenamed": false,
+        "passed": true
+      },
+      {
+        "year": 1882,
+        "original": "Kingdom of Serbia",
+        "earlyTitleRenamed": false,
+        "passed": true
+      }
+    ],
+    "allInputGeometryFilesUnchanged": true,
+    "inputSha256": {
+      "europe-antiquity.geojson": "f665fd18dbe688c60c3f7a1496288d7534b7fe11e37654a3ea4037790032ab04",
+      "europe-early-medieval.geojson": "1076dd3f6d6e7c7c49ba7cef4dd3e2e96594d4e076215ca32f480ac7d795af46",
+      "europe-early-modern.geojson": "2bd2ae4029df281d62826ac9a8e7714adc68e771a3e516291096d39adacceeee",
+      "europe-high-medieval.geojson": "a474c77b6d2437a66676abf9ddd8ff44a4dd6a533dbe9968f6a74d0fbeb0cf5b",
+      "europe-late-medieval.geojson": "fbf2f0eafae631f4ad55b3dac3b3675d3e8ec2ef85957f6270154b1b8979b1c1",
+      "europe-modern.geojson": "acc813d86d2c2bbe24cbeb93ae562ca9219d4f080547102a9974fff2d392cabc"
+    }
+  }
+}

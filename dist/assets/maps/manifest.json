@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "title": "Cliopatria v0.2.1 — European extract",
+    "version": "0.2.1",
+    "sourceCommit": "5f433377139a6eeaeacbdc894b70f8805b72c8b5",
+    "bbox": [
+      -16,
+      30,
+      48,
+      72
+    ],
+    "yearRange": [
+      -500,
+      2024
+    ],
+    "dateSemantics": "fromYear <= selectedYear <= toYear (inclusive); source intervals are approximate historical reconstructions, not annual measurements",
+    "geometryEdits": "Spatial clip to bbox; make_valid when needed; topology-preserving simplification 0.022 then 0.035 degrees; 3 decimal precision; no manual boundary invention. Consecutive records with exactly equal simplified clipped geometry and polity membership are coalesced; original row numbers retained in sourceRecords. After coordinate rounding, 109 geometries repaired using make_valid. Extension through 2024 appends 116 clipped source records beginning after 1993; 0 post-rounding repairs. Earlier-era geometries unchanged.",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "citation": "Bennett, J. S., Mutch, E., Tollefson, A., et al. (2025). Cliopatria – A geospatial database of world-wide political entities from 3400BCE to 2024CE. Scientific Data 12, 247.",
+    "paper": "https://doi.org/10.1038/s41597-025-04516-9",
+    "sourceRepository": "https://github.com/Seshat-Global-History-Databank/cliopatria",
+    "originalArchiveEntry": "cliopatria_polities_only_v021.geojson",
+    "originalArchiveSha256": "e10a4e429fca708788ff9e7572a95fce801fae55852d217cffabc1c59cd4eed4",
+    "retrievedAt": "2026-11-15",
+    "modernBoundaryNote": "Modern outlines reproduce the source dataset’s historical reconstruction. They do not adjudicate disputed sovereignty, international recognition, or present-day borders. Source coverage ends in 2024.",
+    "extensionThrough": 2024
+  },
+  "eras": [
+    {
+      "id": "antiquity",
+      "title": "古典时代",
+      "fromYear": -500,
+      "toYear": 475,
+      "file": "europe-antiquity.geojson",
+      "featureCount": 791,
+      "bytes": 3139375,
+      "sha256": "f665fd18dbe688c60c3f7a1496288d7534b7fe11e37654a3ea4037790032ab04"
+    },
+    {
+      "id": "early-medieval",
+      "title": "中世纪早期",
+      "fromYear": 476,
+      "toYear": 999,
+      "file": "europe-early-medieval.geojson",
+      "featureCount": 1509,
+      "bytes": 4243060,
+      "sha256": "1076dd3f6d6e7c7c49ba7cef4dd3e2e96594d4e076215ca32f480ac7d795af46"
+    },
+    {
+      "id": "high-medieval",
+      "title": "中世纪盛期",
+      "fromYear": 1000,
+      "toYear": 1299,
+      "file": "europe-high-medieval.geojson",
+      "featureCount": 1528,
+      "bytes": 2703985,
+      "sha256": "a474c77b6d2437a66676abf9ddd8ff44a4dd6a533dbe9968f6a74d0fbeb0cf5b"
+    },
+    {
+      "id": "late-medieval",
+      "title": "中世纪晚期",
+      "fromYear": 1300,
+      "toYear": 1499,
+      "file": "europe-late-medieval.geojson",
+      "featureCount": 1251,
+      "bytes": 3335280,
+      "sha256": "fbf2f0eafae631f4ad55b3dac3b3675d3e8ec2ef85957f6270154b1b8979b1c1"
+    },
+    {
+      "id": "early-modern",
+      "title": "近代早期",
+      "fromYear": 1500,
+      "toYear": 1788,
+      "file": "europe-early-modern.geojson",
+      "featureCount": 1312,
+      "bytes": 5154627,
+      "sha256": "2bd2ae4029df281d62826ac9a8e7714adc68e771a3e516291096d39adacceeee"
+    },
+    {
+      "id": "modern",
+      "title": "近现代",
+      "fromYear": 1789,
+      "toYear": 2024,
+      "file": "europe-modern.geojson",
+      "featureCount": 1548,
+      "bytes": 4228053,
+      "sha256": "acc813d86d2c2bbe24cbeb93ae562ca9219d4f080547102a9974fff2d392cabc"
+    }
+  ]
+}

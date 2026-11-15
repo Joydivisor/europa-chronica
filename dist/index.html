@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#203b4f">
+  <meta name="description" content="一幅可以拖动时间、点城读史、追随人物足迹的欧洲历史交互舆图。以中世纪手抄本为视觉灵感，历史条目附可追溯来源。">
+  <title>欧陆纪年 · Europa Chronica</title>
+  <link rel="canonical" href="https://joydivisor.github.io/europa-chronica/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="欧陆纪年 · Europa Chronica">
+  <meta property="og:description" content="从古典时代到现代，在地图上探索欧洲历史。简中、繁中、English。">
+  <meta property="og:url" content="https://joydivisor.github.io/europa-chronica/">
+  <meta property="og:image" content="https://joydivisor.github.io/assets/europa-map.png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/noto-serif-sc.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script src="assets/d3.min.js" defer></script>
+  <script src="data.js" defer></script>
+  <script src="content.js" defer></script>
+  <script src="assets/opencc-cn2t.js" defer></script>
+  <script src="locales/en-core.js" defer></script>
+  <script src="locales/en-content.js" defer></script>
+  <script src="i18n.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5ZM9 3v16M15 5v16"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v16M12 5C8 2 5 3 2 3v16c4-1 7 0 10 2 3-2 6-3 10-2V3c-3 0-6-1-10 2Z"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M5 7v7a5 5 0 0 0 5 5h7M7 5h7a5 5 0 0 1 5 5v3"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 10 5-10 5L2 8l10-5Zm-9 10 9 5 9-5M3 18l9 5 9-5"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 16V2m-5 5 5-5 5 5M5 11H3v11h18V11h-2"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 8-3 5-5 3 3-5 5-3Z"/></symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="m3 5 4 5 5-7 5 7 4-5-2 13H5L3 5ZM5 21h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22S4 15 4 9a8 8 0 0 1 16 0c0 6-8 13-8 13Z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+  </defs></svg>
+  <header class="masthead">
+    <a class="brand" href="./" aria-label="欧陆纪年首页"><span class="brand-seal">E</span><span><strong>欧陆纪年</strong><small>Europa Chronica</small></span></a>
+    <span class="header-context">欧洲历史地图 <span>·</span> 古典至现代</span>
+    <div class="header-actions">
+      <div class="language-switch" role="group" aria-label="选择语言"><span class="language-indicator" aria-hidden="true"></span><button data-lang="zh-CN" class="active" aria-pressed="true" data-no-i18n title="简体中文">简</button><button data-lang="zh-TW" aria-pressed="false" data-no-i18n title="繁體中文">繁</button><button data-lang="en" aria-pressed="false" data-no-i18n title="English">EN</button></div>
+      <button id="layers-button" class="header-button" aria-label="图层" title="图层" aria-expanded="false" aria-controls="layers-menu"><svg><use href="#i-layers"/></svg><span class="button-label">图层</span><span class="chevron">⌄</span></button>
+      <button class="header-button" id="sources-button" aria-label="资料馆" title="资料馆"><svg><use href="#i-book"/></svg><span>资料馆</span></button>
+      <button class="icon-button" id="share-button" aria-label="分享当前地图" title="分享"><svg><use href="#i-share"/></svg></button>
+    </div>
+  </header>
+  <main class="atlas-shell">
+    <section class="map-stage" aria-label="可拖动和缩放的欧洲历史地图">
+      <div class="search-box"><svg><use href="#i-search"/></svg><input id="search" type="search" autocomplete="off" placeholder="搜索城市、人物、史事" aria-label="搜索城市、人物和事件"><kbd>/</kbd><div id="search-results" class="search-results" hidden></div></div>
+      <div class="layers-menu" id="layers-menu" hidden>
+        <div class="layer-menu-heading"><strong>地图图层</strong><button class="icon-button" id="close-layers" aria-label="关闭图层菜单">×</button></div>
+        <div class="map-mode-switch" role="group" aria-label="地图模式"><button data-map-mode="political" class="active" aria-pressed="true">政权图</button><button data-map-mode="terrain" aria-pressed="false">地形图</button></div>
+        <div class="layer-section"><h3>自然地理</h3><label><span>山地阴影</span><input type="checkbox" id="layer-terrain" checked></label><label><span>河流</span><input type="checkbox" id="layer-rivers" checked></label><label><span>湖泊</span><input type="checkbox" id="layer-lakes" checked></label></div>
+        <div class="layer-section"><h3>历史信息</h3><label><span>历史疆域</span><input type="checkbox" id="layer-realms" checked></label><label><span>疆域边线</span><input type="checkbox" id="layer-borders" checked></label><div class="opacity-control"><span>疆域浓度</span><output id="opacity-value" for="realm-opacity">65%</output><input id="realm-opacity" type="range" min="15" max="95" value="65" aria-label="疆域颜色浓度"></div><label><span>城市标记</span><input type="checkbox" id="layer-cities" checked></label><label><span>地名标注</span><input type="checkbox" id="layer-labels" checked></label><label><span>人物行迹</span><input type="checkbox" id="layer-routes" checked></label></div>
+        <div class="layer-section"><h3>对照</h3><label><span>现代边界</span><input type="checkbox" id="layer-modern"></label></div>
+        <button class="reset-layers" id="reset-layers">恢复默认图层</button>
+      </div>
+      <svg id="map" role="group" aria-label="欧洲历史地图"></svg>
+      <div class="map-loading" id="map-loading"><span></span>正在展开地图</div>
+      <span id="map-period" hidden></span>
+      <button id="panel-toggle" class="panel-toggle" aria-label="收起阅读面板" aria-expanded="true" title="收起阅读面板">›</button>
+      <div class="map-tools"><button id="zoom-in" aria-label="放大地图" title="放大">+</button><button id="zoom-out" aria-label="缩小地图" title="缩小">−</button><button id="reset-map" aria-label="回到欧洲全图" title="复位视图"><svg><use href="#i-compass"/></svg></button></div>
+      <div class="legend-wrap" id="legend-wrap"><button class="legend-toggle" id="legend-toggle" aria-expanded="false"><span class="legend-swatch"></span>政权图例 <span id="legend-count"></span><span class="chevron">⌄</span></button><div class="map-legend" id="legend" hidden></div></div>
+      <div class="map-footer"><button id="map-note">地图资料</button><span>Cliopatria · Natural Earth</span><a href="https://github.com/Joydivisor/europa-chronica" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
+      <div class="map-scale" id="map-scale"><i></i><span>500 km</span></div>
+      <button id="mobile-panel-toggle" class="mobile-panel-toggle" aria-expanded="false">阅读历史</button>
+      <div id="map-tooltip" class="map-tooltip" hidden></div>
+    </section>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top"><nav class="main-nav" aria-label="阅读内容"><span class="nav-indicator" aria-hidden="true"></span><button class="nav-link active" data-nav="map">时代概览</button><button class="nav-link" data-nav="events">编年史</button><button class="nav-link" data-nav="people">人物</button></nav><button class="sidebar-close icon-button" id="close-sidebar" aria-label="收起阅读面板">×</button></div>
+      <div class="side-scroll" id="side-content"></div>
+      <dialog id="detail-dialog"><button class="dialog-close back-button" aria-label="返回时代概览">← 返回</button><div id="detail-content"></div></dialog>
+      <button class="challenge-callout" id="quiz-button"><svg><use href="#i-compass"/></svg><span>舆图寻址</span><small>五道题，走遍欧陆</small><span>›</span></button>
+    </aside>
+    <section class="timeline" aria-label="历史时间轴">
+      <div class="playback"><button class="play-button" id="play" title="播放或暂停（空格）" aria-label="播放历史演进">▶</button><div class="speed-control"><button id="speed-button" class="speed-button" aria-label="播放速度" aria-expanded="false" aria-controls="speed-menu">1×</button><div id="speed-menu" class="speed-menu" role="menu" aria-label="播放速度" hidden><button role="menuitemradio" aria-checked="false" data-speed="6000">½×</button><button role="menuitemradio" aria-checked="true" data-speed="3500">1×</button><button role="menuitemradio" aria-checked="false" data-speed="1800">2×</button></div><select id="play-speed" aria-label="播放速度" hidden><option value="3500">1×</option><option value="1800">2×</option><option value="6000">½×</option></select></div><button class="sound-button" id="narration" aria-label="开启语音讲解" aria-pressed="false" title="语音讲解">♫</button></div>
+      <div class="timeline-center"><div class="timeline-context"><span id="era-tag">中世纪盛期</span><span id="year-summary">王国、城市与信仰交织的欧陆</span><button id="timeline-zoom" title="放大当前时代">放大时代</button></div><div class="era-navigation" id="era-navigation"></div><div class="timeline-track"><div id="event-dots" aria-hidden="true"></div><input type="range" min="-500" max="2024" value="1200" id="year-slider" aria-label="拖动穿越历史年份"><div id="timeline-ticks"></div></div></div>
+      <div class="year-controls"><span id="year-prefix">ANNO DOMINI</span><div><button class="icon-button" id="prev-year" title="上一历史节点（←）" aria-label="上一历史节点">‹</button><input id="year-input" type="number" min="-500" max="2024" value="1200" aria-label="历史年份"><button class="icon-button" id="next-year" title="下一历史节点（→）" aria-label="下一历史节点">›</button></div><span class="year-unit">公元纪年</span></div>
+      <small id="snapshot-note" hidden></small>
+    </section>
+  </main>
+  <dialog id="sources-dialog"><button class="dialog-close icon-button" aria-label="关闭资料馆"><svg><use href="#i-close"/></svg></button><div id="sources-content"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="noscript">请启用 JavaScript 以使用交互地图。</div></noscript>
+</body>
+</html>
