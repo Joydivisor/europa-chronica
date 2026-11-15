@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "title": "Cliopatria v0.2.1 — European extract",
+    "title": "Cliopatria v0.2.1 — European detailed display with sourced Iceland correction",
     "version": "0.2.1",
     "sourceCommit": "5f433377139a6eeaeacbdc894b70f8805b72c8b5",
     "bbox": [
-      -16,
+      -25,
       30,
       48,
       72
@@ -14,8 +14,8 @@
       2024
     ],
     "dateSemantics": "fromYear <= selectedYear <= toYear (inclusive); source intervals are approximate historical reconstructions, not annual measurements",
-    "geometryEdits": "Spatial clip to bbox; make_valid when needed; topology-preserving simplification 0.022 then 0.035 degrees; 3 decimal precision; no manual boundary invention. Consecutive records with exactly equal simplified clipped geometry and polity membership are coalesced; original row numbers retained in sourceRecords. After coordinate rounding, 109 geometries repaired using make_valid. Extension through 2024 appends 116 clipped source records beginning after 1993; 0 post-rounding repairs. Earlier-era geometries unchanged.",
-    "license": "CC BY 4.0",
+    "geometryEdits": "Regenerated from the original source records, clipped to the declared bbox with the west edge extended to -25 degrees to retain Iceland; only the existing sourceRecords are included; make_valid where required; topology-preserving Douglas–Peucker simplification at 0.007 degrees; valid-output coordinate grid 0.00001 degrees; standard GeoJSON orientation. Overview semantic properties, identifiers and coalesced intervals retained. Where finer geometry differs inside an overview interval, geometryVariants preserves the original source intervals. No geometry invented or interpolated. Iceland-only editorial display correction: upstream shapes are excised inside the isolated Iceland envelope, then replaced by dated Natural Earth island masks; see icelandCorrection.",
+    "license": "Cliopatria portions: CC BY 4.0; Natural Earth masks: public domain; editorial compilation: GPL-3.0-only",
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
     "citation": "Bennett, J. S., Mutch, E., Tollefson, A., et al. (2025). Cliopatria – A geospatial database of world-wide political entities from 3400BCE to 2024CE. Scientific Data 12, 247.",
     "paper": "https://doi.org/10.1038/s41597-025-04516-9",
@@ -24,7 +24,54 @@
     "originalArchiveSha256": "e10a4e429fca708788ff9e7572a95fce801fae55852d217cffabc1c59cd4eed4",
     "retrievedAt": "2026-11-15",
     "modernBoundaryNote": "Modern outlines reproduce the source dataset’s historical reconstruction. They do not adjudicate disputed sovereignty, international recognition, or present-day borders. Source coverage ends in 2024.",
-    "extensionThrough": 2024
+    "extensionThrough": 2024,
+    "resolution": "detail-display",
+    "overviewIndexBbox": [
+      -16,
+      30,
+      48,
+      72
+    ],
+    "simplificationDegrees": 0.007,
+    "coordinatePrecisionDegrees": 1e-05,
+    "originalGeoJsonSha256": "fc6f0d1e4cc42f45da83522b3696db6f2cc85ec0d12259a85c89b31347b8fc0a",
+    "shapelyVersion": "2.2.0",
+    "geometryVariantsSemantics": "For a selected year, use the geometry of the unique geometryVariants segment whose fromYear <= year <= toYear. If geometryVariants is absent, use feature.geometry. Top-level properties and recordId remain identical to the overview file.",
+    "historicalInterpretation": "Increased geometric detail retains more of the same academic reconstruction; it does not establish additional historical certainty or settlement-scale boundary accuracy.",
+    "upstreamGeometryEdits": "Regenerated from the original source records, clipped to the declared bbox with the west edge extended to -25 degrees to retain Iceland; only the existing sourceRecords are included; make_valid where required; topology-preserving Douglas–Peucker simplification at 0.007 degrees; valid-output coordinate grid 0.00001 degrees; standard GeoJSON orientation. Overview semantic properties, identifiers and coalesced intervals retained. Where finer geometry differs inside an overview interval, geometryVariants preserves the original source intervals. No geometry invented or interpolated.",
+    "icelandCorrection": {
+      "overrideId": "iceland-sovereignty-v1",
+      "verifiedOn": "2026-11-15",
+      "sourceId": "iceland-correction",
+      "excisionBbox": [
+        -25,
+        62,
+        -12,
+        68
+      ],
+      "islandBounds": [
+        -24.53991,
+        63.29532,
+        -13.50292,
+        66.56415
+      ],
+      "annualConvention": "An annual display uses the status in force by the end of that year. Dates below preserve the event's actual precision; 1262–1263 is an explicitly transitional display, not a reconstructed internal partition.",
+      "geometryConvention": "Natural Earth 1:10m modern Iceland land is an island display mask. It is not a reconstruction of medieval shorelines, settlement extent, maritime limits or internal administration. The excision rectangle isolates Iceland from all other land in the supplied Natural Earth source, and removes upstream coastal misalignment fragments before replacement.",
+      "before930": "Remove upstream political fills inside the excision envelope and draw no replacement state fill. This makes no claim that Iceland was uninhabited or that settlements formed one sovereign state.",
+      "geometrySource": {
+        "name": "Natural Earth 1:10m land",
+        "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+        "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_land.geojson",
+        "sha256": "1ac90796408bc6ad6911d69448485d3c4dbf2190370080368a09976e1c9f7416",
+        "license": "Public domain"
+      },
+      "planSha256": "26715655205fc209da71fd7cc31dc5f26efde17d27a4d9b1cc60d7621f3a61e2",
+      "shapelyVersion": "2.2.0",
+      "license": "Natural Earth geometry: public domain; project editorial compilation and script: GPL-3.0-only",
+      "correctionsFile": "iceland-corrections.geojson",
+      "correctionsSha256": "be5330f40f27c317c1ba73a32e3c02d0be1fb17845dffeca5dc0fa08499f431c",
+      "sourceFile": "iceland-correction-sources.json"
+    }
   },
   "eras": [
     {
@@ -33,9 +80,17 @@
       "fromYear": -500,
       "toYear": 475,
       "file": "europe-antiquity.geojson",
+      "bytes": 3954096,
+      "sha256": "575b9080890dc0eecf80471642c1e9a687da5f254bce18945125313929e6616e",
       "featureCount": 791,
-      "bytes": 3139375,
-      "sha256": "f665fd18dbe688c60c3f7a1496288d7534b7fe11e37654a3ea4037790032ab04"
+      "sourceFeatureCount": 791,
+      "retainedSourceFeatureCount": 791,
+      "removedSourceFeatureCount": 0,
+      "correctionFeatureCount": 0,
+      "sourceSha256": "560c97fefbec0efbf2286bab5ca2a10669b5482b4e6edf203e99ddce50ce961c",
+      "sourceBytes": 3951410,
+      "vertexCountIncludingVariants": 186166,
+      "geometryVariantFeatureCount": 2
     },
     {
       "id": "early-medieval",
@@ -43,9 +98,17 @@
       "fromYear": 476,
       "toYear": 999,
       "file": "europe-early-medieval.geojson",
+      "bytes": 5438862,
+      "sha256": "02c84ca35869a2a28510f4507cc1f848c0dd4e76956dae197a33b5591e2624b5",
       "featureCount": 1509,
-      "bytes": 4243060,
-      "sha256": "1076dd3f6d6e7c7c49ba7cef4dd3e2e96594d4e076215ca32f480ac7d795af46"
+      "sourceFeatureCount": 1509,
+      "retainedSourceFeatureCount": 1508,
+      "removedSourceFeatureCount": 1,
+      "correctionFeatureCount": 1,
+      "sourceSha256": "684f5ed397278d7513e7d841f639035625fe1cff4ae41b7f4a8f316a5cd391f1",
+      "sourceBytes": 5390275,
+      "vertexCountIncludingVariants": 246611,
+      "geometryVariantFeatureCount": 10
     },
     {
       "id": "high-medieval",
@@ -53,9 +116,17 @@
       "fromYear": 1000,
       "toYear": 1299,
       "file": "europe-high-medieval.geojson",
-      "featureCount": 1528,
-      "bytes": 2703985,
-      "sha256": "a474c77b6d2437a66676abf9ddd8ff44a4dd6a533dbe9968f6a74d0fbeb0cf5b"
+      "bytes": 3607581,
+      "sha256": "c31d51afa14f533e15cea5c868b646e60ece2ecc7bf614f4547ed0a14d8b5496",
+      "featureCount": 1530,
+      "sourceFeatureCount": 1528,
+      "retainedSourceFeatureCount": 1527,
+      "removedSourceFeatureCount": 1,
+      "correctionFeatureCount": 3,
+      "sourceSha256": "3bdccd2ab4a7a3ad6a1ed7912af5a7be364711bf909a4b5ea846b9e2a6df0c8d",
+      "sourceBytes": 3395054,
+      "vertexCountIncludingVariants": 152879,
+      "geometryVariantFeatureCount": 7
     },
     {
       "id": "late-medieval",
@@ -63,9 +134,17 @@
       "fromYear": 1300,
       "toYear": 1499,
       "file": "europe-late-medieval.geojson",
-      "featureCount": 1251,
-      "bytes": 3335280,
-      "sha256": "fbf2f0eafae631f4ad55b3dac3b3675d3e8ec2ef85957f6270154b1b8979b1c1"
+      "bytes": 4390017,
+      "sha256": "4a0cacc0cf8af1bf3ac9bbd01a4e5cca35ebd45a79ef7ea993402ead51121602",
+      "featureCount": 1253,
+      "sourceFeatureCount": 1251,
+      "retainedSourceFeatureCount": 1251,
+      "removedSourceFeatureCount": 0,
+      "correctionFeatureCount": 2,
+      "sourceSha256": "095a370458fed9e22a75e7a19a221f7c72246e6b04bda0935fd4848d303d936e",
+      "sourceBytes": 4310266,
+      "vertexCountIncludingVariants": 197297,
+      "geometryVariantFeatureCount": 8
     },
     {
       "id": "early-modern",
@@ -73,9 +152,17 @@
       "fromYear": 1500,
       "toYear": 1788,
       "file": "europe-early-modern.geojson",
-      "featureCount": 1312,
-      "bytes": 5154627,
-      "sha256": "2bd2ae4029df281d62826ac9a8e7714adc68e771a3e516291096d39adacceeee"
+      "bytes": 6689257,
+      "sha256": "dc536202cbcece7d068e63b9a66724ec4670a300bf4419863ec9867c0d1dcc18",
+      "featureCount": 1313,
+      "sourceFeatureCount": 1312,
+      "retainedSourceFeatureCount": 1312,
+      "removedSourceFeatureCount": 0,
+      "correctionFeatureCount": 1,
+      "sourceSha256": "4fbfec7ce986e90ffec1c2276397219b1112e698db9e1d27a15863bd8d33adb2",
+      "sourceBytes": 6665398,
+      "vertexCountIncludingVariants": 315991,
+      "geometryVariantFeatureCount": 3
     },
     {
       "id": "modern",
@@ -83,9 +170,2001 @@
       "fromYear": 1789,
       "toYear": 2024,
       "file": "europe-modern.geojson",
-      "featureCount": 1548,
-      "bytes": 4228053,
-      "sha256": "acc813d86d2c2bbe24cbeb93ae562ca9219d4f080547102a9974fff2d392cabc"
+      "bytes": 5660952,
+      "sha256": "4963a30e984b4aa18b841e186e824af65367372df3357ca5e4afedbcb9afdbc1",
+      "featureCount": 1549,
+      "sourceFeatureCount": 1548,
+      "retainedSourceFeatureCount": 1545,
+      "removedSourceFeatureCount": 3,
+      "correctionFeatureCount": 4,
+      "sourceSha256": "4137cdf9378eab1e5d44be67f495d3c0323ef2930817cf1590faf5df9da938cb",
+      "sourceBytes": 5406720,
+      "vertexCountIncludingVariants": 257451,
+      "geometryVariantFeatureCount": 9
     }
-  ]
+  ],
+  "sourceManifest": {
+    "sha256": "fdc21d644731a2aef55d36a741e868868e8a966573ce958959a33229c2bc4778",
+    "role": "uncorrected detailed inputs retained in the preparation workspace",
+    "inputName": "detailed/manifest.json",
+    "deployed": false
+  },
+  "upstreamAudit": {
+    "uniqueFeatures": 7623,
+    "uniqueSourceRecords": 8579,
+    "identifiersPropertiesAndIntervalsUnchanged": true,
+    "overviewVertexCount": 1236174,
+    "detailDefaultGeometryVertexCount": 1289225,
+    "vertexRatio": 1.043,
+    "geometryVariantFeatureCount": 35,
+    "geometryVariants": [
+      {
+        "recordId": 587,
+        "name": "Galatia",
+        "segments": 2,
+        "sourceRecords": [
+          587,
+          663
+        ]
+      },
+      {
+        "recordId": 1133,
+        "name": "Kingdom of Pontus",
+        "segments": 2,
+        "sourceRecords": [
+          1133,
+          1171
+        ]
+      },
+      {
+        "recordId": 1929,
+        "name": "Saxons",
+        "segments": 3,
+        "sourceRecords": [
+          1929,
+          1984,
+          2125
+        ]
+      },
+      {
+        "recordId": 2219,
+        "name": "Saxons",
+        "segments": 2,
+        "sourceRecords": [
+          2219,
+          2356
+        ]
+      },
+      {
+        "recordId": 2445,
+        "name": "Saxons",
+        "segments": 2,
+        "sourceRecords": [
+          2445,
+          2699
+        ]
+      },
+      {
+        "recordId": 2245,
+        "name": "Kingdom of Northumbria",
+        "segments": 2,
+        "sourceRecords": [
+          2245,
+          2259
+        ]
+      },
+      {
+        "recordId": 2455,
+        "name": "Strathclyde",
+        "segments": 2,
+        "sourceRecords": [
+          2455,
+          2481
+        ]
+      },
+      {
+        "recordId": 2809,
+        "name": "Abbasid Caliphate",
+        "segments": 2,
+        "sourceRecords": [
+          2809,
+          2818,
+          2841
+        ]
+      },
+      {
+        "recordId": 3232,
+        "name": "Khazaria",
+        "segments": 3,
+        "sourceRecords": [
+          3232,
+          3284,
+          3455
+        ]
+      },
+      {
+        "recordId": 3291,
+        "name": "Brythons",
+        "segments": 2,
+        "sourceRecords": [
+          3291,
+          3349
+        ]
+      },
+      {
+        "recordId": 3679,
+        "name": "Emirate of Córdoba",
+        "segments": 2,
+        "sourceRecords": [
+          3679,
+          3710
+        ]
+      },
+      {
+        "recordId": 4014,
+        "name": "County of Ribagorza",
+        "segments": 2,
+        "sourceRecords": [
+          4014,
+          4189
+        ]
+      },
+      {
+        "recordId": 5104,
+        "name": "County of Ampuria",
+        "segments": 4,
+        "sourceRecords": [
+          5104,
+          5589,
+          5892,
+          6351
+        ]
+      },
+      {
+        "recordId": 4684,
+        "name": "Principality of Kiev",
+        "segments": 2,
+        "sourceRecords": [
+          4684,
+          4775
+        ]
+      },
+      {
+        "recordId": 4765,
+        "name": "Danishmendids",
+        "segments": 2,
+        "sourceRecords": [
+          4765,
+          4865
+        ]
+      },
+      {
+        "recordId": 4968,
+        "name": "Danishmendids",
+        "segments": 2,
+        "sourceRecords": [
+          4968,
+          5036
+        ]
+      },
+      {
+        "recordId": 5255,
+        "name": "Holy Roman Empire",
+        "segments": 2,
+        "sourceRecords": [
+          5255,
+          5294
+        ]
+      },
+      {
+        "recordId": 5830,
+        "name": "Mamluk Sultanate",
+        "segments": 2,
+        "sourceRecords": [
+          5830,
+          5878
+        ]
+      },
+      {
+        "recordId": 6330,
+        "name": "Kingdom of Hungary",
+        "segments": 2,
+        "sourceRecords": [
+          6330,
+          6413
+        ]
+      },
+      {
+        "recordId": 6388,
+        "name": "Patriarchate of Aquileia",
+        "segments": 2,
+        "sourceRecords": [
+          6388,
+          6529
+        ]
+      },
+      {
+        "recordId": 6597,
+        "name": "Beylik of Dulkadir",
+        "segments": 2,
+        "sourceRecords": [
+          6597,
+          6664
+        ]
+      },
+      {
+        "recordId": 6789,
+        "name": "Serbian Despots",
+        "segments": 2,
+        "sourceRecords": [
+          6789,
+          6852
+        ]
+      },
+      {
+        "recordId": 6967,
+        "name": "Kingdom of Portugal",
+        "segments": 2,
+        "sourceRecords": [
+          6967,
+          7004,
+          7156,
+          7244,
+          7389,
+          7440
+        ]
+      },
+      {
+        "recordId": 7053,
+        "name": "Republic of Ragusa",
+        "segments": 2,
+        "sourceRecords": [
+          7053,
+          10097,
+          10733
+        ]
+      },
+      {
+        "recordId": 7249,
+        "name": "Principality of Moldavia",
+        "segments": 3,
+        "sourceRecords": [
+          7249,
+          7323,
+          7394
+        ]
+      },
+      {
+        "recordId": 7948,
+        "name": "County of Foix",
+        "segments": 2,
+        "sourceRecords": [
+          7948,
+          8076,
+          8178
+        ]
+      },
+      {
+        "recordId": 8521,
+        "name": "Papal States",
+        "segments": 3,
+        "sourceRecords": [
+          8521,
+          9002,
+          9506,
+          9689
+        ]
+      },
+      {
+        "recordId": 10453,
+        "name": "Russian Empire",
+        "segments": 2,
+        "sourceRecords": [
+          10453,
+          10509
+        ]
+      },
+      {
+        "recordId": 11621,
+        "name": "Russian Empire",
+        "segments": 2,
+        "sourceRecords": [
+          11621,
+          11665,
+          11711,
+          11720,
+          11753,
+          11831,
+          11887,
+          11903,
+          11915
+        ]
+      },
+      {
+        "recordId": 11997,
+        "name": "United Principalities of Moldavia and Wallachia",
+        "segments": 2,
+        "sourceRecords": [
+          11997,
+          12195
+        ]
+      },
+      {
+        "recordId": 12550,
+        "name": "Union of Soviet Socialist Republics",
+        "segments": 2,
+        "sourceRecords": [
+          12550,
+          12591,
+          12636,
+          12673
+        ]
+      },
+      {
+        "recordId": 12566,
+        "name": "Kingdom of Norway",
+        "segments": 2,
+        "sourceRecords": [
+          12566,
+          12621,
+          12703
+        ]
+      },
+      {
+        "recordId": 12628,
+        "name": "Italian Africa",
+        "segments": 2,
+        "sourceRecords": [
+          12628,
+          12697
+        ]
+      },
+      {
+        "recordId": 12974,
+        "name": "Denmark",
+        "segments": 2,
+        "sourceRecords": [
+          12974,
+          12992
+        ]
+      },
+      {
+        "recordId": 13058,
+        "name": "People's Republic of Bulgaria",
+        "segments": 2,
+        "sourceRecords": [
+          13058,
+          13083,
+          13467
+        ]
+      }
+    ],
+    "invalidOriginalRecordsRepaired": [
+      3810,
+      5772,
+      5823,
+      5880,
+      6031,
+      6101,
+      6141,
+      6202,
+      6293,
+      6370,
+      6475,
+      6510,
+      6643
+    ],
+    "roundedGeometriesRepaired": [],
+    "allGeometryValid": true,
+    "allGeometryWithinBounds": true,
+    "variantIntervalsContinuousAndUnambiguous": true
+  },
+  "audit": {
+    "sourceUniqueFeatureCount": 7623,
+    "retainedSourceUniqueFeatureCount": 7619,
+    "removedSourceUniqueFeatureCount": 4,
+    "correctionUniqueFeatureCount": 7,
+    "displayUniqueFeatureCount": 7626,
+    "modifiedUniqueSourceFeatureCount": 138,
+    "changedGeometryVariantsAndDefaultsAudited": 138,
+    "sourceRecordsAndOriginalPropertiesPreserved": true,
+    "allChangesConfinedToExcisionEnvelope": true,
+    "allGeometryValid": true,
+    "allAnnualOverlaysContinuousAndNonOverlapping": true,
+    "annualYearsChecked": 2524,
+    "islandMaskVertexCount": 3400,
+    "islandBounds": [
+      -24.53991,
+      63.29532,
+      -13.50292,
+      66.56415
+    ],
+    "coastalPointCheck": {
+      "name": "Akureyri reference point",
+      "coordinate": [
+        -18.0878,
+        65.6839
+      ],
+      "insideNaturalEarthLandMask": false,
+      "note": "This coastal point lies just outside the generalized 1:10m land polygon; the coordinate is not moved and no shoreline is invented to force a point-in-polygon pass."
+    },
+    "unchangedHillshadeBbox": [
+      -20,
+      28,
+      55,
+      74
+    ]
+  },
+  "correctionProvenance": {
+    "affectedSourceRecords": [
+      {
+        "recordId": 3188,
+        "sourceRecords": [
+          3188
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 860,
+        "toYear": 865,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3192,
+        "sourceRecords": [
+          3192
+        ],
+        "name": "West Franks",
+        "fromYear": 860,
+        "toYear": 865,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3195,
+        "sourceRecords": [
+          3195
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 860,
+        "toYear": 865,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3220,
+        "sourceRecords": [
+          3220
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 866,
+        "toYear": 869,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3228,
+        "sourceRecords": [
+          3228
+        ],
+        "name": "West Franks",
+        "fromYear": 866,
+        "toYear": 869,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3230,
+        "sourceRecords": [
+          3230
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 866,
+        "toYear": 869,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3261,
+        "sourceRecords": [
+          3261
+        ],
+        "name": "Viking settlements",
+        "fromYear": 870,
+        "toYear": 874,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3268,
+        "sourceRecords": [
+          3268
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 870,
+        "toYear": 874,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3276,
+        "sourceRecords": [
+          3276
+        ],
+        "name": "West Franks",
+        "fromYear": 870,
+        "toYear": 874,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3278,
+        "sourceRecords": [
+          3278
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 870,
+        "toYear": 874,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3287,
+        "sourceRecords": [
+          3287
+        ],
+        "name": "West Franks",
+        "fromYear": 875,
+        "toYear": 875,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3289,
+        "sourceRecords": [
+          3289
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 875,
+        "toYear": 875,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3299,
+        "sourceRecords": [
+          3299
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 875,
+        "toYear": 875,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3314,
+        "sourceRecords": [
+          3314
+        ],
+        "name": "Viking settlements",
+        "fromYear": 875,
+        "toYear": 875,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3329,
+        "sourceRecords": [
+          3329
+        ],
+        "name": "Viking settlements",
+        "fromYear": 876,
+        "toYear": 877,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3335,
+        "sourceRecords": [
+          3335
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 876,
+        "toYear": 877,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3337,
+        "sourceRecords": [
+          3337
+        ],
+        "name": "West Franks",
+        "fromYear": 876,
+        "toYear": 877,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3338,
+        "sourceRecords": [
+          3338
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 876,
+        "toYear": 877,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3342,
+        "sourceRecords": [
+          3342
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 878,
+        "toYear": 879,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3343,
+        "sourceRecords": [
+          3343
+        ],
+        "name": "West Franks",
+        "fromYear": 878,
+        "toYear": 879,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3351,
+        "sourceRecords": [
+          3351
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 878,
+        "toYear": 879,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3360,
+        "sourceRecords": [
+          3360
+        ],
+        "name": "Viking settlements",
+        "fromYear": 878,
+        "toYear": 879,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3368,
+        "sourceRecords": [
+          3368
+        ],
+        "name": "Viking settlements",
+        "fromYear": 880,
+        "toYear": 881,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3378,
+        "sourceRecords": [
+          3378
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 880,
+        "toYear": 881,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3380,
+        "sourceRecords": [
+          3380
+        ],
+        "name": "West Franks",
+        "fromYear": 880,
+        "toYear": 881,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3381,
+        "sourceRecords": [
+          3381
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 880,
+        "toYear": 881,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3386,
+        "sourceRecords": [
+          3386
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 882,
+        "toYear": 883,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3387,
+        "sourceRecords": [
+          3387
+        ],
+        "name": "West Franks",
+        "fromYear": 882,
+        "toYear": 883,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3391,
+        "sourceRecords": [
+          3391
+        ],
+        "name": "Viking settlements",
+        "fromYear": 882,
+        "toYear": 885,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3400,
+        "sourceRecords": [
+          3400
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 884,
+        "toYear": 885,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3401,
+        "sourceRecords": [
+          3401
+        ],
+        "name": "West Franks",
+        "fromYear": 884,
+        "toYear": 885,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3419,
+        "sourceRecords": [
+          3419
+        ],
+        "name": "Viking settlements",
+        "fromYear": 886,
+        "toYear": 891,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3432,
+        "sourceRecords": [
+          3432
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 886,
+        "toYear": 886,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3433,
+        "sourceRecords": [
+          3433
+        ],
+        "name": "West Franks",
+        "fromYear": 886,
+        "toYear": 886,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3445,
+        "sourceRecords": [
+          3445
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 887,
+        "toYear": 887,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3448,
+        "sourceRecords": [
+          3448
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 887,
+        "toYear": 887,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3449,
+        "sourceRecords": [
+          3449
+        ],
+        "name": "West Franks",
+        "fromYear": 887,
+        "toYear": 887,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3453,
+        "sourceRecords": [
+          3453
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 888,
+        "toYear": 891,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3456,
+        "sourceRecords": [
+          3456
+        ],
+        "name": "West Franks",
+        "fromYear": 888,
+        "toYear": 895,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3457,
+        "sourceRecords": [
+          3457
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 888,
+        "toYear": 891,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3468,
+        "sourceRecords": [
+          3468
+        ],
+        "name": "Viking settlements",
+        "fromYear": 892,
+        "toYear": 910,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3474,
+        "sourceRecords": [
+          3474
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 892,
+        "toYear": 895,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3479,
+        "sourceRecords": [
+          3479
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 892,
+        "toYear": 895,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3484,
+        "sourceRecords": [
+          3484
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 896,
+        "toYear": 897,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3485,
+        "sourceRecords": [
+          3485
+        ],
+        "name": "West Franks",
+        "fromYear": 896,
+        "toYear": 897,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3489,
+        "sourceRecords": [
+          3489
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 896,
+        "toYear": 897,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3530,
+        "sourceRecords": [
+          3530
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 898,
+        "toYear": 898,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3536,
+        "sourceRecords": [
+          3536
+        ],
+        "name": "West Franks",
+        "fromYear": 898,
+        "toYear": 910,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3539,
+        "sourceRecords": [
+          3539
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 898,
+        "toYear": 898,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3554,
+        "sourceRecords": [
+          3554
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 899,
+        "toYear": 899,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3560,
+        "sourceRecords": [
+          3560
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 899,
+        "toYear": 899,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3566,
+        "sourceRecords": [
+          3566
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 900,
+        "toYear": 910,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3573,
+        "sourceRecords": [
+          3573
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 900,
+        "toYear": 910,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3625,
+        "sourceRecords": [
+          3625
+        ],
+        "name": "Viking settlements",
+        "fromYear": 911,
+        "toYear": 921,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3639,
+        "sourceRecords": [
+          3639
+        ],
+        "name": "(Allegiance of East Franks to Carolingian Empire)",
+        "fromYear": 911,
+        "toYear": 921,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3648,
+        "sourceRecords": [
+          3648
+        ],
+        "name": "West Franks",
+        "fromYear": 911,
+        "toYear": 921,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3652,
+        "sourceRecords": [
+          3652
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 911,
+        "toYear": 921,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3666,
+        "sourceRecords": [
+          3666
+        ],
+        "name": "Viking settlements",
+        "fromYear": 922,
+        "toYear": 925,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3690,
+        "sourceRecords": [
+          3690
+        ],
+        "name": "West Franks",
+        "fromYear": 922,
+        "toYear": 925,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3696,
+        "sourceRecords": [
+          3696
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 922,
+        "toYear": 925,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3717,
+        "sourceRecords": [
+          3717
+        ],
+        "name": "West Franks",
+        "fromYear": 926,
+        "toYear": 935,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3718,
+        "sourceRecords": [
+          3718
+        ],
+        "name": "(Carolingian Empire)",
+        "fromYear": 926,
+        "toYear": 935,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3736,
+        "sourceRecords": [
+          3736
+        ],
+        "name": "Viking settlements",
+        "fromYear": 926,
+        "toYear": 935,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 3755,
+        "sourceRecords": [
+          3755,
+          5802
+        ],
+        "name": "Icelandic Commonwealth",
+        "fromYear": 936,
+        "toYear": 1271,
+        "action": "removed"
+      },
+      {
+        "recordId": 5848,
+        "sourceRecords": [
+          5848
+        ],
+        "name": "Old Kingdom of Norway",
+        "fromYear": 1272,
+        "toYear": 1313,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6166,
+        "sourceRecords": [
+          6166
+        ],
+        "name": "Old Kingdom of Norway",
+        "fromYear": 1314,
+        "toYear": 1325,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6229,
+        "sourceRecords": [
+          6229
+        ],
+        "name": "Old Kingdom of Norway",
+        "fromYear": 1326,
+        "toYear": 1332,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6250,
+        "sourceRecords": [
+          6250
+        ],
+        "name": "(Personal union of Kingdom of Sweden with Old Kingdom of Norway)",
+        "fromYear": 1326,
+        "toYear": 1332,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6313,
+        "sourceRecords": [
+          6313
+        ],
+        "name": "(Personal union of Kingdom of Sweden with Old Kingdom of Norway)",
+        "fromYear": 1333,
+        "toYear": 1343,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6326,
+        "sourceRecords": [
+          6326
+        ],
+        "name": "Old Kingdom of Norway",
+        "fromYear": 1333,
+        "toYear": 1343,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6549,
+        "sourceRecords": [
+          6549,
+          6781
+        ],
+        "name": "Old Kingdom of Norway",
+        "fromYear": 1363,
+        "toYear": 1401,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6389,
+        "sourceRecords": [
+          6389,
+          6422
+        ],
+        "name": "(Personal union of Kingdom of Sweden with Old Kingdom of Norway)",
+        "fromYear": 1344,
+        "toYear": 1362,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6410,
+        "sourceRecords": [
+          6410
+        ],
+        "name": "Old Kingdom of Norway",
+        "fromYear": 1344,
+        "toYear": 1362,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6499,
+        "sourceRecords": [
+          6499
+        ],
+        "name": "(Personal union of Old Kingdom of Norway with Kingdom of Sweden)",
+        "fromYear": 1363,
+        "toYear": 1374,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6717,
+        "sourceRecords": [
+          6717
+        ],
+        "name": "(Personal union of Kingdom of Denmark with Old Kingdom of Norway)",
+        "fromYear": 1385,
+        "toYear": 1394,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6767,
+        "sourceRecords": [
+          6767
+        ],
+        "name": "(Personal union of Kingdom of Denmark with Old Kingdom of Norway)",
+        "fromYear": 1395,
+        "toYear": 1401,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6804,
+        "sourceRecords": [
+          6804
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1402,
+        "toYear": 1406,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6868,
+        "sourceRecords": [
+          6868
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1402,
+        "toYear": 1406,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6877,
+        "sourceRecords": [
+          6877
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1407,
+        "toYear": 1414,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6923,
+        "sourceRecords": [
+          6923
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1407,
+        "toYear": 1414,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6937,
+        "sourceRecords": [
+          6937
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1415,
+        "toYear": 1421,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 6979,
+        "sourceRecords": [
+          6979
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1415,
+        "toYear": 1421,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7009,
+        "sourceRecords": [
+          7009
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1422,
+        "toYear": 1428,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7033,
+        "sourceRecords": [
+          7033
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1422,
+        "toYear": 1428,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7072,
+        "sourceRecords": [
+          7072
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1429,
+        "toYear": 1449,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7079,
+        "sourceRecords": [
+          7079
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1429,
+        "toYear": 1449,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7236,
+        "sourceRecords": [
+          7236
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1450,
+        "toYear": 1452,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7242,
+        "sourceRecords": [
+          7242
+        ],
+        "name": "House of Oldenburg",
+        "fromYear": 1450,
+        "toYear": 1452,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7284,
+        "sourceRecords": [
+          7284
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1453,
+        "toYear": 1458,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7291,
+        "sourceRecords": [
+          7291
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1453,
+        "toYear": 1458,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7306,
+        "sourceRecords": [
+          7306
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1459,
+        "toYear": 1467,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7345,
+        "sourceRecords": [
+          7345
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1459,
+        "toYear": 1467,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7408,
+        "sourceRecords": [
+          7408
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1468,
+        "toYear": 1474,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7431,
+        "sourceRecords": [
+          7431
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1468,
+        "toYear": 1474,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7448,
+        "sourceRecords": [
+          7448
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1475,
+        "toYear": 1481,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7498,
+        "sourceRecords": [
+          7498
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1475,
+        "toYear": 1481,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7512,
+        "sourceRecords": [
+          7512
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1482,
+        "toYear": 1501,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7544,
+        "sourceRecords": [
+          7544
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1482,
+        "toYear": 1501,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7907,
+        "sourceRecords": [
+          7907
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1521,
+        "toYear": 1525,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7931,
+        "sourceRecords": [
+          7931
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1521,
+        "toYear": 1525,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7699,
+        "sourceRecords": [
+          7699
+        ],
+        "name": "Kalmar Union",
+        "fromYear": 1502,
+        "toYear": 1520,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7713,
+        "sourceRecords": [
+          7713
+        ],
+        "name": "(Kalmar Union)",
+        "fromYear": 1502,
+        "toYear": 1520,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 7950,
+        "sourceRecords": [
+          7950
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1526,
+        "toYear": 1563,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8268,
+        "sourceRecords": [
+          8268
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1564,
+        "toYear": 1571,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8339,
+        "sourceRecords": [
+          8339
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1572,
+        "toYear": 1594,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8476,
+        "sourceRecords": [
+          8476
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1595,
+        "toYear": 1611,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8644,
+        "sourceRecords": [
+          8644
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1619,
+        "toYear": 1621,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8752,
+        "sourceRecords": [
+          8752
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1632,
+        "toYear": 1644,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8609,
+        "sourceRecords": [
+          8609
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1612,
+        "toYear": 1618,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8679,
+        "sourceRecords": [
+          8679
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1622,
+        "toYear": 1625,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8692,
+        "sourceRecords": [
+          8692
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1626,
+        "toYear": 1628,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8734,
+        "sourceRecords": [
+          8734
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1629,
+        "toYear": 1631,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 8914,
+        "sourceRecords": [
+          8914
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1645,
+        "toYear": 1658,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 9057,
+        "sourceRecords": [
+          9057
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1659,
+        "toYear": 1661,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 9068,
+        "sourceRecords": [
+          9068
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1662,
+        "toYear": 1669,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 9097,
+        "sourceRecords": [
+          9097
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1670,
+        "toYear": 1708,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 9494,
+        "sourceRecords": [
+          9494
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1709,
+        "toYear": 1712,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 9548,
+        "sourceRecords": [
+          9548
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1713,
+        "toYear": 1717,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 9577,
+        "sourceRecords": [
+          9577
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1718,
+        "toYear": 1720,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 9627,
+        "sourceRecords": [
+          9627
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1721,
+        "toYear": 1743,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 9824,
+        "sourceRecords": [
+          9824
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1744,
+        "toYear": 1774,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 10127,
+        "sourceRecords": [
+          10127
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1775,
+        "toYear": 1806,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 10743,
+        "sourceRecords": [
+          10743
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1807,
+        "toYear": 1808,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 10758,
+        "sourceRecords": [
+          10758
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1809,
+        "toYear": 1813,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 10923,
+        "sourceRecords": [
+          10923
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1814,
+        "toYear": 1814,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 10994,
+        "sourceRecords": [
+          10994
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1815,
+        "toYear": 1847,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 11521,
+        "sourceRecords": [
+          11521
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1853,
+        "toYear": 1863,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 11475,
+        "sourceRecords": [
+          11475
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1848,
+        "toYear": 1852,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 11752,
+        "sourceRecords": [
+          11752
+        ],
+        "name": "Denmark-Norway",
+        "fromYear": 1864,
+        "toYear": 1921,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 12467,
+        "sourceRecords": [
+          12467,
+          12826
+        ],
+        "name": "Kingdom of Iceland",
+        "fromYear": 1918,
+        "toYear": 1939,
+        "action": "removed"
+      },
+      {
+        "recordId": 12837,
+        "sourceRecords": [
+          12837
+        ],
+        "name": "(British Empire)",
+        "fromYear": 1940,
+        "toYear": 1940,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 12850,
+        "sourceRecords": [
+          12850
+        ],
+        "name": "Kingdom of Great Britain",
+        "fromYear": 1940,
+        "toYear": 1940,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 12858,
+        "sourceRecords": [
+          12858
+        ],
+        "name": "(British Empire)",
+        "fromYear": 1941,
+        "toYear": 1941,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 12868,
+        "sourceRecords": [
+          12868
+        ],
+        "name": "Kingdom of Great Britain",
+        "fromYear": 1941,
+        "toYear": 1944,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 12897,
+        "sourceRecords": [
+          12897,
+          12937
+        ],
+        "name": "United States of America",
+        "fromYear": 1942,
+        "toYear": 1944,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 12957,
+        "sourceRecords": [
+          12957
+        ],
+        "name": "United States of America",
+        "fromYear": 1945,
+        "toYear": 1945,
+        "action": "iceland-excised"
+      },
+      {
+        "recordId": 13010,
+        "sourceRecords": [
+          13010
+        ],
+        "name": "Republic of Iceland",
+        "fromYear": 1946,
+        "toYear": 2023,
+        "action": "removed"
+      },
+      {
+        "recordId": 13679,
+        "sourceRecords": [
+          13679
+        ],
+        "name": "Republic of Iceland",
+        "fromYear": 2024,
+        "toYear": 2024,
+        "action": "removed"
+      }
+    ],
+    "periods": [
+      {
+        "recordId": -93001,
+        "id": "iceland-commonwealth",
+        "name": "Icelandic Commonwealth",
+        "nameZh": "冰岛自由邦",
+        "fromYear": 930,
+        "toYear": 1261,
+        "fromDate": "0930",
+        "datePrecision": "year",
+        "sourceIds": [
+          "iceland-thingvellir",
+          "iceland-althingi"
+        ],
+        "status": "commonwealth"
+      },
+      {
+        "recordId": -93002,
+        "id": "iceland-covenant-transition",
+        "name": "Iceland — Old Covenant transition",
+        "nameZh": "冰岛·归附挪威过渡期",
+        "fromYear": 1262,
+        "toYear": 1263,
+        "fromDate": "1262",
+        "transitionEnd": "1264",
+        "datePrecision": "multi-year-process",
+        "sourceIds": [
+          "iceland-althingi"
+        ],
+        "status": "transition"
+      },
+      {
+        "recordId": -93003,
+        "id": "iceland-norwegian-crown",
+        "name": "Iceland under the Norwegian crown",
+        "nameZh": "冰岛·挪威王权",
+        "fromYear": 1264,
+        "toYear": 1379,
+        "fromDate": "1264",
+        "datePrecision": "year",
+        "sourceIds": [
+          "iceland-althingi"
+        ],
+        "status": "crown-territory"
+      },
+      {
+        "recordId": -93004,
+        "id": "iceland-danish-norwegian-crown",
+        "name": "Iceland under the Danish–Norwegian crown",
+        "nameZh": "冰岛·丹麦—挪威共主",
+        "fromYear": 1380,
+        "toYear": 1813,
+        "fromDate": "1380",
+        "datePrecision": "year",
+        "sourceIds": [
+          "iceland-althingi",
+          "norway-government-union",
+          "iceland-government-kiel"
+        ],
+        "status": "crown-territory"
+      },
+      {
+        "recordId": -93005,
+        "id": "iceland-danish-crown",
+        "name": "Iceland under the Danish crown",
+        "nameZh": "冰岛·丹麦王权",
+        "fromYear": 1814,
+        "toYear": 1917,
+        "fromDate": "1814-01",
+        "datePrecision": "month",
+        "sourceIds": [
+          "iceland-government-kiel",
+          "iceland-union-act"
+        ],
+        "status": "crown-territory"
+      },
+      {
+        "recordId": -93006,
+        "id": "iceland-kingdom",
+        "name": "Kingdom of Iceland",
+        "nameZh": "冰岛王国",
+        "fromYear": 1918,
+        "toYear": 1943,
+        "fromDate": "1918-12-01",
+        "toDate": "1944-06-16",
+        "datePrecision": "day",
+        "sourceIds": [
+          "iceland-althingi",
+          "iceland-union-act",
+          "iceland-wartime-sovereignty"
+        ],
+        "status": "sovereign-kingdom"
+      },
+      {
+        "recordId": -93007,
+        "id": "iceland-republic",
+        "name": "Republic of Iceland",
+        "nameZh": "冰岛共和国",
+        "fromYear": 1944,
+        "toYear": 2024,
+        "fromDate": "1944-06-17",
+        "datePrecision": "day",
+        "sourceIds": [
+          "iceland-national-museum-republic",
+          "iceland-republic-notification"
+        ],
+        "status": "sovereign-republic"
+      }
+    ],
+    "sources": [
+      {
+        "id": "iceland-thingvellir",
+        "title": "History",
+        "institution": "Þingvellir National Park",
+        "url": "https://www.thingvellir.is/en/education/history/",
+        "locator": "History; Lögberg",
+        "supports": "Alþing established around 930; Commonwealth period ending with submission beginning in 1262."
+      },
+      {
+        "id": "iceland-althingi",
+        "title": "Althingi: parliamentary information booklet",
+        "institution": "Alþingi",
+        "url": "https://www.althingi.is/pdf/enska.pdf",
+        "locator": "Printed pp. 6–9: Historical background, The monarchy until 1800, Sovereign state, Republic",
+        "supports": "Old Covenant process 1262–1264; later Danish monarchy; parliamentary institutions; sovereignty on 1 December 1918; republic on 17 June 1944."
+      },
+      {
+        "id": "norway-government-union",
+        "title": "Velkommen statsborger i Norge — Historien",
+        "institution": "Government of Norway",
+        "url": "https://www.regjeringen.no/no/dokumenter/velkommen-statsborger-i-norge-ny-gavebok-til-utdeling-pa-statsborgerseremonier/id3089381/?ch=3",
+        "locator": "Historien: Danmarkstiden",
+        "supports": "Danish–Norwegian union dated 1380–1814; institutional change after 1536–1537. The overlay names the shared crown broadly, without implying unchanged constitutional arrangements."
+      },
+      {
+        "id": "iceland-government-kiel",
+        "title": "Nú er tíð að vakna: Kristján Friðrik og sjálfstæðisbarátta Noregs og Íslands",
+        "institution": "Iceland Ministry for Foreign Affairs",
+        "url": "https://www.stjornarradid.is/frettir/grein/2014-05-27-Nu-er-tid-ad-vakna-Kristjan-Fridrik-og-sjalfstaedisbaratta-Noregs-og-Islands/",
+        "locator": "Gunnar Pálsson, 27 May 2014; paragraphs on Kílarsamningurinn",
+        "supports": "January 1814 Treaty of Kiel: Iceland, Greenland and the Faroes remained connected to Denmark when Norway was ceded."
+      },
+      {
+        "id": "iceland-union-act",
+        "title": "Centennial of the Danish–Icelandic Union Act of 1918",
+        "institution": "Law Library of Congress",
+        "url": "https://blogs.loc.gov/law/2018/11/centennial-of-the-danish-icelandic-union-act-of-1918/",
+        "locator": "Elin Hofverberg, 29 November 2018; opening and What Made the 1918 Union Act Special?",
+        "supports": "1874 constitution, home rule effective in 1904, sovereign personal union effective 1 December 1918."
+      },
+      {
+        "id": "iceland-national-museum-republic",
+        "title": "Picturing a Nation: Capturing the Founding of the Republic in 1944",
+        "institution": "National Museum of Iceland",
+        "url": "https://www.thjodminjasafn.is/en/syningar/thjod-i-mynd-myndefni-fra-stofnun-lydveldis-1944",
+        "locator": "Exhibition introduction",
+        "supports": "Republic founded 17 June 1944."
+      },
+      {
+        "id": "iceland-republic-notification",
+        "title": "The Icelandic Minister (Thors) to the Secretary of State, 17 June 1944",
+        "institution": "Icelandic Government; published in US Department of State, FRUS 1944, vol. III, document 915",
+        "url": "https://history.state.gov/historicaldocuments/frus1944v03/d915",
+        "locator": "Official diplomatic notification, paragraphs 2–4",
+        "supports": "Republican constitution entered into force on 17 June 1944; election of Sveinn Björnsson."
+      },
+      {
+        "id": "iceland-wartime-sovereignty",
+        "title": "The Department of State to the British Embassy",
+        "institution": "US Department of State, FRUS 1944, vol. III, document 907",
+        "url": "https://history.state.gov/historicaldocuments/frus1944v03/d907",
+        "locator": "Aide-Mémoire, paragraphs 2 and 5",
+        "supports": "Independent state since 1918; the 1941 defence agreement explicitly respected Icelandic independence and sovereignty."
+      },
+      {
+        "id": "iceland-wartime-presence",
+        "title": "The Icelandic Ministry for Foreign Affairs to the American Legation in Iceland",
+        "institution": "Iceland Ministry for Foreign Affairs; published in US Department of State, FRUS 1943, vol. II, document 277",
+        "url": "https://history.state.gov/historicaldocuments/frus1943v02/d277",
+        "locator": "Aide-Mémoire, opening paragraphs",
+        "supports": "British occupation began 10 May 1940; 1941 defence arrangements provided for American forces to supplement and replace them. Military presence is distinct from sovereignty."
+      }
+    ]
+  }
 }

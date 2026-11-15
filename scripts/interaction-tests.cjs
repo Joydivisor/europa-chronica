@@ -18,7 +18,17 @@ async function ready(){for(let i=0;i<100;i++){if(w.atlasAPI.ready())return;await
 async function year(value){w.atlasAPI.setYear(value);await wait(45);}
 function names(){return w.atlasAPI.inspect().polities.map(p=>p.name).join(' ');}
 async function test(){
- await ready();assert.equal(w.atlasAPI.inspect().year,1200);assert($$('.realm').length>20);assert.equal($('#map-loading').hidden,true);assert($('.map-land').getAttribute('d').length>10000);assert.equal($$('.water-river').length,86);assert.equal($$('.water-lake').length,78);assert($('.terrain-layer image').getAttribute('href').endsWith('.webp'));
+ await ready();assert.equal(w.atlasAPI.inspect().year,1200);assert($$('.realm').length>20);assert.equal($('#map-loading').hidden,true);assert($('.map-land').getAttribute('d').length>100000);assert($$('.water-river').length>=249);assert($$('.water-lake').length>=260);assert($('.terrain-layer image').getAttribute('href').endsWith('.webp'));
+ // Preserve source subintervals when a previously merged border changes shape.
+ const history=JSON.parse(fs.readFileSync(path.join(root,'assets/maps/europe-antiquity.geojson'),'utf8'));
+ const varied=history.features.find(f=>f.geometryVariants?.length>1);
+ for(const segment of varied.geometryVariants){const selected=w.EUROPA_UTILS.selectFeatures([varied],segment.fromYear);assert.equal(selected.length,1);assert.equal(selected[0].geometry,segment.geometry);assert.deepEqual(selected[0].resolvedSourceRecords,segment.sourceRecords);}
+ const island=JSON.parse(fs.readFileSync(path.join(root,'assets/maps/iceland-corrections.geojson'),'utf8')).features;
+ assert.equal(w.EUROPA_UTILS.selectFeatures(island,929).length,0);
+ for(const interval of island){for(const y of [interval.properties.fromYear,interval.properties.toYear])assert.equal(w.EUROPA_UTILS.selectFeatures(island,y)[0].properties.id,interval.properties.id);}
+ assert.equal(w.EUROPA_UTILS.selectFeatures(island,1940)[0].properties.name,'Kingdom of Iceland');assert.equal(w.EUROPA_UTILS.selectFeatures(island,1944)[0].properties.name,'Republic of Iceland');
+ assert.equal($('#play').getAttribute('aria-pressed'),'false');
+ click('#play');assert.equal($('#play').getAttribute('aria-pressed'),'true');click('#play');assert.equal($('#play').getAttribute('aria-pressed'),'false');
  // Regression: capture native range/number values before pause redraws controls.
  input('#year-slider',1350);await wait(70);assert.equal(w.atlasAPI.inspect().year,1350);assert.equal($('#year-slider').value,'1350');assert.equal($('#year-input').value,'1350');
  input('#year-slider',1215,'change');await wait(60);assert.equal(w.atlasAPI.inspect().year,1215);
@@ -31,6 +41,9 @@ async function test(){
  await year(-27);click('#timeline-zoom');assert.equal($('#timeline-zoom').textContent,'全部年代');click('#timeline-zoom');assert.equal($('#year-slider').max,'2024');
  // In-app reading: actual narratives and internal navigation, no outbound-link placeholders.
  click('[data-era="high"]');await wait(60);click('[data-event="magna-carta"]');await wait(60);assert.equal(w.atlasAPI.inspect().year,1215);assert($('#detail-dialog').open);assert($('#detail-content').textContent.includes('兰尼米德'));assert.equal($$('#detail-content a').length,0);click('#detail-dialog .dialog-close');
+ // Place index, rich narratives, and two distinct 1945 surrender venues.
+ click('[data-nav="places"]');assert($$('.place-index-card').length>=10);click('[data-place-scope="all"]');assert($$('.place-index-card').length>=65);click('[data-city="versailles"]');assert($('#detail-content').textContent.includes('1871'));click('#detail-content [data-event="german-empire-1871"]');assert.equal($$('#detail-content .event-explanation').length,2);assert($('#detail-content').textContent.includes('镜厅'));$('#detail-dialog').close();
+ await year(1945);click('[data-nav="events"]');click('[data-event="ve-1945"]');await wait(60);assert.equal($$('.event-site').length,2);assert.equal($$('#detail-content .event-location-button').length,2);assert($('#detail-content').textContent.includes('兰斯'));const firstSite=w.d3.zoomTransform($('#map'));click('#detail-content [data-event-location="1"]');await wait(40);assert.equal(w.atlasAPI.inspect().eventLocation,1);assert.notEqual(w.d3.zoomTransform($('#map')).x,firstSite.x);assert($('.event-site.selected').textContent.includes('卡尔斯霍斯特'));click('[data-lang="en"]');assert.equal(w.atlasAPI.inspect().eventLocation,1);assert($('#detail-content').textContent.includes('Karlshorst'));click('[data-lang="zh-CN"]');$('#detail-dialog').close();await year(1946);assert.equal($$('.event-site').length,0);click('[data-nav="map"]');
  w.atlasAPI.locate({place:'rome'});await wait(50);assert($('#detail-content').textContent.includes('1871'));assert($('#detail-content').textContent.includes('意大利首都'));assert($$('#detail-content .chronicle-row').length>=4);click('[data-history-year="800"]');await wait(60);assert.equal(w.atlasAPI.inspect().year,800);assert.equal(w.atlasAPI.inspect().place,'rome');assert(!$('#detail-dialog').open);
  await year(1200);click('#legend-toggle');assert(!$('#legend').hidden);click('[data-realm="aggregate-holy-roman-empire"]');assert($('#detail-content').textContent.includes('金玺诏书'));assert($('#detail-content').textContent.includes('1495'));assert($('#detail-content .source-details'));assert.equal($$('#detail-content a').length,0);click('#detail-dialog .dialog-close');
  // Every city opens substantive chronology; each curated polity has sources and dated nodes.
@@ -73,6 +86,8 @@ async function test(){
  click('[data-lang="zh-TW"]');assert($('#detail-content').textContent.includes('羅馬'));assert($('#detail-content').textContent.includes('城市紀事'));assert($('.brand strong').textContent.includes('歐陸紀年'));assert.equal(w.atlasAPI.inspect().year,1200);
  click('[data-lang="en"]');$('#detail-dialog').close();click('#layers-button');noChinese('English layers');click('#close-layers');
  click('#sources-button');noChinese('English bibliography');$('#sources-dialog').close();
+ click('[data-nav="places"]');noChinese('English place index');click('[data-nav="events"]');
+ for(const entry of w.EUROPA.events.filter(e=>['marathon-490','monte-cassino-529','canossa-1077','kalmar-union-1397','nantes-edict-1598','westphalia-1648','german-empire-1871','ve-1945','helsinki-act-1975'].includes(e.id))){await year(entry.year);const button=$(`[data-event="${entry.id}"]`);assert(button,entry.id);button.click();noChinese(`English event ${entry.id}`);assert($('#detail-content .source-details'));assert($$('.event-site').length>0);$('#detail-dialog').close();}click('[data-nav="map"]');
  for(const c of w.EUROPA.cities){w.atlasAPI.locate({place:c.id});noChinese(`English city ${c.id}`);assert($('#detail-content .chronicle-row'));$('#detail-dialog').close();}
  await year(1200);for(const polygon of $$('.realm')){polygon.dispatchEvent(new w.MouseEvent('click',{bubbles:true}));noChinese(`English polity ${polygon.__data__.properties.name}`);assert($('#detail-dialog').open);$('#detail-dialog').close();}
  for(const p of w.EUROPA.people){w.atlasAPI.openPerson(p.id);await wait(35);noChinese(`English journey ${p.id}`);click(`[data-person-info="${p.id}"]`);noChinese(`English biography ${p.id}`);$('#detail-dialog').close();}click('[data-exit-journey]');click('[data-nav="map"]');

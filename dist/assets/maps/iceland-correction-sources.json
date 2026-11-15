@@ -1,0 +1,78 @@
+{
+  "overrideId": "iceland-sovereignty-v1",
+  "verifiedOn": "2026-11-15",
+  "sources": [
+    {
+      "id": "iceland-thingvellir",
+      "title": "History",
+      "institution": "Þingvellir National Park",
+      "url": "https://www.thingvellir.is/en/education/history/",
+      "locator": "History; Lögberg",
+      "supports": "Alþing established around 930; Commonwealth period ending with submission beginning in 1262."
+    },
+    {
+      "id": "iceland-althingi",
+      "title": "Althingi: parliamentary information booklet",
+      "institution": "Alþingi",
+      "url": "https://www.althingi.is/pdf/enska.pdf",
+      "locator": "Printed pp. 6–9: Historical background, The monarchy until 1800, Sovereign state, Republic",
+      "supports": "Old Covenant process 1262–1264; later Danish monarchy; parliamentary institutions; sovereignty on 1 December 1918; republic on 17 June 1944."
+    },
+    {
+      "id": "norway-government-union",
+      "title": "Velkommen statsborger i Norge — Historien",
+      "institution": "Government of Norway",
+      "url": "https://www.regjeringen.no/no/dokumenter/velkommen-statsborger-i-norge-ny-gavebok-til-utdeling-pa-statsborgerseremonier/id3089381/?ch=3",
+      "locator": "Historien: Danmarkstiden",
+      "supports": "Danish–Norwegian union dated 1380–1814; institutional change after 1536–1537. The overlay names the shared crown broadly, without implying unchanged constitutional arrangements."
+    },
+    {
+      "id": "iceland-government-kiel",
+      "title": "Nú er tíð að vakna: Kristján Friðrik og sjálfstæðisbarátta Noregs og Íslands",
+      "institution": "Iceland Ministry for Foreign Affairs",
+      "url": "https://www.stjornarradid.is/frettir/grein/2014-05-27-Nu-er-tid-ad-vakna-Kristjan-Fridrik-og-sjalfstaedisbaratta-Noregs-og-Islands/",
+      "locator": "Gunnar Pálsson, 27 May 2014; paragraphs on Kílarsamningurinn",
+      "supports": "January 1814 Treaty of Kiel: Iceland, Greenland and the Faroes remained connected to Denmark when Norway was ceded."
+    },
+    {
+      "id": "iceland-union-act",
+      "title": "Centennial of the Danish–Icelandic Union Act of 1918",
+      "institution": "Law Library of Congress",
+      "url": "https://blogs.loc.gov/law/2018/11/centennial-of-the-danish-icelandic-union-act-of-1918/",
+      "locator": "Elin Hofverberg, 29 November 2018; opening and What Made the 1918 Union Act Special?",
+      "supports": "1874 constitution, home rule effective in 1904, sovereign personal union effective 1 December 1918."
+    },
+    {
+      "id": "iceland-national-museum-republic",
+      "title": "Picturing a Nation: Capturing the Founding of the Republic in 1944",
+      "institution": "National Museum of Iceland",
+      "url": "https://www.thjodminjasafn.is/en/syningar/thjod-i-mynd-myndefni-fra-stofnun-lydveldis-1944",
+      "locator": "Exhibition introduction",
+      "supports": "Republic founded 17 June 1944."
+    },
+    {
+      "id": "iceland-republic-notification",
+      "title": "The Icelandic Minister (Thors) to the Secretary of State, 17 June 1944",
+      "institution": "Icelandic Government; published in US Department of State, FRUS 1944, vol. III, document 915",
+      "url": "https://history.state.gov/historicaldocuments/frus1944v03/d915",
+      "locator": "Official diplomatic notification, paragraphs 2–4",
+      "supports": "Republican constitution entered into force on 17 June 1944; election of Sveinn Björnsson."
+    },
+    {
+      "id": "iceland-wartime-sovereignty",
+      "title": "The Department of State to the British Embassy",
+      "institution": "US Department of State, FRUS 1944, vol. III, document 907",
+      "url": "https://history.state.gov/historicaldocuments/frus1944v03/d907",
+      "locator": "Aide-Mémoire, paragraphs 2 and 5",
+      "supports": "Independent state since 1918; the 1941 defence agreement explicitly respected Icelandic independence and sovereignty."
+    },
+    {
+      "id": "iceland-wartime-presence",
+      "title": "The Icelandic Ministry for Foreign Affairs to the American Legation in Iceland",
+      "institution": "Iceland Ministry for Foreign Affairs; published in US Department of State, FRUS 1943, vol. II, document 277",
+      "url": "https://history.state.gov/historicaldocuments/frus1943v02/d277",
+      "locator": "Aide-Mémoire, opening paragraphs",
+      "supports": "British occupation began 10 May 1940; 1941 defence arrangements provided for American forces to supplement and replace them. Military presence is distinct from sovereignty."
+    }
+  ]
+}

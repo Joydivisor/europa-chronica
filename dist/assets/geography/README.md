@@ -4,19 +4,21 @@
 
 ## 精细矢量底图
 
-来源：Natural Earth 1:50 million，公有领域。
+来源：Natural Earth 1:10 million，公有领域。
 
 - 官方条款：https://www.naturalearthdata.com/about/terms-of-use/
 - 数据仓库：https://github.com/nvkelso/natural-earth-vector
 - 取得日期：2026-11-15。
-- 海岸/陆地：`europe-land-50m.geojson`
-- 湖泊：`europe-lakes-50m.geojson`
-- 河流及湖心线：`europe-rivers-50m.geojson`
+- 海岸/陆地：`europe-land-10m.geojson`
+- 湖泊：`europe-lakes-10m.geojson`
+- 河流及湖心线：`europe-rivers-10m.geojson`
 - 完整源URL、文件哈希和要素数量：`manifest.json`。
 
-只裁切至经纬度边界 `west=-20, south=28, east=55, north=74`、精简属性并保留5位坐标小数，没有另行平滑或手绘自然地理。
+只裁切至经纬度边界 `west=-26, south=28, east=55, north=74`、精简属性并保留5位坐标小数，没有另行平滑或手绘自然地理。
 
 矢量为 WGS84 / EPSG:4326。GeoJSON标准环方向：外环逆时针、孔顺时针。D3球面geoPath的环方向相反，接入时应反转所有polygon rings（河流线不反转）。属性为 `id, name, nameZh, kind, rank, minZoom`；`rank`与`minZoom`沿用Natural Earth。湖泊与河流包含现代水体及水库，不能据此推断历史年代存在同样水面。
+
+扩展后的西部冰岛使用完整矢量海岸；高程阴影仍维持原有覆盖范围。
 
 ## 高程阴影
 
@@ -43,7 +45,9 @@
 
 ## 可重建脚本
 
-- `scripts/prepare-geography.py`：从缓存的官方50m源文件生成欧洲矢量。
+- `scripts/prepare-geography-detail.py`：从固定提交的官方 10m 源文件生成当前矢量。
+- 旧版 50m 资源与 `manifest-50m.json` 保留为对照。
+- [详细处理方法](DETAIL.md) 与 `detail-comparison.json` 给出来源哈希和细节比较。
 - `scripts/prepare-hillshade.py`：取得/复用缓存瓦片，保存逐瓦片元数据，生成阴影图。
 
 原始源文件与瓦片缓存位于工作区研究目录，未作为网页运行时依赖；网页图层均可直接本地加载。

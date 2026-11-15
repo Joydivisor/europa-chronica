@@ -1,0 +1,68 @@
+{
+  "land": {
+    "overviewFeatures": 185,
+    "detailFeatures": 9,
+    "overviewVertices": 8481,
+    "detailVertices": 79946,
+    "vertexRatio": 9.43,
+    "overviewBytes": 196046,
+    "detailBytes": 1583734,
+    "overviewBbox": [
+      -20,
+      28,
+      55,
+      74
+    ],
+    "detailBbox": [
+      -26,
+      28,
+      55,
+      74
+    ],
+    "comparisonNote": "Vertex change includes both native 1:10m detail and restored western Iceland extent."
+  },
+  "rivers": {
+    "overviewFeatures": 86,
+    "detailFeatures": 249,
+    "overviewVertices": 3369,
+    "detailVertices": 37186,
+    "vertexRatio": 11.04,
+    "overviewBytes": 81899,
+    "detailBytes": 775943,
+    "overviewBbox": [
+      -20,
+      28,
+      55,
+      74
+    ],
+    "detailBbox": [
+      -26,
+      28,
+      55,
+      74
+    ],
+    "comparisonNote": "Vertex change includes both native 1:10m detail and restored western Iceland extent."
+  },
+  "lakes": {
+    "overviewFeatures": 78,
+    "detailFeatures": 260,
+    "overviewVertices": 3699,
+    "detailVertices": 27747,
+    "vertexRatio": 7.5,
+    "overviewBytes": 86869,
+    "detailBytes": 592435,
+    "overviewBbox": [
+      -20,
+      28,
+      55,
+      74
+    ],
+    "detailBbox": [
+      -26,
+      28,
+      55,
+      74
+    ],
+    "comparisonNote": "Vertex change includes both native 1:10m detail and restored western Iceland extent."
+  }
+}

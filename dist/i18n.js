@@ -5,6 +5,7 @@
   const clone=value=>JSON.parse(JSON.stringify(value));
   const convert=OpenCC.Converter({from:'cn',to:'tw'});
   const english={
+    '阅读详解 ›':'Read the full account ›','地点':'Places','地点索引':'Place index','从城市、会址与战场走进历史。':'Enter history through cities, meeting places and battlefields.','本时代':'This era','全部地点':'All places','附近年代':'Nearby years','展开本时代编年史 →':'Explore this era’s chronicle →','历史背景':'Historical context','后续影响':'What followed','事件地点':'Event locations','关联地点':'Related places','同期史事':'Events around this time',
     '欧陆纪年 · Europa Chronica':'Europa Chronica · Historical Atlas','欧陆纪年首页':'Europa Chronica home','欧陆纪年':'Europa Chronica','欧洲历史地图':'Historical Atlas of Europe','古典至现代':'Antiquity to the present',
     '图层':'Layers','资料馆':'Library','分享当前地图':'Share the current map','分享':'Share','选择语言':'Choose language','简体中文':'Simplified Chinese','繁體中文':'Traditional Chinese',
     '可拖动和缩放的欧洲历史地图':'Interactive map of European history','搜索城市、人物、史事':'Search places, people, events','搜索城市、人物和事件':'Search cities, people and events',
@@ -17,7 +18,7 @@
     '在舆图中查看':'Locate on map','阅读此地沿革':'Read this place’s history','查看此年舆图':'View this year','城市沿革':'City histories','地理坐标':'Coordinates','城市纪事':'City chronicle','与此地有关的人物':'Lives connected to this place','纪事':'Entries','人物目录':'All people','故人同游':'Parallel journeys','多人的生平按年代排列；在同一年、同一地留下足迹时，标记为“同途”。':'Lives are arranged in chronological order. Places visited in the same year are marked “Shared”.','上一站':'Previous','下一站':'Next','暂停巡礼':'Pause journey','自动巡礼':'Play journey','同途':'Shared','阅读人物传记':'Read biography','人物传记':'Biography','生平纪事':'Life chronicle','沿着生平游历':'Follow this life',
     '欧陆资料馆':'Atlas library','历史与地图':'History & cartography','史事':'Events','政权专题':'Polity profiles','人物生平':'Lives','地形与水系':'Relief & waterways','书目与史料':'Bibliography','历史研究':'Historical research','用于相关历史条目的年代、事件背景与人物关系核对。':'Reference for dates, historical context and the people in these entries.',
     'Cliopatria v0.2.1 · Bennett、Mutch、Tollefson 等，Scientific Data，2025。按年代组织历史政权范围，配合中文名称、政权专题与事件索引。许可：CC BY 4.0。':'Cliopatria v0.2.1 · Bennett, Mutch, Tollefson et al., Scientific Data, 2025. Historical territories are organised by date, with polity profiles and an event index. Licensed under CC BY 4.0.',
-    'Natural Earth 1:50 million 海岸线、河流与湖泊。地形晕渲由 NOAA ETOPO1、USGS GMTED2010 高程生成，经 Mapzen / Tilezen Terrarium 分发。地理数据为公共领域作品。':'Coastlines, rivers and lakes: Natural Earth, 1:50 million. Relief shading uses NOAA ETOPO1 and USGS GMTED2010 elevation data, distributed through Mapzen / Tilezen Terrarium. Geographic data are in the public domain.',
+    'Natural Earth 1:10 million 海岸线、河流与湖泊。地形晕渲由 NOAA ETOPO1、USGS GMTED2010 高程生成，经 Mapzen / Tilezen Terrarium 分发。地理数据为公共领域作品。':'Coastlines, rivers and lakes: Natural Earth, 1:10 million. Relief shading uses NOAA ETOPO1 and USGS GMTED2010 elevation data, distributed through Mapzen / Tilezen Terrarium. Geographic data are in the public domain.',
     '交互灵感：DeanChensj / 江山时序。本项目独立设计与实现。':'Interaction inspiration: DeanChensj / Jiangshan Atlas. Independently designed and implemented.',
     'D3 · ISC；Noto Serif SC、Cinzel、Uncial Antiqua · SIL Open Font License。':'D3 · ISC. Noto Serif SC, Cinzel, Uncial Antiqua and Cormorant Garamond · SIL Open Font License.',
     '资料整理：2026年11月15日。':'Sources reviewed: 15 November 2026.',
@@ -38,6 +39,7 @@
     const key=s.trim();if(english[key])return s.replace(key,english[key]);
     s=s.replace(/公元前(\d+)年/g,'$1 BCE').replace(/公元(\d+)年/g,'$1 CE').replace(/(\d+)年/g,'$1');
     s=s.replace(/^(\d+) 则精选史事$/,'$1 entries').replace(/^(\d+) 处生平节点$/,'$1 moments').replace(/^(\d+) 则 · (.+)起$/,'$1 entries · from $2').replace(/^另 (\d+) 个政权/,'$1 more polities').replace(/^(.+)的政权$/,'Polities in $1');
+    s=s.replace(/^(\d+) 则史事$/,'$1 events').replace(/^(\d+) 处地点/,'$1 places');
     s=s.replace(/^距离约 (\d+) 公里$/,'About $1 km away').replace(/^本题 (\d+) 分 · 累计 (\d+) 分$/,'$1 points · Total $2').replace(/^(.+)，阅读此地历史$/,'$1 · Read the history of this place');
     s=s.replace(/^当前图层收录 (\d+) 个政权或政治体系。点击查看记录与来源。$/,'Explore $1 polities on this map. Select one to read its profile.');
     s=s.replace(/^(.+)的(.+)在地图中包含 (\d+) 片区域。拖动时间轴可逐年查看其疆域变化。$/,'$2 is shown in $3 geographic areas in $1. Move along the timeline to explore changes.');

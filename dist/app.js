@@ -17,15 +17,15 @@
   const era = y => D.eras.find(e => y >= e.start && y < e.end) || D.eras[0];
   const icon = name => `<svg aria-hidden="true"><use href="#i-${name}"/></svg>`;
   const params = new URLSearchParams(location.search);
-  const state = {reader:null,year: clampYear(params.get('year') || 1200),view:'map',eventId:'',cityId:'',persons:[],stop:0,playing:false,narration:false,filter:'全部',quiz:null,range:[-500,2024],legendOpen:false,mode:'political',opacity:65,layers:{...layerDefaults}};
-  let geo, land, modern, rivers, lakes, projection, path, planarPath, zoom, mapRoot, realmGroup, labelGroup, cityGroup, routeGroup, quizGroup, waterGroup, seaGroup, terrainImage, changingLanguage=false, currentFeatures = [], currentGroups = [], playingTimer, toastTimer, renderFrame, mapReady = false, width = 0, height = 0, dataRequest = 0;
+  const state = {reader:null,year: clampYear(params.get('year') || 1200),view:'map',eventId:'',cityId:'',eventLocation:0,placeScope:'era',persons:[],stop:0,playing:false,narration:false,filter:'全部',quiz:null,range:[-500,2024],legendOpen:false,mode:'political',opacity:65,layers:{...layerDefaults}};
+  let geo, land, modern, rivers, lakes, projection, path, planarPath, zoom, mapRoot, realmGroup, labelGroup, cityGroup, routeGroup, quizGroup, eventSiteGroup, waterGroup, seaGroup, terrainImage, changingLanguage=false, currentFeatures = [], currentGroups = [], playingTimer, toastTimer, renderFrame, mapReady = false, width = 0, height = 0, dataRequest = 0;
   const geometryCache = new Map(),polygonCache=new WeakMap();
   const colors = ['#c8b079','#8ca7b8','#b97f76','#97aa88','#ab91ad','#beb592','#86a9a2','#c9a883','#989bb6','#bc9b84'];
   const knownColors = [[/holy roman/i,'#d1b96f'],[/roman empire/i,'#b77873'],[/france/i,'#85a7bf'],[/england|angevin/i,'#b76d68'],[/byzant/i,'#b28bab'],[/ottoman/i,'#7fa58f'],[/almohad|umayyad|andalus/i,'#97ac8b'],[/hungary/i,'#a4b59e'],[/rus|novgorod/i,'#b9b58f'],[/castile/i,'#cdb579'],[/aragon/i,'#c3a25b'],[/sweden/i,'#86aab4'],[/denmark/i,'#ba827a']];
   const realmColor = name => { const hit = knownColors.find(([r]) => r.test(name)); if (hit) return hit[1]; let hash = 0; for (const c of name) hash = (hash * 31 + c.charCodeAt(0)) | 0; return colors[Math.abs(hash) % colors.length]; };
   const realmName = f => {const correction=(C.corrections?.rules||[]).find(r=>r.action==='rename'&&state.year>=r.fromYear&&state.year<=r.toYear&&r.exactOriginal.includes(f.properties.original));if(L.locale==='en'){const names={'serbia-pre-kingdom-title':'Grand Principality of Serbia','halych-union-label-1200':'Galicia–Volhynia · Galicia','volhynia-union-label-1200':'Galicia–Volhynia · Volhynia'};return names[correction?.id]||f.properties.name||f.properties.original;}return L.text(correction?.nameZh||C.names?.[f.properties.name]||f.properties.nameZh||f.properties.name||f.properties.original);};
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const getSources = refs => [...new Set(refs||[])].map(s=>typeof s==='string'?D.sources[s]:s).filter(Boolean);
+  const getSources = refs => [...new Map((refs||[]).map(s=>typeof s==='string'?D.sources[s]:s).filter(Boolean).map(s=>[s.url||s.title,s])).values()];
   const sourceLinks = refs => {const sources=getSources(refs);return sources.length ? `<details class="source-details"><summary>参考资料 · ${sources.length}</summary>${sources.map(s=>`<div class="source-entry"><b>${esc(s.title)}</b><p>${esc(s.institution||s.type||'历史资料')}${s.supports?' · '+esc(Array.isArray(s.supports)?s.supports.join('；'):s.supports):''}</p></div>`).join('')}</details>` : '';};
 
 
@@ -39,7 +39,7 @@
     history.replaceState(null, '', `${location.pathname}?${p}`);
   }
   function toggleSidebar(open) { $('#sidebar').classList.toggle('open', open); $('.atlas-shell').classList.toggle('panel-collapsed',!open && window.innerWidth>850); $('#mobile-panel-toggle').textContent=open?'收起历史':'阅读历史'; $('#mobile-panel-toggle').setAttribute('aria-expanded',String(open)); $('#panel-toggle').textContent=open?'›':'‹'; $('#panel-toggle').setAttribute('aria-expanded',String(open)); $('#panel-toggle').setAttribute('aria-label',open?'收起阅读面板':'展开阅读面板'); }
-  function activateView(view) { $('#detail-dialog').close(); state.reader=null;state.view = view;$('.main-nav').style.setProperty('--active-tab',['map','events','people'].indexOf(view)); $$('.nav-link').forEach(el => el.classList.toggle('active', el.dataset.nav === view)); renderSide();reveal($('#side-content'),'right'); }
+  function activateView(view) { $('#detail-dialog').close(); state.reader=null;state.view = view;$('.main-nav').style.setProperty('--active-tab',['map','events','places','people'].indexOf(view)); $$('.nav-link').forEach(el => el.classList.toggle('active', el.dataset.nav === view)); renderSide();reveal($('#side-content'),'right'); }
   function setYear(value, opts = {}) {
     const previous = state.year;
     state.year = clampYear(value);
@@ -47,8 +47,8 @@
     if (state.year < state.range[0] || state.year > state.range[1]) state.range = [-500,2024];
     renderTimeline();
     if (!opts.keepSide || era(previous).id !== era(state.year).id) renderSide();
-    else $$('.event-card').forEach(el=>el.classList.toggle('active',event(el.dataset.event)?.year===state.year));
-    if (mapReady) { d3.select('#map').classed('labels-hidden',!state.layers.labels||!!state.quiz);renderCities(); renderRoutes(); renderQuizMarkers();loadPeriod(); }
+    else {$$('.event-card').forEach(el=>el.classList.toggle('active',event(el.dataset.event)?.year===state.year));const readingYear=$('.overview-context strong');if(readingYear)readingYear.textContent=formatYear(state.year);}
+    if (mapReady) { d3.select('#map').classed('labels-hidden',!state.layers.labels||!!state.quiz);renderCities(); renderRoutes(); renderEventLocations();renderQuizMarkers();loadPeriod(); }
     updateURL();
   }
   function renderTimeline() {
@@ -65,42 +65,71 @@
     const ticks = min === -500 ? [-500,1,500,1000,1500,2024] : d3.ticks(min,max,7).filter(y => y !== 0);
     $('#timeline-ticks').innerHTML = ticks.map(y => `<span style="left:${100*(y-min)/(max-min)}%">${shortYear(y)}</span>`).join('');
     $('#event-dots').innerHTML = D.events.filter(x=>x.year>=min&&x.year<=max).map(x=>`<span style="left:${100*(x.year-min)/(max-min)}%"></span>`).join('');
-    $('#play').textContent = state.playing ? 'Ⅱ' : '▶'; $('#play').setAttribute('aria-label', state.playing?'暂停历史演进':'播放历史演进');
+    $('#play').textContent = state.playing ? 'Ⅱ' : '▶'; $('#play').setAttribute('aria-label', state.playing?'暂停历史演进':'播放历史演进');$('#play').setAttribute('aria-pressed',String(state.playing));
   }
-  function eventCard(e) { return `<button class="event-card ${e.id===state.eventId || (!state.eventId&&e.year===state.year)?'active':''}" data-event="${e.id}"><span class="event-date">${e.year<0?(L.locale==='en'?Math.abs(e.year)+' BCE':'前'+Math.abs(e.year)):e.year}</span><strong>${esc(e.title)}</strong><p>${esc(e.summary)}</p></button>`; }
+  function eventPlaceIds(e){return [...new Set([e.city,...(e.relatedPlaces||[])])].filter(id=>city(id));}
+  function eventsAtPlace(id){return D.events.filter(e=>eventPlaceIds(e).includes(id));}
+  function eventCard(e) {
+    const place=e.placeLabel||city(e.city)?.name||'',date=e.date&&![''+e.year,formatYear(e.year)].includes(e.date)?e.date:'';
+    return `<button class="event-card ${e.id===state.eventId || (!state.eventId&&e.year===state.year)?'active':''}" data-event="${e.id}"><span class="event-date">${e.year<0?(L.locale==='en'?Math.abs(e.year)+' BCE':'前'+Math.abs(e.year)):e.year}</span><strong>${esc(e.title)}</strong><span class="event-meta">${date?`<time>${esc(date)}</time><span aria-hidden="true"> · </span>`:''}${icon('pin')}${esc(place)}</span><p>${esc(e.summary)}</p></button>`;
+  }
+  function periodPlaces(period,all=false){
+    const entries=D.events.filter(e=>all||(e.year>=period.start&&e.year<period.end)),places=new Map();
+    for(const e of entries)for(const id of eventPlaceIds(e)){if(!places.has(id))places.set(id,{place:city(id),events:[]});places.get(id).events.push(e);}
+    return [...places.values()].sort((a,b)=>Math.min(...a.events.map(e=>Math.abs(e.year-state.year)))-Math.min(...b.events.map(e=>Math.abs(e.year-state.year)))||a.place.name.localeCompare(b.place.name,L.locale));
+  }
+  function placeCard(item){
+    const c=item.place,years=item.events.map(e=>e.year),from=Math.min(...years),to=Math.max(...years);
+    return `<button class="place-index-card" data-city="${esc(c.id)}"><span class="place-index-symbol">${icon(c.kind==='site'?'compass':'pin')}</span><span><strong>${esc(c.name)}</strong><small>${esc(c.latin)}</small><span class="place-years">${esc(formatYear(from))}${from===to?'':' — '+esc(formatYear(to))}</span></span><span class="place-count">${item.events.length}<small>史事</small></span></button>`;
+  }
+  function renderPlaceIndex(period){
+    const items=periodPlaces(period,state.placeScope==='all');
+    $('#side-content').innerHTML=`<span class="eyebrow">LOCA & MEMORIA</span><h1 class="era-title">地点索引</h1><p class="index-intro">从城市、会址与战场走进历史。</p><div class="filter-row"><button class="filter-chip ${state.placeScope==='era'?'active':''}" data-place-scope="era">本时代</button><button class="filter-chip ${state.placeScope==='all'?'active':''}" data-place-scope="all">全部地点</button></div><div class="index-caption"><span>${state.placeScope==='era'?esc(period.name):L.text('全部年代')}</span><span>${items.length} 处地点</span></div><div class="place-index-list">${items.map(placeCard).join('')}</div>`;
+  }
   function renderSide() {
     if (state.quiz) return renderQuiz();
     if (state.persons.length) return renderJourney();
     const e = era(state.year), root = $('#side-content');
+    if(state.view==='places')return renderPlaceIndex(e);
     if (state.view === 'people') {
       root.innerHTML = `<span class="eyebrow">VITAE & ITINERA</span><h1 class="era-title">追随故人</h1><p class="era-description">从一座城，到另一座城。沿着生平的片段，重新走进他们的时代。</p>${D.people.map(p=>`<button class="person-card" data-person="${p.id}"><span class="person-medallion">${p.initial}</span><span><strong>${p.name}</strong><small>${p.life}<br>${p.role}</small></span></button>`).join('')}<p class="side-note">搜索框可同时输入多个人名，用空格分隔。</p>`;
       return;
     }
     let events = D.events.filter(x => x.year >= e.start && x.year < e.end);
+    const eraEventCount=events.length,places=periodPlaces(e);
     const showAll = state.view === 'events';
-    if(!showAll)events=events.sort((a,b)=>Math.abs(a.year-state.year)-Math.abs(b.year-state.year)).slice(0,8).sort((a,b)=>a.year-b.year);
+    if(!showAll)events=events.sort((a,b)=>Math.abs(a.year-state.year)-Math.abs(b.year-state.year)).slice(0,12).sort((a,b)=>a.year-b.year);
     const reigning = (D.reigns||[]).filter(r=>state.year>=r.from&&state.year<=r.to);
     const reignHTML = reigning.length ? `<div class="reigning"><small>同时代人物</small>${reigning.map(r=>`<button data-person-info="${r.person}">${icon('crown')}<span>${person(r.person).name}<em>${r.title}</em></span><span>›</span></button>`).join('')}</div>` : '';
     if (showAll && state.filter !== '全部') events = events.filter(x=>x.category===state.filter);
-    root.innerHTML = `<span class="eyebrow">${e.en}</span><h1 class="era-title">${e.name}</h1><div class="era-dates">${e.dates}</div><p class="era-description">${e.description}</p>${reignHTML}${showAll?`<div class="filter-row">${['全部','政权','战争','文化','制度','社会'].map(f=>`<button class="filter-chip ${state.filter===f?'active':''}" data-filter="${f}">${f}</button>`).join('')}</div>`:''}<h2 class="section-label"><span>重要事件</span><small>${events.length} 则精选史事</small></h2><div class="chronicle-list">${events.map(eventCard).join('') || '<p class="empty-state">这个时期尚未收录此类事件。<br>可切换分类或拖动时间轴。</p>'}</div>`;
+    const nearbyPlaces=!showAll?`<div class="overview-places">${places.slice(0,6).map(item=>`<button data-city="${esc(item.place.id)}">${icon('pin')}${esc(item.place.name)}</button>`).join('')}</div>`:'';
+    root.innerHTML = `<span class="eyebrow">${e.en}</span><h1 class="era-title">${e.name}</h1><div class="era-dates">${e.dates}</div><div class="overview-context"><strong>${formatYear(state.year)}</strong><span>${eraEventCount} 则史事</span><button data-nav="places">${places.length} 处地点 ›</button></div><p class="era-description">${e.description}</p>${reignHTML}${nearbyPlaces}${showAll?`<div class="filter-row">${['全部','政权','战争','文化','制度','社会'].map(f=>`<button class="filter-chip ${state.filter===f?'active':''}" data-filter="${f}">${f}</button>`).join('')}</div>`:''}<h2 class="section-label"><span>${showAll?'重要事件':'附近年代'}</span><small>${showAll?`${events.length} 则精选史事`:`${shortYear(events[0]?.year||state.year)} — ${shortYear(events.at(-1)?.year||state.year)}`}</small></h2><div class="chronicle-list">${events.map(eventCard).join('') || '<p class="empty-state">这个时期尚未收录此类事件。<br>可切换分类或拖动时间轴。</p>'}</div>${!showAll?'<button class="chronicle-more secondary-button" data-nav="events">展开本时代编年史 →</button>':''}`;
   }
   function openDialog(id, html) { pause(); const el=$(id),content=$(id==='#detail-dialog'?'#detail-content':'#sources-content');content.innerHTML=html;if(id==='#detail-dialog'){toggleSidebar(true);if(!el.open)el.show();}else if(!el.open)el.showModal();content.scrollTop=0;reveal(content,id==='#detail-dialog'?'right':'up'); }
+  function prose(value){return String(value||'').split(/\n\s*\n/).filter(Boolean).map(p=>`<p class="detail-body">${esc(p)}</p>`).join('');}
+  function eventLocationHTML(e){
+    const locations=e.eventLocations||[];
+    if(!locations.length&&!e.locationNote)return '';
+    return `<section class="event-geography"><h3 class="section-label">事件地点</h3>${locations.map((p,i)=>`<button class="event-location-button ${i===state.eventLocation?'active':''}" data-event-location="${i}" data-event-origin="${esc(e.id)}">${icon('pin')}<span><strong>${esc(p.name)}</strong><small>${esc(p.precision||'')}${p.precision?' · ':''}${Math.abs(p.coord[0]).toFixed(3)}°${p.coord[0]<0?'W':'E'}, ${Math.abs(p.coord[1]).toFixed(3)}°${p.coord[1]<0?'S':'N'}</small></span><span aria-hidden="true">↗</span></button>`).join('')}${e.locationNote?`<p class="location-note">${esc(e.locationNote)}</p>`:''}</section>`;
+  }
   function openEvent(id) {
     const e = event(id); if (!e) return;state.reader={type:'event',id};
-    state.quiz = null; state.persons = []; state.eventId = id; state.cityId = e.city;
-    setYear(e.year,{preserveSelection:true}); focusCity(e.city,1.6);
-    openDialog('#detail-dialog', `<div class="detail-kicker">ANNALS · ${esc(e.category)}</div><h2 class="detail-title">${esc(e.title)}</h2><div class="detail-subtitle">${esc(e.date||formatYear(e.year))} · ${esc(city(e.city)?.name)}</div><p class="detail-body">${esc(e.body)}</p><div class="action-row"><button class="primary-button" data-locate="${e.city}">在舆图中查看</button><button class="secondary-button" data-city="${e.city}">阅读此地沿革</button></div>${sourceLinks(e.sources)}`);
+    state.quiz = null; state.persons = []; state.eventId = id; state.cityId = e.city;if(!changingLanguage)state.eventLocation=0;
+    setYear(e.year,{preserveSelection:true});if(e.eventLocations?.length)focusEventLocation(e.id,state.eventLocation);else focusCity(e.city,1.6);
+    const related=D.events.filter(item=>item.id!==id&&!item.id.startsWith('city-')&&Math.abs(item.year-e.year)<=50).sort((a,b)=>Math.abs(a.year-e.year)-Math.abs(b.year-e.year)).slice(0,3).sort((a,b)=>a.year-b.year);
+    const places=eventPlaceIds(e),refs=[...e.sources,...(e.eventLocations||[]).flatMap(p=>p.sourceIds||[])];
+    openDialog('#detail-dialog', `<div class="detail-kicker">ANNALS · ${esc(e.category)}</div><h2 class="detail-title">${esc(e.title)}</h2><div class="detail-subtitle">${esc(e.date||formatYear(e.year))} · ${esc(e.placeLabel||city(e.city)?.name)}</div>${prose(e.body)}${e.context?`<section class="event-explanation"><h3 class="section-label">历史背景</h3>${prose(e.context)}</section>`:''}${e.outcome?`<section class="event-explanation"><h3 class="section-label">后续影响</h3>${prose(e.outcome)}</section>`:''}${eventLocationHTML(e)}<div class="action-row"><button class="primary-button" ${e.eventLocations?.length?`data-event-location="${state.eventLocation}" data-event-origin="${esc(e.id)}"`:`data-locate="${e.city}"`}>在舆图中查看</button><button class="secondary-button" data-city="${e.city}">阅读此地沿革</button></div>${places.length>1?`<h3 class="section-label">关联地点</h3><div class="related-places">${places.map(id=>`<button data-city="${esc(id)}">${esc(city(id).name)}</button>`).join('')}</div>`:''}${sourceLinks(refs)}${related.length?`<h3 class="section-label">同期史事</h3><div class="related-events">${related.map(eventCard).join('')}</div>`:''}`);
   }
   function chronicleRows(items, cityId) {
-    return items.map(m=>`<article class="chronicle-row"><b>${esc(m.date||m.dateLabel||formatYear(m.year))}</b><div><strong>${esc(m.title)}</strong><p>${esc(m.text)}</p>${m.polity?`<em>${esc(m.polity)}</em>`:''}<button class="text-button" data-history-year="${m.year}" data-history-event="${D.events.find(e=>e.year===m.year&&(cityId?e.city===cityId:e.title===m.title))?.id||''}" ${cityId?`data-history-city="${cityId}"`:''}>查看此年舆图 ›</button></div></article>`).join('');
+    return items.map(m=>`<article class="chronicle-row"><b>${esc(m.date||m.dateLabel||formatYear(m.year))}</b><div><strong>${esc(m.title)}</strong><p>${esc(m.text)}</p>${m.polity?`<em>${esc(m.polity)}</em>`:''}${m.eventId&&!m.eventId.startsWith('city-')?`<button class="text-button" data-event="${esc(m.eventId)}">阅读详解 ›</button>`:''}<button class="text-button" data-history-year="${m.year}" data-history-event="${m.eventId||D.events.find(e=>e.year===m.year&&(cityId?e.city===cityId:e.title===m.title))?.id||''}" ${cityId?`data-history-city="${cityId}"`:''}>查看此年舆图 ›</button></div></article>`).join('');
   }
   function openCity(id) {
     const c=city(id);if(!c)return;if(state.quiz)exitQuiz();state.reader={type:'city',id};
-    state.cityId=id;state.eventId='';updateURL();renderCities();focusCity(id,1.65);
-    const profile=C.cities.find(p=>p.id===id), events=D.events.filter(e=>e.city===id), stops=D.people.flatMap(p=>p.stops.filter(s=>s.city===id).map(s=>({...s,person:p})));
-    const records=[...events.map(e=>({year:e.year,date:e.date,title:e.title,text:e.body})),...stops.filter(s=>!events.some(e=>e.year===s.year&&e.title.includes(s.person.name))).map(s=>({year:s.year,title:`${s.person.name} · ${s.title}`,text:s.text}))].sort((a,b)=>a.year-b.year);
-    const milestones=profile?.milestones||records, refs=profile?.sources||[...events.flatMap(e=>e.sources),...stops.flatMap(s=>s.person.sources)];
-    openDialog('#detail-dialog',`<div class="detail-kicker">LOCUS & MEMORIA · 城市沿革</div><h2 class="detail-title">${esc(c.name)}</h2><div class="detail-subtitle">${esc(c.latin)}${c.modern?' · 今 '+esc(c.modern):''}</div>${profile?`<p class="detail-body">${esc(profile.overview)}</p>`:''}<dl class="profile-facts"><dt>地理坐标</dt><dd>${Math.abs(c.coord[0]).toFixed(2)}°${c.coord[0]<0?'W':'E'} · ${Math.abs(c.coord[1]).toFixed(2)}°${c.coord[1]<0?'S':'N'}</dd><dt>纪事</dt><dd>${milestones.length} 则 · ${formatYear(milestones[0]?.year||c.since)}起</dd></dl><h3 class="section-label">城市纪事</h3>${chronicleRows(milestones,id)}${stops.length?`<h3 class="section-label">与此地有关的人物</h3><div class="related-places">${[...new Set(stops.map(s=>s.person.id))].map(id=>`<button data-person="${id}">${esc(person(id).name)}</button>`).join('')}</div>`:''}${sourceLinks(refs)}`);
+    state.cityId=id;state.eventId='';if(!changingLanguage&&state.year<c.since)setYear(c.since,{preserveSelection:true});updateURL();renderCities();renderEventLocations();focusCity(id,1.65);
+    const profile=C.cities.find(p=>p.id===id), events=eventsAtPlace(id), stops=D.people.flatMap(p=>p.stops.filter(s=>s.city===id).map(s=>({...s,person:p})));
+    const records=[...events.map(e=>({eventId:e.id,year:e.year,date:e.date,title:e.title,text:e.body})),...stops.filter(s=>!events.some(e=>e.year===s.year&&e.title.includes(s.person.name))).map(s=>({year:s.year,title:`${s.person.name} · ${s.title}`,text:s.text}))].sort((a,b)=>a.year-b.year);
+    const milestones=[...records,...(profile?.milestones||[]).filter(m=>!records.some(r=>r.year===m.year))].sort((a,b)=>a.year-b.year), refs=[...(profile?.sources||[]),...events.flatMap(e=>e.sources),...stops.flatMap(s=>s.person.sources),...(c.coordSources||[])];
+    openDialog('#detail-dialog',`<div class="detail-kicker">LOCUS & MEMORIA · 城市沿革</div><h2 class="detail-title">${esc(c.name)}</h2><div class="detail-subtitle">${esc(c.latin)}${c.modern?' · 今 '+esc(c.modern):''}</div>${profile?.overview||c.overview?`<p class="detail-body">${esc(profile?.overview||c.overview)}</p>`:''}<dl class="profile-facts"><dt>地理坐标</dt><dd>${Math.abs(c.coord[0]).toFixed(3)}°${c.coord[0]<0?'W':'E'} · ${Math.abs(c.coord[1]).toFixed(3)}°${c.coord[1]<0?'S':'N'}</dd><dt>纪事</dt><dd>${milestones.length} 则 · ${formatYear(milestones[0]?.year||c.since)}起</dd></dl>${c.locationNote?`<p class="location-note">${esc(c.locationNote)}</p>`:''}<h3 class="section-label">城市纪事</h3>${chronicleRows(milestones,id)}${stops.length?`<h3 class="section-label">与此地有关的人物</h3><div class="related-places">${[...new Set(stops.map(s=>s.person.id))].map(id=>`<button data-person="${id}">${esc(person(id).name)}</button>`).join('')}</div>`:''}${sourceLinks(refs)}`);
   }
   function journeyStops() { return state.persons.flatMap(id => { const p=person(id); return p ? p.stops.map((s,i)=>({...s,person:p,personStop:i})) : []; }).sort((a,b)=>a.year-b.year || state.persons.indexOf(a.person.id)-state.persons.indexOf(b.person.id) || a.personStop-b.personStop); }
   function openPerson(ids, stop = 0) {
@@ -112,18 +141,18 @@
   }
   function renderJourney() {
     const people = state.persons.map(person), stops = journeyStops(), single = people.length === 1, first = people[0];
-    $('#side-content').innerHTML = `<div class="route-heading"><button class="back-button" data-exit-journey>← 人物目录</button><span class="count-badge">${stops.length} 处生平节点</span></div><span class="eyebrow">VITAE & ITINERA</span><h1 class="era-title">${single?first.name:'故人同游'}</h1><div class="era-dates">${single?first.life:'CHRONICLES IN PARALLEL'}</div>${!single?people.map(p=>`<span class="multi-person-label">${p.name}</span>`).join(''):''}<p class="era-description">${single?first.bio:'多人的生平按年代排列；在同一年、同一地留下足迹时，标记为“同途”。'}</p><div class="route-step-controls"><button class="secondary-button" data-step="-1" ${state.stop===0?'disabled':''}>‹ 上一站</button><button class="primary-button" data-toggle-play>${state.playing?'暂停巡礼':'自动巡礼'}</button><button class="secondary-button" data-step="1" ${state.stop===stops.length-1?'disabled':''}>下一站 ›</button></div><div>${stops.map((s,i)=>{const overlap=stops.filter(v=>v.year===s.year&&v.city===s.city&&v.person.id!==s.person.id).length;return `<button class="route-stop ${state.stop===i?'active':''}" data-stop="${i}" data-number="${i+1}"><small>${formatYear(s.year)} · ${city(s.city).name}${overlap?' · 同途':''}</small><strong>${!single?s.person.name+' · ':''}${s.title}</strong><p>${s.text}</p></button>`;}).join('')}</div><button class="text-button" data-person-info="${first.id}">${icon('book')} 阅读人物传记</button>`;
+    $('#side-content').innerHTML = `<div class="route-heading"><button class="back-button" data-exit-journey>← 人物目录</button><span class="count-badge">${stops.length} 处生平节点</span></div><span class="eyebrow">VITAE & ITINERA</span><h1 class="era-title">${single?first.name:'故人同游'}</h1><div class="era-dates">${single?first.life:'CHRONICLES IN PARALLEL'}</div>${!single?people.map(p=>`<span class="multi-person-label">${p.name}</span>`).join(''):''}<p class="era-description">${single?first.bio:'多人的生平按年代排列；在同一年、同一地留下足迹时，标记为“同途”。'}</p><div class="route-step-controls"><button class="secondary-button" data-step="-1" ${state.stop===0?'disabled':''}>‹ 上一站</button><button class="primary-button" data-toggle-play>${state.playing?'暂停巡礼':'自动巡礼'}</button><button class="secondary-button" data-step="1" ${state.stop===stops.length-1?'disabled':''}>下一站 ›</button></div><div>${stops.map((s,i)=>{const overlap=stops.filter(v=>v.year===s.year&&v.city===s.city&&v.person.id!==s.person.id).length;return `<button class="route-stop ${state.stop===i?'active':''}" data-stop="${i}" data-number="${i+1}"><small>${formatYear(s.year)} · ${s.eventLocations?.[0]?.name||city(s.city).name}${overlap?' · 同途':''}</small><strong>${!single?s.person.name+' · ':''}${s.title}</strong><p>${s.text}</p></button>`;}).join('')}</div><button class="text-button" data-person-info="${first.id}">${icon('book')} 阅读人物传记</button>`;
   }
-  function goStop(index) { const stops=journeyStops(); if (!stops.length) return; state.stop=Math.max(0,Math.min(index,stops.length-1)); const s=stops[state.stop]; state.cityId=s.city; setYear(s.year,{preserveSelection:true}); focusCity(s.city,1.75); }
+  function goStop(index) { const stops=journeyStops(); if (!stops.length) return; state.stop=Math.max(0,Math.min(index,stops.length-1)); const s=stops[state.stop]; state.cityId=s.city; setYear(s.year,{preserveSelection:true}); focusCoordinate(stopCoord(s),1.75); }
   function openPersonInfo(id) {
     const p=person(id);if(!p)return;state.reader={type:'person',id};
-    openDialog('#detail-dialog',`<div class="detail-kicker">VITA · 人物传记</div><h2 class="detail-title">${esc(p.name)}</h2><div class="detail-subtitle">${esc(p.en)} · ${esc(p.life)}</div><p class="detail-body">${esc(p.bio)}</p><p class="detail-body">${esc(p.relations)}</p><h3 class="section-label">生平纪事</h3>${p.stops.map(s=>`<article class="chronicle-row"><b>${formatYear(s.year)}</b><div><strong>${esc(s.title)}</strong><p>${esc(s.text)}</p><button class="text-button" data-city="${s.city}">${esc(city(s.city).name)} ›</button></div></article>`).join('')}<button class="primary-button" data-person="${p.id}">沿着生平游历</button>${sourceLinks(p.sources)}`);
+    openDialog('#detail-dialog',`<div class="detail-kicker">VITA · 人物传记</div><h2 class="detail-title">${esc(p.name)}</h2><div class="detail-subtitle">${esc(p.en)} · ${esc(p.life)}</div><p class="detail-body">${esc(p.bio)}</p><p class="detail-body">${esc(p.relations)}</p><h3 class="section-label">生平纪事</h3>${p.stops.map(s=>`<article class="chronicle-row"><b>${formatYear(s.year)}</b><div><strong>${esc(s.title)}</strong><p>${esc(s.text)}</p>${s.locationNote?`<p class="location-note">${esc(s.locationNote)}</p>`:''}<button class="text-button" data-city="${s.city}">${esc(city(s.city).name)} ›</button></div></article>`).join('')}<button class="primary-button" data-person="${p.id}">沿着生平游历</button>${sourceLinks(p.sources)}`);
   }
   function leaveJourney() { pause(); state.persons=[];state.cityId='';state.stop=0;renderSide();renderRoutes();renderCities();updateURL(); }
 
   function openSources() {
     const refs=[...Object.values(D.sources),...C.cities.flatMap(c=>c.sources||[]),...C.polities.flatMap(p=>p.sources||[])],sources=[...new Map(refs.map(s=>[s.url,s])).values()];
-    openDialog('#sources-dialog',`<div class="detail-kicker">BIBLIOTHECA · 欧陆资料馆</div><h2 class="detail-title">历史与地图</h2><div class="detail-subtitle">公元前500年 — 2024年</div><div class="library-stats"><span><b>${D.events.length}</b> 史事</span><span><b>${C.cities.length}</b> 城市沿革</span><span><b>${C.polities.length}</b> 政权专题</span><span><b>${D.people.length}</b> 人物生平</span></div><h3 class="section-label">地图图层</h3><div class="profile-section"><h3>历史疆域</h3><p>Cliopatria v0.2.1 · Bennett、Mutch、Tollefson 等，Scientific Data，2025。按年代组织历史政权范围，配合中文名称、政权专题与事件索引。许可：CC BY 4.0。</p></div><div class="profile-section"><h3>地形与水系</h3><p>Natural Earth 1:50 million 海岸线、河流与湖泊。地形晕渲由 NOAA ETOPO1、USGS GMTED2010 高程生成，经 Mapzen / Tilezen Terrarium 分发。地理数据为公共领域作品。</p></div><h3 class="section-label">书目与史料</h3>${sources.map(s=>`<details class="source-item"><summary>${esc(s.title)}</summary><p>${esc(s.institution||s.type||'历史研究')}</p>${s.supports?`<p>${esc(Array.isArray(s.supports)?s.supports.join('；'):s.supports)}</p>`:`<p>用于相关历史条目的年代、事件背景与人物关系核对。</p>`}<p class="source-address">${esc(s.url)}</p></details>`).join('')}<p class="attribution-note">交互灵感：DeanChensj / 江山时序。本项目独立设计与实现。<br>D3 · ISC；Noto Serif SC、Cinzel、Uncial Antiqua · SIL Open Font License。<br>资料整理：2026年11月15日。</p>`);
+    openDialog('#sources-dialog',`<div class="detail-kicker">BIBLIOTHECA · 欧陆资料馆</div><h2 class="detail-title">历史与地图</h2><div class="detail-subtitle">公元前500年 — 2024年</div><div class="library-stats"><span><b>${D.events.length}</b> 史事</span><span><b>${D.cities.length}</b> 地点</span><span><b>${C.polities.length}</b> 政权专题</span><span><b>${D.people.length}</b> 人物生平</span></div><h3 class="section-label">地图图层</h3><div class="profile-section"><h3>历史疆域</h3><p>Cliopatria v0.2.1 · Bennett、Mutch、Tollefson 等，Scientific Data，2025。按年代组织历史政权范围，配合中文名称、政权专题与事件索引。许可：CC BY 4.0。</p></div><div class="profile-section"><h3>地形与水系</h3><p>Natural Earth 1:10 million 海岸线、河流与湖泊。地形晕渲由 NOAA ETOPO1、USGS GMTED2010 高程生成，经 Mapzen / Tilezen Terrarium 分发。地理数据为公共领域作品。</p></div><h3 class="section-label">书目与史料</h3>${sources.map(s=>`<details class="source-item"><summary>${esc(s.title)}</summary><p>${esc(s.institution||s.type||'历史研究')}</p>${s.supports?`<p>${esc(Array.isArray(s.supports)?s.supports.join('；'):s.supports)}</p>`:`<p>用于相关历史条目的年代、事件背景与人物关系核对。</p>`}<p class="source-address">${esc(s.url)}</p></details>`).join('')}<p class="attribution-note">交互灵感：DeanChensj / 江山时序。本项目独立设计与实现。<br>D3 · ISC；Noto Serif SC、Cinzel、Uncial Antiqua · SIL Open Font License。<br>资料整理：2026年11月15日。</p>`);
   }
   async function share() {
     updateURL();
@@ -154,7 +183,7 @@
     if(next===undefined){pause();return;}setYear(next);const e=D.events.find(e=>e.year===next);speak(`${formatYear(next)}，${e?e.title+'。'+e.body:era(next).summary}`);
   }
   function play() {if(state.quiz)return;$('#detail-dialog').close();clearInterval(playingTimer);state.playing=true;renderTimeline();if(state.persons.length)renderJourney();playingTimer=setInterval(()=>step(1),Number($('#play-speed').value));}
-  function pause({redraw=true}={}) {state.playing=false;clearInterval(playingTimer);if('speechSynthesis'in window)speechSynthesis.cancel();if(redraw){renderTimeline();if(state.persons.length&&!state.quiz)renderJourney();}else{$('#play').textContent='▶';$('#play').setAttribute('aria-label','播放历史演进');}}
+  function pause({redraw=true}={}) {state.playing=false;clearInterval(playingTimer);if('speechSynthesis'in window)speechSynthesis.cancel();if(redraw){renderTimeline();if(state.persons.length&&!state.quiz)renderJourney();}else{$('#play').textContent='▶';$('#play').setAttribute('aria-label',L.text('播放历史演进'));$('#play').setAttribute('aria-pressed','false');}}
   function togglePlay() {state.playing?pause():play();}
 
   function startQuiz() {
@@ -195,7 +224,7 @@
     waterGroup.selectAll('.river-label').data((rivers?.features||[]).filter(f=>f.properties.nameZh&&f.properties.rank<=4)).join('text').attr('class','river-label').attr('x',d=>planarPath.centroid(d)[0]).attr('y',d=>planarPath.centroid(d)[1]).text(d=>L.locale==='en'?d.properties.name:L.text(d.properties.nameZh));
     mapRoot.append('path').datum(modern).attr('id','modern-borders').attr('d',path).attr('fill','none').attr('stroke','#786c61').attr('stroke-width',.7).attr('stroke-dasharray','3 3').attr('vector-effect','non-scaling-stroke').attr('opacity',.65).attr('pointer-events','none');
     seaGroup=mapRoot.append('g').attr('class','sea-layer').attr('clip-path','url(#water-label-clip)');renderSeaLabels();
-    labelGroup=mapRoot.append('g');routeGroup=mapRoot.append('g');cityGroup=mapRoot.append('g');quizGroup=mapRoot.append('g');
+    labelGroup=mapRoot.append('g');routeGroup=mapRoot.append('g');cityGroup=mapRoot.append('g');eventSiteGroup=mapRoot.append('g').attr('class','event-sites');quizGroup=mapRoot.append('g');
     zoom=d3.zoom().scaleExtent([.7,8]).extent([[0,0],[width,height]]).translateExtent([[-width,-height],[width*2,height*2]]).filter(e=>!e.ctrlKey&&!e.button&&e.type!=='dblclick').on('zoom',e=>{const level=e.transform.k>=1.6;mapRoot.attr('transform',e.transform);if(level!==state.cityDetail){state.cityDetail=level;renderCities();}rescaleMarkers(e.transform.k);updateScale(e.transform);});
     svg.call(zoom).on('dblclick.zoom',null).on('click.quiz',e=>{if(e.defaultPrevented||!state.quiz)return;const p=d3.pointer(e,svg.node()),v=d3.zoomTransform(svg.node()).invert(p),coord=projection.invert(v);if(coord&&Number.isFinite(coord[0])&&Number.isFinite(coord[1]))quizGuess(coord);}).on('dblclick.trace',e=>{if(state.quiz)return;const p=d3.pointer(e,svg.node()),v=d3.zoomTransform(svg.node()).invert(p),coord=projection.invert(v);const c=D.cities.filter(c=>c.since<=state.year).sort((a,b)=>d3.geoDistance(coord,a.coord)-d3.geoDistance(coord,b.coord))[0];if(c&&d3.geoDistance(coord,c.coord)*6371<180)openCity(c.id);});
     let transform=d3.zoomIdentity;
@@ -246,12 +275,13 @@
   function rescaleMarkers(k) {
     layoutSeaLabels(k);
     cityGroup?.selectAll('.city-marker').attr('transform',d=>`translate(${projection(d.coord)}) scale(${1/k})`);
-    routeGroup?.selectAll('.route-dot').attr('transform',d=>`translate(${projection(city(d.city).coord)}) scale(${1/k})`);
+    routeGroup?.selectAll('.route-dot').attr('transform',d=>`translate(${projection(stopCoord(d))}) scale(${1/k})`);
+    eventSiteGroup?.selectAll('.event-site').attr('transform',d=>`translate(${projection(d.coord)}) scale(${1/k})`);
     quizGroup?.selectAll('.quiz-marker').attr('transform',d=>`translate(${projection(d.coord)}) scale(${1/k})`);
     labelGroup?.selectAll('text').style('font-size',`${Math.min(18,13*Math.sqrt(k))/k}px`);
     waterGroup?.selectAll('.river-label').style('font-size',`${10/k}px`).style('display',state.layers.rivers&&state.layers.labels&&!state.quiz&&k>=1.35?null:'none');
     waterGroup?.selectAll('.water-river').style('display',d=>state.layers.rivers&&(k>=1.2||d.properties.rank<=5)?null:'none');
-    const occupied=[];
+    const occupied=state.layers.cities&&state.layers.labels&&!state.quiz?(event(state.eventId)?.eventLocations||[]).map(p=>{const point=projection(p.coord);return {x:point[0]*k+11,y:point[1]*k-13,w:p.name.length*(L.locale==='en'?7:11)};}):[];
     const markers=cityGroup?.selectAll('.city-marker').nodes()||[];
     markers.sort((a,b)=>Number(b.__data__.id===state.cityId)-Number(a.__data__.id===state.cityId));
     for(const node of markers){
@@ -269,11 +299,21 @@
     $('#realm-opacity').value=state.opacity;$('#opacity-value').value=`${state.opacity}%`;
     terrainImage?.style('display',state.layers.terrain?null:'none');waterGroup?.selectAll('.water-lake').style('display',state.layers.lakes?null:'none');
     d3.select('#modern-borders').style('display',state.layers.modern?null:'none');
-    renderTerritories();renderCities();renderRoutes();
+    renderTerritories();renderCities();renderRoutes();renderEventLocations();
     if(mapRoot)rescaleMarkers(d3.zoomTransform($('#map')).k);
   }
   function resetMap() {if(!mapReady||!zoom)return;d3.select('#map').interrupt().transition().duration(reducedMotion?0:450).call(zoom.transform,d3.zoomIdentity);}
   function focusCity(id,k=1.7) {const c=city(id);if(!c||!mapReady||changingLanguage)return;const p=projection(c.coord);d3.select('#map').interrupt().transition().duration(reducedMotion?0:650).call(zoom.transform,d3.zoomIdentity.translate(width*.54-k*p[0],height*.48-k*p[1]).scale(k));}
+  function focusCoordinate(coord,k=1.9){if(!coord||!mapReady||changingLanguage)return;const p=projection(coord);d3.select('#map').interrupt().transition().duration(reducedMotion?0:550).call(zoom.transform,d3.zoomIdentity.translate(width*.5-k*p[0],height*.49-k*p[1]).scale(k));}
+  function focusEventLocation(id,index){const selected=event(id),point=selected?.eventLocations?.[index];if(!point)return;state.eventLocation=index;focusCoordinate(point.coord);renderEventLocations();$$('[data-event-location]').forEach(b=>{if(b.dataset.eventOrigin===id)b.classList.toggle('active',Number(b.dataset.eventLocation)===index);});}
+  function renderEventLocations(){
+    if(!eventSiteGroup)return;const selected=event(state.eventId),locations=state.layers.cities&&!state.quiz?(selected?.eventLocations||[]):[];
+    const marks=eventSiteGroup.selectAll('.event-site').data(locations.map((p,index)=>({...p,index})),d=>d.index).join(enter=>{const g=enter.append('g').attr('class','event-site').attr('role','button').attr('tabindex',0);g.append('circle').attr('class','site-ring').attr('r',10);g.append('circle').attr('class','site-dot').attr('r',4);g.append('text').attr('x',11).attr('y',-13);g.append('title');return g;});
+    const activate=d=>{if(!$('#detail-dialog').open)openEvent(selected.id);focusEventLocation(selected.id,d.index);};
+    marks.classed('selected',d=>d.index===state.eventLocation).attr('aria-label',d=>`${d.name} · ${selected?.title||''}`).on('click',(e,d)=>{e.stopPropagation();activate(d);}).on('keydown',(e,d)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();activate(d);}});
+    marks.select('text').text(d=>d.name).style('display',state.layers.labels?null:'none');marks.select('title').text(d=>`${d.name} · ${selected?.date||''}`);rescaleMarkers(d3.zoomTransform($('#map')).k);
+  }
+  function stopCoord(stop){return stop.eventLocations?.[0]?.coord||city(stop.city).coord;}
   function renderCities() {
     if(!cityGroup)return;
     let visible=D.cities.filter(c=>c.since<=state.year && (d3.zoomTransform($('#map')).k>=1.6||c.important||c.id===state.cityId||D.events.some(e=>e.city===c.id&&Math.abs(e.year-state.year)<=35)));
@@ -284,7 +324,7 @@
   }
   function renderRoutes() {
     if(!routeGroup)return;routeGroup.selectAll('*').remove();if(!state.layers.routes||state.quiz)return;
-    const stops=journeyStops();state.persons.forEach((id,pi)=>{const p=person(id),coords=p.stops.map(s=>city(s.city).coord);routeGroup.append('path').datum({type:'LineString',coordinates:coords}).attr('d',planarPath).attr('class','route-line').style('stroke',pi===0?'#743e37':pi===1?'#547575':'#8f7841');});
+    const stops=journeyStops();state.persons.forEach((id,pi)=>{const p=person(id),coords=p.stops.map(stopCoord);routeGroup.append('path').datum({type:'LineString',coordinates:coords}).attr('d',planarPath).attr('class','route-line').style('stroke',pi===0?'#743e37':pi===1?'#547575':'#8f7841');});
     const unique=stops.filter((s,i)=>!stops.some((o,j)=>j>i&&o.city===s.city&&i!==state.stop)||i===state.stop);
     const g=routeGroup.selectAll('.route-dot').data(unique).join('g').attr('class',d=>'route-dot'+(stops.indexOf(d)===state.stop?' current':'')).attr('role','button').attr('tabindex',0).attr('aria-label',d=>`${d.person.name}，${formatYear(d.year)}，${d.title}`).on('click',(e,d)=>{e.stopPropagation();goStop(stops.indexOf(d));}).on('keydown',(e,d)=>{if(e.key==='Enter'){goStop(stops.indexOf(d));}});
     g.append('circle').attr('r',9);g.append('text').text(d=>stops.indexOf(d)+1);g.append('title').text(d=>`${formatYear(d.year)} ${d.person.name} · ${d.title}`);rescaleMarkers(d3.zoomTransform($('#map')).k);
@@ -294,7 +334,10 @@
   function selectFeatures(features,year) {
     const candidates=features.filter(f=>f.properties.fromYear<=year&&f.properties.toYear>=year).filter(f=>!(C.corrections?.rules||[]).some(r=>r.action==='hide'&&year>=r.fromYear&&year<=r.toYear&&r.exactOriginal.includes(f.properties.original)&&(!r.recordIds||r.recordIds.includes(f.properties.recordId)))).filter(f=>!(state.eventId==='constantinople-1453'&&year===1453&&f.properties.original==='Byzantine Empire'));
     const names=new Set(candidates.map(f=>f.properties.original));
-    return candidates.filter(f=>!parentNames(f.properties.memberOf).some(name=>{const unwrapped=name.replace(/^\(|\)$/g,'');return name!==f.properties.original&&(names.has(name)||(unwrapped!==f.properties.original&&names.has(unwrapped)));}));
+    return candidates.filter(f=>!parentNames(f.properties.memberOf).some(name=>{const unwrapped=name.replace(/^\(|\)$/g,'');return name!==f.properties.original&&(names.has(name)||(unwrapped!==f.properties.original&&names.has(unwrapped)));})).map(f=>{
+      const variant=f.geometryVariants?.find(v=>v.fromYear<=year&&year<=v.toYear);
+      return variant?{...f,geometry:variant.geometry,resolvedSourceRecords:variant.sourceRecords}:f;
+    });
   }
   function renderTerritories() {
     if(!realmGroup||!geo)return;
@@ -336,7 +379,7 @@
   function openRealm(id) {
     const g=currentGroups.find(g=>g.id===id);if(!g)return;state.reader={type:'realm',id};
     const profile=polityProfile(g),places=D.cities.filter(c=>c.since<=state.year&&containsPoint(g.features,c.coord));
-    const history=profile?.milestones||D.events.filter(e=>places.some(c=>c.id===e.city)&&Math.abs(e.year-state.year)<100).map(e=>({year:e.year,date:e.date,title:e.title,text:e.body}));
+    const history=profile?.milestones||D.events.filter(e=>places.some(c=>c.id===e.city)&&Math.abs(e.year-state.year)<100).map(e=>({eventId:e.id,year:e.year,date:e.date,title:e.title,text:e.body}));
     const center=profile?.center,centerText=typeof center==='string'?center:Array.isArray(center)?center.join('、'):center?.text||center?.name||'';
     openDialog('#detail-dialog',`<div class="detail-kicker">REGNUM · 政权档案</div><h2 class="detail-title">${esc(g.name)}</h2><div class="detail-subtitle">${esc(g.english)} · ${formatYear(state.year)}</div>${profile&&profile.name!==g.name?`<span class="profile-topic">专题 · ${esc(profile.name)}</span>`:''}${profile?`<p class="detail-body">${esc(profile.overview)}</p>`:''}<dl class="profile-facts">${profile?.periodLabel?`<dt>历史时期</dt><dd>${esc(profile.periodLabel)}</dd>`:''}${centerText?`<dt>统治中心</dt><dd>${esc(centerText)}</dd>`:''}<dt>地图年份</dt><dd>${formatYear(state.year)}</dd>${places.length?`<dt>图内地点</dt><dd>${places.map(c=>esc(c.name)).join('、')}</dd>`:''}</dl><button class="secondary-button" data-focus-realm="${esc(id)}">聚焦疆域</button>${(profile?.institutions||[]).map(i=>`<section class="profile-section"><h3>${esc(i.title)}</h3><p>${esc(i.text)}</p></section>`).join('')}${history.length?`<h3 class="section-label">历史纪事</h3>${chronicleRows(history)}`:''}${places.length?`<h3 class="section-label">走进城市</h3><div class="related-places">${places.map(c=>`<button data-city="${c.id}">${esc(c.name)}</button>`).join('')}</div>`:''}${!profile?`<section class="profile-section"><h3>疆域沿革</h3><p>${formatYear(state.year)}的${esc(g.name)}在地图中包含 ${g.features.length} 片区域。拖动时间轴可逐年查看其疆域变化。</p></section><h3 class="section-label">同时代史事</h3>${D.events.filter(e=>Math.abs(e.year-state.year)<=150).slice(0,3).map(eventCard).join('')}`:''}${sourceLinks(profile?.sources||['maps'])}`);
   }
@@ -349,14 +392,14 @@
   }
   async function loadPeriod() {
     const p=choosePeriod(state.year);if(!p)return;const ticket=++dataRequest;
-    try {if(!geometryCache.has(p.file)){ $('#snapshot-note').textContent='正在读取这一时代的历史疆域…';geometryCache.set(p.file,fetchJSON(`assets/maps/europe-${p.file}.geojson`).catch(e=>{geometryCache.delete(p.file);throw e;})); }const data=await geometryCache.get(p.file);if(ticket!==dataRequest)return;geo=data;renderTerritories();renderCities();renderRoutes();renderQuizMarkers();$('#map-loading').hidden=true;}
+    try {if(!geometryCache.has(p.file)){ $('#snapshot-note').textContent='正在读取这一时代的历史疆域…';geometryCache.set(p.file,fetchJSON(`assets/maps/europe-${p.file}.geojson`).catch(e=>{geometryCache.delete(p.file);throw e;})); }const data=await geometryCache.get(p.file);if(ticket!==dataRequest)return;geo=data;renderTerritories();renderCities();renderRoutes();renderEventLocations();renderQuizMarkers();$('#map-loading').hidden=true;}
     catch(error){console.error(error);if(ticket!==dataRequest)return;geo={type:'FeatureCollection',features:[]};renderTerritories();$('#snapshot-note').textContent='疆域数据暂未加载；可继续浏览史事，点击下方重试';$('#legend').hidden=false;$('#legend').innerHTML='<button class="legend-item" data-retry-map>历史疆域加载失败 · 点击重试</button>';$('#map-loading').hidden=true;toast('疆域加载未成功，底图与史事仍可使用。');}
   }
   async function initializeMap() {
     try {
-      const results=await Promise.all([fetchJSON('assets/geography/europe-land-50m.geojson'),fetchJSON('assets/modern-borders.geojson'),fetchJSON('assets/geography/europe-rivers-50m.geojson'),fetchJSON('assets/geography/europe-lakes-50m.geojson')]);
+      const results=await Promise.all([fetchJSON('assets/geography/europe-land-10m.geojson'),fetchJSON('assets/modern-borders.geojson'),fetchJSON('assets/geography/europe-rivers-10m.geojson'),fetchJSON('assets/geography/europe-lakes-10m.geojson')]);
       [land,modern,rivers,lakes]=results;mapReady=true;buildMap();await loadPeriod();
-      if(state.persons.length)focusCity(journeyStops()[state.stop]?.city);else if(state.cityId)focusCity(state.cityId);
+      if(state.persons.length)focusCoordinate(stopCoord(journeyStops()[state.stop]));else if(event(state.eventId)?.eventLocations?.length)focusEventLocation(state.eventId,state.eventLocation);else if(state.cityId)focusCity(state.cityId);
     }catch(error){console.error(error);$('#map-loading').innerHTML='<span>地图加载失败。<button class="secondary-button" data-retry-init>重新加载</button></span>';}
   }
 
@@ -403,7 +446,8 @@
     const b=e.target.closest('button');if(!b)return;
     if(b.dataset.lang){setLanguage(b.dataset.lang);return;}
     if(b.dataset.speed){$('#play-speed').value=b.dataset.speed;$$('[data-speed]').forEach(el=>el.setAttribute('aria-checked',String(el===b)));$('#speed-button').textContent=b.textContent;$('#play-speed').dispatchEvent(new Event('change'));setMenu($('#speed-menu'),false,$('#speed-button'));return;}
-    if(b.dataset.event)openEvent(b.dataset.event);
+    if(b.hasAttribute('data-event-location'))focusEventLocation(b.dataset.eventOrigin,Number(b.dataset.eventLocation));
+    else if(b.dataset.event)openEvent(b.dataset.event);
     else if(b.dataset.city)openCity(b.dataset.city);
     else if(b.dataset.person)openPerson(b.dataset.person);
     else if(b.dataset.personInfo)openPersonInfo(b.dataset.personInfo);
@@ -412,10 +456,11 @@
     else if(b.dataset.realm)openRealm(b.dataset.realm);
     else if(b.hasAttribute('data-all-realms'))allRealms();
     else if(b.dataset.era){$('#detail-dialog').close();pause();state.persons=[];state.quiz=null;state.eventId='';state.cityId='';setYear(D.eras.find(a=>a.id===b.dataset.era).focus);resetMap();}
-    else if(b.hasAttribute('data-history-year')){const item=event(b.dataset.historyEvent),id=b.dataset.historyCity||item?.city;pause();state.persons=[];state.quiz=null;state.eventId=item?.id||'';state.cityId=id||'';setYear(b.dataset.historyYear,{preserveSelection:true});if(id)focusCity(id,1.8);$('#detail-dialog').close();}
+    else if(b.hasAttribute('data-history-year')){const item=event(b.dataset.historyEvent),id=b.dataset.historyCity||item?.city;pause();state.persons=[];state.quiz=null;state.eventId=item?.id||'';state.cityId=id||'';state.eventLocation=0;setYear(b.dataset.historyYear,{preserveSelection:true});if(item?.eventLocations?.length)focusEventLocation(item.id,0);else if(id)focusCity(id,1.8);$('#detail-dialog').close();}
     else if(b.dataset.mapMode){state.mode=b.dataset.mapMode;state.layers.realms=state.mode==='political';state.layers.terrain=true;applyLayers();}
     else if(b.dataset.nav){leaveJourney();if(state.quiz)exitQuiz();activateView(b.dataset.nav);if(b.dataset.nav!=='map')toggleSidebar(true);}
     else if(b.dataset.filter){state.filter=b.dataset.filter;renderSide();}
+    else if(b.dataset.placeScope){state.placeScope=b.dataset.placeScope;renderSide();}
     else if(b.dataset.searchType)selectSearch(b.dataset.searchType,b.dataset.searchId);
     else if(b.hasAttribute('data-stop')){pause();goStop(Number(b.dataset.stop));}
     else if(b.dataset.step){pause();goStop(state.stop+Number(b.dataset.step));}
@@ -472,7 +517,7 @@
   let resizeTimer;new ResizeObserver(()=>{if(!mapReady)return;clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{buildMap();},130);}).observe($('.map-stage'));
 
   // Small public API for integrations and reproducible checks, mirroring the source project's deep-link model.
-  window.atlasAPI={setLanguage,search,locate({year,place}){if(year!==undefined)setYear(year);const c=D.cities.find(c=>[c.id,c.name,c.modern,c.latin].includes(place));if(c)openCity(c.id);return c||null;},openPerson:(id,stop=0)=>openPerson(String(id).split(','),stop),inspect(){return {language:L.locale,year:state.year,era:era(state.year).name,persons:[...state.persons],stop:state.stop,place:state.cityId,layers:{...state.layers},opacity:state.opacity,mode:state.mode,polities:currentGroups.map(g=>({id:g.id,name:g.name})),quiz:state.quiz?{index:state.quiz.index,score:state.quiz.score,revealed:state.quiz.revealed,complete:state.quiz.complete}:null};},setYear:y=>setYear(y),ready:()=>mapReady&&!!geo};
+  window.atlasAPI={setLanguage,search,locate({year,place}){if(year!==undefined)setYear(year);const c=D.cities.find(c=>[c.id,c.name,c.modern,c.latin].includes(place));if(c)openCity(c.id);return c||null;},openPerson:(id,stop=0)=>openPerson(String(id).split(','),stop),inspect(){return {language:L.locale,year:state.year,era:era(state.year).name,persons:[...state.persons],stop:state.stop,place:state.cityId,event:state.eventId,eventLocation:state.eventLocation,layers:{...state.layers},opacity:state.opacity,mode:state.mode,polities:currentGroups.map(g=>({id:g.id,name:g.name})),quiz:state.quiz?{index:state.quiz.index,score:state.quiz.score,revealed:state.quiz.revealed,complete:state.quiz.complete}:null};},setYear:y=>setYear(y),ready:()=>mapReady&&!!geo};
   window.EUROPA_UTILS={clampYear,era,selectFeatures,parentNames,formatYear,seaLabelAudit};
   L.localize();updateLanguageButtons();renderTimeline();renderSide();updateURL();
   const initialPersons=(params.get('person')||'').split(',').filter(id=>person(id));

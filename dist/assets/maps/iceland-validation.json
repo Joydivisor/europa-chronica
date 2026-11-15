@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "sourceUniqueFeatureCount": 7623,
+  "displayUniqueFeatureCount": 7626,
+  "geometriesReadAndValidatedIncludingPartitionDuplicates": 8031,
+  "allSourcePropertiesPreserved": true,
+  "allSourceGeometryOutsideEnvelopeIdentical": true,
+  "allEraHashesAndFeatureCountsMatch": true,
+  "allCorrectionMasksIdenticalToDocumentedNaturalEarthMask": true,
+  "allProfileNamesAndSourceIndexesValid": true,
+  "totalEraBytes": 29740765,
+  "manifestSha256": "a285a9b5e81a2954f27ae4e2d3473b4db246d1465e7dc667bcf4fd2a5591f168"
+}

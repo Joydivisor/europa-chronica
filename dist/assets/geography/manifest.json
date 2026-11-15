@@ -1,41 +1,54 @@
 {
   "bbox": [
-    -20,
+    -26,
     28,
     55,
     74
   ],
   "crs": "EPSG:4326",
-  "scale": "Natural Earth 1:50 million",
+  "scale": "Natural Earth 1:10 million",
+  "resolution": "detail",
+  "sourceCommit": "ca96624a56bd078437bca8184e78163e5039ad19",
   "license": "Public domain",
   "licenseUrl": "https://www.naturalearthdata.com/about/terms-of-use/",
   "sourceRepository": "https://github.com/nvkelso/natural-earth-vector",
   "retrievedAt": "2026-11-15",
-  "note": "Modern physical geography reference; not a historical coastline or hydrography reconstruction.",
+  "note": "Modern natural geography reference; not a reconstruction of historical coastlines or historical water surfaces.",
+  "reliefCoverageNote": "The separately managed existing hillshade retains its original west=-20, south=28, east=55, north=74 coverage; the newly restored western Iceland coast is displayed without invented relief.",
+  "geometryEdits": "Spatial clipping to the European viewport, property selection, valid-output 0.00001-degree coordinate grid. Native 1:10m vertices retained without line simplification.",
   "layers": {
     "land": {
-      "file": "europe-land-50m.geojson",
-      "featureCount": 185,
-      "bytes": 196046,
-      "sourceUrl": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_land.geojson",
-      "sourceSha256": "e874b27a51d146452be360cafb3cc50c86001074a67d534113e6534682f9826b",
-      "sha256": "2862941b288ef9cf737edff0dc1efaada260de334d9190ee33b20c3dbaa2450b"
+      "file": "europe-land-10m.geojson",
+      "featureCount": 9,
+      "vertexCount": 79946,
+      "bytes": 1583734,
+      "sourceUrl": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_land.geojson",
+      "sourceSha256": "1ac90796408bc6ad6911d69448485d3c4dbf2190370080368a09976e1c9f7416",
+      "sha256": "db5c694f9dc006fafe7f78d772f0f83d5085e85ba130600e912fdc47b3f693bd",
+      "invalidSourceGeometriesRepaired": 0,
+      "allGeometryValid": true
     },
     "lakes": {
-      "file": "europe-lakes-50m.geojson",
-      "featureCount": 78,
-      "bytes": 86869,
-      "sourceUrl": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_lakes.geojson",
-      "sourceSha256": "d350b75978b26fe839b797c2c529b2fb8f47fb3983c03f4964e36d5df9378a52",
-      "sha256": "ede606d40789af0d2702ccfc711ee49d4dd7984d5f8fe5582dd0122218e422b9"
+      "file": "europe-lakes-10m.geojson",
+      "featureCount": 260,
+      "vertexCount": 27747,
+      "bytes": 592435,
+      "sourceUrl": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_lakes.geojson",
+      "sourceSha256": "2d036f53dedec578001c5c30c2959ee7d4eebc1306900fa4367c49929ec8f2d9",
+      "sha256": "5daf03a1bd871fb1954074563e9dd1fe9621054ee5243352ffcae8e577a69144",
+      "invalidSourceGeometriesRepaired": 0,
+      "allGeometryValid": true
     },
     "rivers": {
-      "file": "europe-rivers-50m.geojson",
-      "featureCount": 86,
-      "bytes": 81899,
-      "sourceUrl": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_rivers_lake_centerlines.geojson",
-      "sourceSha256": "f286e0ce978fde999ca2d7a78c764be08542e19b63cded52b05c12d5173ccc51",
-      "sha256": "1fa4981ccbe80755cc1b22c86403a3188938a9db92570d9ffe2144a2580acd2f"
+      "file": "europe-rivers-10m.geojson",
+      "featureCount": 249,
+      "vertexCount": 37186,
+      "bytes": 775943,
+      "sourceUrl": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_rivers_lake_centerlines.geojson",
+      "sourceSha256": "bb854a900ecbd3b408df46d5e16e3e0f974ba55993f9d8b5c26e855273c0905a",
+      "sha256": "5fea38774373119c182459accc75fefb34880f8e31896a9442d0718ffc7113dc",
+      "invalidSourceGeometriesRepaired": 0,
+      "allGeometryValid": true
     }
   }
 }

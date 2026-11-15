@@ -1,0 +1,492 @@
+{
+  "metadata": {
+    "title": "Cliopatria v0.2.1 — European detailed geometry",
+    "version": "0.2.1",
+    "sourceCommit": "5f433377139a6eeaeacbdc894b70f8805b72c8b5",
+    "bbox": [
+      -25,
+      30,
+      48,
+      72
+    ],
+    "yearRange": [
+      -500,
+      2024
+    ],
+    "dateSemantics": "fromYear <= selectedYear <= toYear (inclusive); source intervals are approximate historical reconstructions, not annual measurements",
+    "geometryEdits": "Regenerated from the original source records, clipped to the declared bbox with the west edge extended to -25 degrees to retain Iceland; only the existing sourceRecords are included; make_valid where required; topology-preserving Douglas–Peucker simplification at 0.007 degrees; valid-output coordinate grid 0.00001 degrees; standard GeoJSON orientation. Overview semantic properties, identifiers and coalesced intervals retained. Where finer geometry differs inside an overview interval, geometryVariants preserves the original source intervals. No geometry invented or interpolated.",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "citation": "Bennett, J. S., Mutch, E., Tollefson, A., et al. (2025). Cliopatria – A geospatial database of world-wide political entities from 3400BCE to 2024CE. Scientific Data 12, 247.",
+    "paper": "https://doi.org/10.1038/s41597-025-04516-9",
+    "sourceRepository": "https://github.com/Seshat-Global-History-Databank/cliopatria",
+    "originalArchiveEntry": "cliopatria_polities_only_v021.geojson",
+    "originalArchiveSha256": "e10a4e429fca708788ff9e7572a95fce801fae55852d217cffabc1c59cd4eed4",
+    "retrievedAt": "2026-11-15",
+    "modernBoundaryNote": "Modern outlines reproduce the source dataset’s historical reconstruction. They do not adjudicate disputed sovereignty, international recognition, or present-day borders. Source coverage ends in 2024.",
+    "extensionThrough": 2024,
+    "resolution": "detail",
+    "overviewIndexBbox": [
+      -16,
+      30,
+      48,
+      72
+    ],
+    "simplificationDegrees": 0.007,
+    "coordinatePrecisionDegrees": 1e-05,
+    "originalGeoJsonSha256": "fc6f0d1e4cc42f45da83522b3696db6f2cc85ec0d12259a85c89b31347b8fc0a",
+    "shapelyVersion": "2.2.0",
+    "geometryVariantsSemantics": "For a selected year, use the geometry of the unique geometryVariants segment whose fromYear <= year <= toYear. If geometryVariants is absent, use feature.geometry. Top-level properties and recordId remain identical to the overview file.",
+    "historicalInterpretation": "Increased geometric detail retains more of the same academic reconstruction; it does not establish additional historical certainty or settlement-scale boundary accuracy."
+  },
+  "eras": [
+    {
+      "id": "antiquity",
+      "title": "古典时代",
+      "fromYear": -500,
+      "toYear": 475,
+      "file": "europe-antiquity.geojson",
+      "featureCount": 791,
+      "bytes": 3951410,
+      "sha256": "560c97fefbec0efbf2286bab5ca2a10669b5482b4e6edf203e99ddce50ce961c",
+      "vertexCountIncludingVariants": 186166,
+      "overviewBytes": 3139375,
+      "geometryVariantFeatureCount": 2
+    },
+    {
+      "id": "early-medieval",
+      "title": "中世纪早期",
+      "fromYear": 476,
+      "toYear": 999,
+      "file": "europe-early-medieval.geojson",
+      "featureCount": 1509,
+      "bytes": 5390275,
+      "sha256": "684f5ed397278d7513e7d841f639035625fe1cff4ae41b7f4a8f316a5cd391f1",
+      "vertexCountIncludingVariants": 244510,
+      "overviewBytes": 4243060,
+      "geometryVariantFeatureCount": 10
+    },
+    {
+      "id": "high-medieval",
+      "title": "中世纪盛期",
+      "fromYear": 1000,
+      "toYear": 1299,
+      "file": "europe-high-medieval.geojson",
+      "featureCount": 1528,
+      "bytes": 3395054,
+      "sha256": "3bdccd2ab4a7a3ad6a1ed7912af5a7be364711bf909a4b5ea846b9e2a6df0c8d",
+      "vertexCountIncludingVariants": 142869,
+      "overviewBytes": 2703985,
+      "geometryVariantFeatureCount": 7
+    },
+    {
+      "id": "late-medieval",
+      "title": "中世纪晚期",
+      "fromYear": 1300,
+      "toYear": 1499,
+      "file": "europe-late-medieval.geojson",
+      "featureCount": 1251,
+      "bytes": 4310266,
+      "sha256": "095a370458fed9e22a75e7a19a221f7c72246e6b04bda0935fd4848d303d936e",
+      "vertexCountIncludingVariants": 193727,
+      "overviewBytes": 3335280,
+      "geometryVariantFeatureCount": 8
+    },
+    {
+      "id": "early-modern",
+      "title": "近代早期",
+      "fromYear": 1500,
+      "toYear": 1788,
+      "file": "europe-early-modern.geojson",
+      "featureCount": 1312,
+      "bytes": 6665398,
+      "sha256": "4fbfec7ce986e90ffec1c2276397219b1112e698db9e1d27a15863bd8d33adb2",
+      "vertexCountIncludingVariants": 315061,
+      "overviewBytes": 5154627,
+      "geometryVariantFeatureCount": 3
+    },
+    {
+      "id": "modern",
+      "title": "近现代",
+      "fromYear": 1789,
+      "toYear": 2024,
+      "file": "europe-modern.geojson",
+      "featureCount": 1548,
+      "bytes": 5406720,
+      "sha256": "4137cdf9378eab1e5d44be67f495d3c0323ef2930817cf1590faf5df9da938cb",
+      "vertexCountIncludingVariants": 245466,
+      "overviewBytes": 4228053,
+      "geometryVariantFeatureCount": 9
+    }
+  ],
+  "audit": {
+    "uniqueFeatures": 7623,
+    "uniqueSourceRecords": 8579,
+    "identifiersPropertiesAndIntervalsUnchanged": true,
+    "overviewVertexCount": 1236174,
+    "detailDefaultGeometryVertexCount": 1289225,
+    "vertexRatio": 1.043,
+    "geometryVariantFeatureCount": 35,
+    "geometryVariants": [
+      {
+        "recordId": 587,
+        "name": "Galatia",
+        "segments": 2,
+        "sourceRecords": [
+          587,
+          663
+        ]
+      },
+      {
+        "recordId": 1133,
+        "name": "Kingdom of Pontus",
+        "segments": 2,
+        "sourceRecords": [
+          1133,
+          1171
+        ]
+      },
+      {
+        "recordId": 1929,
+        "name": "Saxons",
+        "segments": 3,
+        "sourceRecords": [
+          1929,
+          1984,
+          2125
+        ]
+      },
+      {
+        "recordId": 2219,
+        "name": "Saxons",
+        "segments": 2,
+        "sourceRecords": [
+          2219,
+          2356
+        ]
+      },
+      {
+        "recordId": 2445,
+        "name": "Saxons",
+        "segments": 2,
+        "sourceRecords": [
+          2445,
+          2699
+        ]
+      },
+      {
+        "recordId": 2245,
+        "name": "Kingdom of Northumbria",
+        "segments": 2,
+        "sourceRecords": [
+          2245,
+          2259
+        ]
+      },
+      {
+        "recordId": 2455,
+        "name": "Strathclyde",
+        "segments": 2,
+        "sourceRecords": [
+          2455,
+          2481
+        ]
+      },
+      {
+        "recordId": 2809,
+        "name": "Abbasid Caliphate",
+        "segments": 2,
+        "sourceRecords": [
+          2809,
+          2818,
+          2841
+        ]
+      },
+      {
+        "recordId": 3232,
+        "name": "Khazaria",
+        "segments": 3,
+        "sourceRecords": [
+          3232,
+          3284,
+          3455
+        ]
+      },
+      {
+        "recordId": 3291,
+        "name": "Brythons",
+        "segments": 2,
+        "sourceRecords": [
+          3291,
+          3349
+        ]
+      },
+      {
+        "recordId": 3679,
+        "name": "Emirate of Córdoba",
+        "segments": 2,
+        "sourceRecords": [
+          3679,
+          3710
+        ]
+      },
+      {
+        "recordId": 4014,
+        "name": "County of Ribagorza",
+        "segments": 2,
+        "sourceRecords": [
+          4014,
+          4189
+        ]
+      },
+      {
+        "recordId": 5104,
+        "name": "County of Ampuria",
+        "segments": 4,
+        "sourceRecords": [
+          5104,
+          5589,
+          5892,
+          6351
+        ]
+      },
+      {
+        "recordId": 4684,
+        "name": "Principality of Kiev",
+        "segments": 2,
+        "sourceRecords": [
+          4684,
+          4775
+        ]
+      },
+      {
+        "recordId": 4765,
+        "name": "Danishmendids",
+        "segments": 2,
+        "sourceRecords": [
+          4765,
+          4865
+        ]
+      },
+      {
+        "recordId": 4968,
+        "name": "Danishmendids",
+        "segments": 2,
+        "sourceRecords": [
+          4968,
+          5036
+        ]
+      },
+      {
+        "recordId": 5255,
+        "name": "Holy Roman Empire",
+        "segments": 2,
+        "sourceRecords": [
+          5255,
+          5294
+        ]
+      },
+      {
+        "recordId": 5830,
+        "name": "Mamluk Sultanate",
+        "segments": 2,
+        "sourceRecords": [
+          5830,
+          5878
+        ]
+      },
+      {
+        "recordId": 6330,
+        "name": "Kingdom of Hungary",
+        "segments": 2,
+        "sourceRecords": [
+          6330,
+          6413
+        ]
+      },
+      {
+        "recordId": 6388,
+        "name": "Patriarchate of Aquileia",
+        "segments": 2,
+        "sourceRecords": [
+          6388,
+          6529
+        ]
+      },
+      {
+        "recordId": 6597,
+        "name": "Beylik of Dulkadir",
+        "segments": 2,
+        "sourceRecords": [
+          6597,
+          6664
+        ]
+      },
+      {
+        "recordId": 6789,
+        "name": "Serbian Despots",
+        "segments": 2,
+        "sourceRecords": [
+          6789,
+          6852
+        ]
+      },
+      {
+        "recordId": 6967,
+        "name": "Kingdom of Portugal",
+        "segments": 2,
+        "sourceRecords": [
+          6967,
+          7004,
+          7156,
+          7244,
+          7389,
+          7440
+        ]
+      },
+      {
+        "recordId": 7053,
+        "name": "Republic of Ragusa",
+        "segments": 2,
+        "sourceRecords": [
+          7053,
+          10097,
+          10733
+        ]
+      },
+      {
+        "recordId": 7249,
+        "name": "Principality of Moldavia",
+        "segments": 3,
+        "sourceRecords": [
+          7249,
+          7323,
+          7394
+        ]
+      },
+      {
+        "recordId": 7948,
+        "name": "County of Foix",
+        "segments": 2,
+        "sourceRecords": [
+          7948,
+          8076,
+          8178
+        ]
+      },
+      {
+        "recordId": 8521,
+        "name": "Papal States",
+        "segments": 3,
+        "sourceRecords": [
+          8521,
+          9002,
+          9506,
+          9689
+        ]
+      },
+      {
+        "recordId": 10453,
+        "name": "Russian Empire",
+        "segments": 2,
+        "sourceRecords": [
+          10453,
+          10509
+        ]
+      },
+      {
+        "recordId": 11621,
+        "name": "Russian Empire",
+        "segments": 2,
+        "sourceRecords": [
+          11621,
+          11665,
+          11711,
+          11720,
+          11753,
+          11831,
+          11887,
+          11903,
+          11915
+        ]
+      },
+      {
+        "recordId": 11997,
+        "name": "United Principalities of Moldavia and Wallachia",
+        "segments": 2,
+        "sourceRecords": [
+          11997,
+          12195
+        ]
+      },
+      {
+        "recordId": 12550,
+        "name": "Union of Soviet Socialist Republics",
+        "segments": 2,
+        "sourceRecords": [
+          12550,
+          12591,
+          12636,
+          12673
+        ]
+      },
+      {
+        "recordId": 12566,
+        "name": "Kingdom of Norway",
+        "segments": 2,
+        "sourceRecords": [
+          12566,
+          12621,
+          12703
+        ]
+      },
+      {
+        "recordId": 12628,
+        "name": "Italian Africa",
+        "segments": 2,
+        "sourceRecords": [
+          12628,
+          12697
+        ]
+      },
+      {
+        "recordId": 12974,
+        "name": "Denmark",
+        "segments": 2,
+        "sourceRecords": [
+          12974,
+          12992
+        ]
+      },
+      {
+        "recordId": 13058,
+        "name": "People's Republic of Bulgaria",
+        "segments": 2,
+        "sourceRecords": [
+          13058,
+          13083,
+          13467
+        ]
+      }
+    ],
+    "invalidOriginalRecordsRepaired": [
+      3810,
+      5772,
+      5823,
+      5880,
+      6031,
+      6101,
+      6141,
+      6202,
+      6293,
+      6370,
+      6475,
+      6510,
+      6643
+    ],
+    "roundedGeometriesRepaired": [],
+    "allGeometryValid": true,
+    "allGeometryWithinBounds": true,
+    "variantIntervalsContinuousAndUnambiguous": true
+  }
+}
