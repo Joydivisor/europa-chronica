@@ -8,6 +8,8 @@
 
 **[打开地图](https://joydivisor.github.io/europa-chronica/)** · **[Joydivisor 个人主页](https://joydivisor.github.io/)** · **[English introduction](#english)** · **[反馈问题](https://github.com/Joydivisor/europa-chronica/issues)**
 
+> **灵感来源**：本项目受到 [DeanChensj 的《江山时序》（jiangshan-map）](https://github.com/DeanChensj/jiangshan-map) 启发，具体参考范围见[灵感来源与致谢](#灵感来源与致谢)。
+
 ![公元1200年的欧洲地图，英文地名与历史疆域](docs/map-preview.png)
 
 ## 可以怎样探索
@@ -91,17 +93,29 @@ scripts/                         数据检查、交互测试与地理处理脚�
 
 Fork 部署时，在自己的仓库启用 Pages，并将首页、canonical 与 README 地址改为对应的 `https://用户名.github.io/仓库名/`。所有运行时资源采用相对路径，支持项目子目录。
 
+## 灵感来源与致谢
+
+本项目的主要产品与交互灵感来自 **[江山时序（jiangshan-map）](https://github.com/DeanChensj/jiangshan-map)**，作者为 **[DeanChensj](https://github.com/DeanChensj)**。尤其参考了以地图为主体、底部时间轴与侧栏联动的阅读布局，以及拖动年代、点击地点读历史、沿人物足迹探索和切换图层的交互思路。感谢原作者对历史地图探索方式的实践与分享。
+
+**欧陆纪年是独立维护的欧洲历史项目。** 本项目围绕欧洲通史重新整理史事与地点，并实现相应的地图数据处理、三语内容和中古欧洲风格界面；视觉配色也参考了《欧陆风云》（Europa Universalis）系列的历史地图氛围。上述产品、交互与视觉参考在此明确致谢。
+
+实际使用的历史疆域、自然地理、字体及代码依赖，另按各自来源和许可列于[历史与地理来源](#历史与地理来源)及 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。涉及具体代码、数据或素材的复用，应保留相应许可证、署名和修改说明。如发现来源或署名遗漏，欢迎通过 [Issues](https://github.com/Joydivisor/europa-chronica/issues) 提供原始链接与涉及的文件，便于核实和更正。
+
 ## 开源与参与
 
 本项目原创程序、界面与文档采用 **GNU General Public License v3.0 only（GPL-3.0-only）**。完整条款见 [LICENSE](LICENSE)。修改和再分发请遵循 GPL-3.0；第三方代码、地图数据与字体保留原有许可证，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
-交互灵感来自 [DeanChensj / jiangshan-map](https://github.com/DeanChensj/jiangshan-map)，本项目独立设计与实现。欢迎通过 [Issues](https://github.com/Joydivisor/europa-chronica/issues) 和 Pull Requests 提交建议；历史内容与翻译贡献请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
+欢迎通过 [Issues](https://github.com/Joydivisor/europa-chronica/issues) 和 Pull Requests 提交建议；历史内容与翻译贡献请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## English
 
 **Europa Chronica** is an interactive historical atlas of Europe, covering **500 BCE–2024 CE**. Explore political territories, terrain and waterways, follow people through their lives, and read city histories and polity dossiers without leaving the map.
 
 The interface and historical content are available in Simplified Chinese, Traditional Chinese and English. Language changes preserve the current year, place and map view. The atlas is a static application built with JavaScript and D3, with locally hosted fonts and geographic assets.
+
+**Inspiration and acknowledgements:** The main product and interaction inspiration comes from [Chronicles of the Realm / 江山时序 (`jiangshan-map`)](https://github.com/DeanChensj/jiangshan-map) by [DeanChensj](https://github.com/DeanChensj), particularly its map-centred layout, linked timeline and reading panel, place histories, biographical journeys and layer controls. We gratefully acknowledge this influence. The visual palette also takes inspiration from the *Europa Universalis* series.
+
+Europa Chronica is maintained independently, with European historical content, geographic data processing and a multilingual interface developed for this project. Geographic datasets, fonts and libraries are credited separately in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), with their respective licences and attribution requirements. Please report missing credits through [Issues](https://github.com/Joydivisor/europa-chronica/issues), including the original source and the relevant files.
 
 - **Live atlas:** https://joydivisor.github.io/europa-chronica/?lang=en
 - **Portfolio:** https://joydivisor.github.io/
