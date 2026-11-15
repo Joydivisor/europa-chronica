@@ -1,0 +1,58 @@
+name: Update repository description and topics
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: europa-repository-metadata
+  cancel-in-progress: false
+
+jobs:
+  update-metadata:
+    if: github.repository == 'Joydivisor/europa-chronica' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Update the two approved repository fields
+        shell: bash
+        env:
+          GH_HOST: github.com
+          GH_TOKEN: ${{ secrets.EUROPA_METADATA_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${GH_TOKEN:-}" ]]; then
+            echo '::error::Add the EUROPA_METADATA_TOKEN repository secret before running this manual workflow.'
+            exit 1
+          fi
+
+          metadata_dir="$(mktemp -d)"
+          trap 'rm -rf "$metadata_dir"' EXIT
+          cat > "$metadata_dir/description.json" <<'JSON'
+          {"description":"欧洲历史交互地图｜500 BCE–2024 CE。探索历史疆域、城市与人物足迹，支持简繁中文和 English。An interactive historical atlas of Europe."}
+          JSON
+          cat > "$metadata_dir/topics.json" <<'JSON'
+          {"names":["european-history","historical-atlas","historical-maps","historical-geography","interactive-map","medieval-history","digital-humanities","history","cartography","timeline","data-visualization","d3js","geojson","javascript","multilingual"]}
+          JSON
+
+          gh api repos/Joydivisor/europa-chronica/topics > "$metadata_dir/existing.json"
+          jq -s '{names: (.[0].names + .[1].names | unique)}' \
+            "$metadata_dir/existing.json" "$metadata_dir/topics.json" > "$metadata_dir/merged.json"
+          if ! jq -e '.names | length <= 20' "$metadata_dir/merged.json" > /dev/null; then
+            echo '::error::Existing and proposed topics exceed the GitHub limit of 20. No fields were changed.'
+            exit 1
+          fi
+
+          gh api --method PATCH repos/Joydivisor/europa-chronica \
+            --input "$metadata_dir/description.json" --jq '{description}'
+          gh api --method PUT repos/Joydivisor/europa-chronica/topics \
+            --input "$metadata_dir/merged.json" --jq '{names}'
+
+          gh api repos/Joydivisor/europa-chronica > "$metadata_dir/result.json"
+          jq -e --slurpfile expected "$metadata_dir/description.json" \
+            '.description == $expected[0].description' "$metadata_dir/result.json" > /dev/null
+          gh api repos/Joydivisor/europa-chronica/topics > "$metadata_dir/result-topics.json"
+          jq -e --slurpfile expected "$metadata_dir/merged.json" \
+            '(.names | sort) == ($expected[0].names | sort)' "$metadata_dir/result-topics.json" > /dev/null
+          echo 'Repository description and topics updated and verified.'
