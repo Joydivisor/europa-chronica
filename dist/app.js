@@ -474,7 +474,7 @@
     else if(b.hasAttribute('data-retry-init'))initializeMap();
   });
   $('#search').addEventListener('input',showSearch);$('#search').addEventListener('focus',showSearch);$('#search').addEventListener('keydown',e=>{if(e.key==='Escape'){$('#search-results').hidden=true;$('#search').blur();}if(e.key==='Enter'){const b=$('.search-result');if(b){e.preventDefault();selectSearch(b.dataset.searchType,b.dataset.searchId);}}if(e.key==='ArrowDown'){e.preventDefault();$('.search-result')?.focus();}});
-  document.addEventListener('click',e=>{if(!e.target.closest('.search-box'))setMenu($('#search-results'),false);if(!e.target.closest('.speed-control'))setMenu($('#speed-menu'),false,$('#speed-button'));if(!e.target.closest('.layers-menu')&&!e.target.closest('#layers-button')){setMenu($('#layers-menu'),false,$('#layers-button'));}});
+  document.addEventListener('click',e=>{if(!e.target.closest('.search-box'))setMenu($('#search-results'),false);if(!e.target.closest('.speed-control'))setMenu($('#speed-menu'),false,$('#speed-button'));if(!e.target.closest('.github-control'))setMenu($('#project-menu'),false,$('#project-menu-button'));if(!e.target.closest('.layers-menu')&&!e.target.closest('#layers-button')){setMenu($('#layers-menu'),false,$('#layers-button'));}});
   function scrubYear(value) {
     const restoreSide=state.persons.length||state.quiz;pause({redraw:false});state.persons=[];state.quiz=null;$('#detail-dialog').close();cancelAnimationFrame(renderFrame);
     renderFrame=requestAnimationFrame(()=>setYear(value,{keepSide:!restoreSide}));
@@ -488,7 +488,22 @@
   $('#prev-year').onclick=()=>{pause();step(-1);};$('#next-year').onclick=()=>{pause();step(1);};$('#play').onclick=togglePlay;
   $('#play-speed').onchange=()=>{if(state.playing){pause();play();}};
   $('#narration').onclick=()=>{if(!('speechSynthesis'in window)){toast('此浏览器不支持语音讲解，文字史事仍可阅读。');return;}state.narration=!state.narration;$('#narration').setAttribute('aria-pressed',String(state.narration));$('#narration').setAttribute('aria-label',state.narration?'关闭语音讲解':'开启语音讲解');if(!state.narration)speechSynthesis.cancel();toast(state.narration?'已开启语音讲解，播放时朗读史事':'已关闭语音讲解');};
-  $('#sources-button').onclick=openSources;$('#map-note').onclick=openSources;$('#share-button').onclick=share;$('#quiz-button').onclick=startQuiz;
+  $('#sources-button').onclick=openSources;$('#map-note').onclick=openSources;$('#quiz-button').onclick=startQuiz;
+  function toggleProjectMenu(open){
+    setMenu($('#project-menu'),open,$('#project-menu-button'));
+    if(open)$('#share-button').focus();
+  }
+  $('#project-menu-button').onclick=()=>toggleProjectMenu($('#project-menu-button').getAttribute('aria-expanded')!=='true');
+  $('#github-star').onclick=()=>toggleProjectMenu(false);
+  $('#share-button').onclick=()=>{toggleProjectMenu(false);$('#project-menu-button').focus();share();};
+  $('.github-control').addEventListener('focusout',e=>{if(!e.currentTarget.contains(e.relatedTarget))toggleProjectMenu(false);});
+  $('.github-control').addEventListener('keydown',e=>{
+    const open=$('#project-menu-button').getAttribute('aria-expanded')==='true';
+    if(e.key==='Escape'&&open){e.preventDefault();e.stopPropagation();toggleProjectMenu(false);$('#project-menu-button').focus();}
+    else if(e.target!==$('#github-star')&&(['ArrowDown','ArrowUp'].includes(e.key)||(open&&['Home','End'].includes(e.key)))){e.preventDefault();e.stopPropagation();toggleProjectMenu(true);}
+    else if(open&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();e.stopPropagation();}
+    else if(open&&['Enter',' '].includes(e.key))e.stopPropagation();
+  });
   $('#mobile-panel-toggle').onclick=()=>toggleSidebar(!$('#sidebar').classList.contains('open'));
   $('#close-sidebar').onclick=()=>toggleSidebar(false);
   $('#layers-button').onclick=()=>setMenu($('#layers-menu'),$('#layers-button').getAttribute('aria-expanded')!=='true',$('#layers-button'));
@@ -506,7 +521,7 @@
   $('#legend').addEventListener('pointerover',e=>{const b=e.target.closest('[data-realm]');if(b)highlightRealm(b.dataset.realm);});$('#legend').addEventListener('pointerleave',()=>highlightRealm(null));
   document.addEventListener('keydown',e=>{
     const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
-    if(e.key==='Escape'){pause();setMenu($('#speed-menu'),false,$('#speed-button'));setMenu($('#layers-menu'),false,$('#layers-button'));$('#search-results').hidden=true;if($('#detail-dialog').open)$('#detail-dialog').close();else if(window.innerWidth<=850)toggleSidebar(false);return;}
+    if(e.key==='Escape'){pause();setMenu($('#speed-menu'),false,$('#speed-button'));setMenu($('#layers-menu'),false,$('#layers-button'));toggleProjectMenu(false);$('#search-results').hidden=true;if($('#detail-dialog').open)$('#detail-dialog').close();else if(window.innerWidth<=850)toggleSidebar(false);return;}
     if((e.key==='/'&&!typing)||((e.ctrlKey||e.metaKey)&&e.key==='k')){e.preventDefault();toggleSidebar(true);$('#search').focus();return;}
     if(typing||$('dialog[open]'))return;
     if(e.key===' '&&!['BUTTON','A'].includes(document.activeElement?.tagName)){e.preventDefault();togglePlay();}

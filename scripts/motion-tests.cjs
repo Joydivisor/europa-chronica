@@ -26,6 +26,25 @@ async function test(){
  w.atlasAPI.locate({place:'rome'});await wait(700);assert($('#detail-dialog').open);assert(motions.some(m=>m.element.id==='detail-content'&&m.frames[0].transform.includes('translateX')));
  const before=w.d3.zoomTransform($('#map'));click('[data-lang="en"]');await wait(60);assert.equal(w.d3.zoomTransform($('#map')).k,before.k);assert($('#detail-content').textContent.includes('Rome'));assert.equal(w.atlasAPI.inspect().year,1200);
  click('#speed-button');assert(!$('#speed-menu').hidden);assert.equal(w.document.activeElement.dataset.speed,'3500');w.document.activeElement.dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true}));assert.equal(w.document.activeElement.dataset.speed,'1800');w.document.activeElement.click();await wait(50);assert($('#speed-menu').hidden);assert.equal($('#speed-button').textContent,'2×');
- assert.equal(errors.length,0,errors.join('\n'));console.log('PASS: menu slide-in, interrupted close/reopen, reading-panel slide, language switch with camera retained, and custom speed-menu keyboard flow.');dom.window.close();
+ const star=$('#github-star'),menuButton=$('#project-menu-button'),menu=$('#project-menu');
+ assert.equal(star.href,'https://github.com/Joydivisor/europa-chronica');assert.equal(star.target,'_blank');assert(star.relList.contains('noopener')&&star.relList.contains('noreferrer'));
+ assert.equal(menuButton.getAttribute('aria-haspopup'),'menu');assert(menu.hidden);assert.equal(menu.querySelectorAll('[role=menuitem]').length,1);assert(menu.contains($('#share-button')));
+ click('#project-menu-button');assert(!menu.hidden);assert.equal(w.document.activeElement,$('#share-button'));assert(motions.some(m=>m.element===menu&&m.frames[0].transform.includes('translateY')));
+ click('#project-menu-button');click('#project-menu-button');await wait(50);assert(!menu.hidden,'Reopening the project menu must cancel its closing animation');
+ const menuYear=w.atlasAPI.inspect().year;
+ $('#share-button').dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));assert.equal(w.atlasAPI.inspect().year,menuYear,'Menu navigation must not move the timeline');
+ $('#share-button').dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));await wait(50);assert(menu.hidden);assert.equal(w.document.activeElement,menuButton);assert($('#detail-dialog').open,'Escaping the project menu must preserve the reading panel');
+ menuButton.dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true}));assert.equal(w.document.activeElement,$('#share-button'));
+ $('#search').focus();await wait(50);assert(menu.hidden,'Tabbing out must close the project menu');
+ click('#project-menu-button');click('.masthead');await wait(50);assert(menu.hidden,'An outside click must close the project menu');
+ const copied=[];Object.defineProperty(w.navigator,'clipboard',{configurable:true,value:{writeText:async value=>copied.push(value)}});
+ for(const [language,label,accessible] of [['zh-CN','分享','在 GitHub 上为项目加星标'],['zh-TW','分享','在 GitHub 上為項目加星標'],['en','Share','Star this project on GitHub']]){
+  click(`[data-lang="${language}"]`);click('#project-menu-button');assert.equal($('#share-button span').textContent,label);assert.equal(star.getAttribute('aria-label'),accessible);
+  click('#share-button');await wait(50);assert(menu.hidden);assert.equal(menuButton.getAttribute('aria-expanded'),'false');assert.equal(w.document.activeElement,menuButton);
+  const url=new URL(copied.at(-1));assert.equal(url.searchParams.get('year'),'1200');assert.equal(url.searchParams.get('lang'),language);assert.equal(url.searchParams.get('place'),'rome');
+ }
+ Object.defineProperty(w.navigator,'clipboard',{value:{writeText:async()=>{throw new Error('Permission denied');}}});
+ click('#project-menu-button');click('#share-button');await wait(50);assert(menu.hidden);assert($('#detail-dialog').open);assert.equal($('#share-url').value,w.location.href);assert($('#detail-content').textContent.includes('Share this moment'),'A denied clipboard must offer the localized copyable link');
+ assert.equal(errors.length,0,errors.join('\n'));console.log('PASS: animated menus, interrupted close/reopen, reading-panel motion, camera-preserving language switch, speed-menu keyboard flow, GitHub link, accessible share dropdown, three-language deep-link sharing and clipboard fallback.');dom.window.close();
 }
 test().catch(e=>{console.error(e);dom.window.close();process.exitCode=1;});

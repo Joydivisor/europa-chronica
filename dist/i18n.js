@@ -7,7 +7,7 @@
   const english={
     '阅读详解 ›':'Read the full account ›','地点':'Places','地点索引':'Place index','从城市、会址与战场走进历史。':'Enter history through cities, meeting places and battlefields.','本时代':'This era','全部地点':'All places','附近年代':'Nearby years','展开本时代编年史 →':'Explore this era’s chronicle →','历史背景':'Historical context','后续影响':'What followed','事件地点':'Event locations','关联地点':'Related places','同期史事':'Events around this time',
     '欧陆纪年 · Europa Chronica':'Europa Chronica · Historical Atlas','欧陆纪年首页':'Europa Chronica home','欧陆纪年':'Europa Chronica','欧洲历史地图':'Historical Atlas of Europe','古典至现代':'Antiquity to the present',
-    '图层':'Layers','资料馆':'Library','分享当前地图':'Share the current map','分享':'Share','选择语言':'Choose language','简体中文':'Simplified Chinese','繁體中文':'Traditional Chinese',
+    '图层':'Layers','资料馆':'Library','分享当前地图':'Share the current map','分享':'Share','在 GitHub 上为项目加星标':'Star this project on GitHub','更多操作':'More actions','项目菜单':'Project menu','选择语言':'Choose language','简体中文':'Simplified Chinese','繁體中文':'Traditional Chinese',
     '可拖动和缩放的欧洲历史地图':'Interactive map of European history','搜索城市、人物、史事':'Search places, people, events','搜索城市、人物和事件':'Search cities, people and events',
     '地图图层':'Map layers','关闭图层菜单':'Close map layers','地图模式':'Map mode','政权图':'Political','地形图':'Terrain','自然地理':'Geography','山地阴影':'Relief shading','河流':'Rivers','湖泊':'Lakes',
     '历史信息':'History','历史疆域':'Historical territories','疆域边线':'Territory borders','疆域浓度':'Colour strength','疆域颜色浓度':'Territory colour strength','城市标记':'Cities','地名标注':'Place names','人物行迹':'Journeys','现代边界':'Modern borders','对照':'Reference','恢复默认图层':'Restore defaults',
