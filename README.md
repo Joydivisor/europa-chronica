@@ -15,6 +15,7 @@
 ## 可以怎样探索
 
 - **沿时间读历史**：连续拖动时间轴、输入年份、播放年代演进，或放大某个时代。公元前纪年自动跳过零年。
+- **顺着专题深入**：15 条导读串起古典世界、中世纪、宗教改革、革命、工业社会、两次大战与欧洲一体化；专题时间轴逐条播放同一年内的不同事件。
 - **展开自己的地图**：独立开关地形阴影、河流、湖泊、历史疆域、边线、城市、地名、人物行迹与现代边界。
 - **走进城市与政权**：点击地图或图例，站内阅读城市沿革、政权制度、重大事件和对应书目。
 - **按地点读编年史**：地点目录按时代筛选城市、会址与战场，事件卡显示日期与地点，详情展开背景、影响和关联史事；多会场事件可逐一定位。
@@ -31,6 +32,11 @@
 | 公元 1200 年的欧洲 | [打开地图](https://joydivisor.github.io/europa-chronica/?year=1200) |
 | 查理曼在罗马，公元 800 年 | [定位罗马](https://joydivisor.github.io/europa-chronica/?year=800&place=rome) |
 | 《大宪章》 | [阅读事件](https://joydivisor.github.io/europa-chronica/?event=magna-carta) |
+| 古典世界与中世纪 | [古典世界](https://joydivisor.github.io/europa-chronica/?topic=antiquity) · [中世纪欧洲](https://joydivisor.github.io/europa-chronica/?topic=medieval) |
+| 宗教改革与革命 | [宗教改革](https://joydivisor.github.io/europa-chronica/?topic=reformation) · [革命与社会变革](https://joydivisor.github.io/europa-chronica/?topic=revolutions) |
+| 两次世界大战 | [第一次世界大战](https://joydivisor.github.io/europa-chronica/?topic=ww1) · [第二次世界大战](https://joydivisor.github.io/europa-chronica/?topic=ww2) |
+| 凡尔登战役 | [战场、背景与人物](https://joydivisor.github.io/europa-chronica/?topic=ww1&event=verdun-battle-1916) |
+| 欧洲重大会议 | [会议与条约](https://joydivisor.github.io/europa-chronica/?topic=diplomacy) |
 | 英文界面 | [Explore in English](https://joydivisor.github.io/europa-chronica/?lang=en) |
 | 繁體中文 | [開啟輿圖](https://joydivisor.github.io/europa-chronica/?lang=zh-TW) |
 
@@ -69,11 +75,15 @@ scripts/                         数据检查、交互测试与地理处理脚�
 .github/workflows/pages.yml      测试后自动部署 GitHub Pages
 ```
 
-当前收录 64 则核心史事、73 个地点、24 份城市专题沿革、27 份政权专题、8 位人物生平与 5 道寻址题。城市纪事同时汇入编年史，并保留逐条来源关联。新增 36 条史事覆盖六个时代，包含正文、历史背景与后续影响。
+当前收录 **225 则核心史事、46 位人物、162 处地点与 15 个阅读专题**，另有 24 份城市专题沿革、27 份政权专题与 5 道寻址题。每则核心史事提供事件正文、历史背景与后续影响；人物与事件双向关联，城市沿革汇入同一编年史。简体、繁体和英文共享年代、地点与来源标识。
+
+2026 年 11 月扩充新增 161 则史事、38 位人物与 89 处地点，并扩写 40 则原有史事和全部 8 位原有人物。范围从希腊罗马、中世纪教会与王权，延伸到宗教改革、革命、科学与社会变化、两次大战及战后欧洲。教材章节对照与核查方法见 [本轮内容扩充记录](docs/content-expansion-2026-11.md)。
 
 ## 历史与地理来源
 
 历史条目引用博物馆、国家档案馆、大学、学术出版物和官方历史文献。来源记录随内容分发，也可在站内资料馆与条目末尾查看。
+
+本轮以 OpenStax《World History》两卷和 Christopher Brooks 的开放教材《Western Civilization: A Concise History》核对主题覆盖，再用专题研究、档案、博物馆和机构原始材料核查日期、人物活动及地点。已读取来源的条目关联与取舍记录保存在 [结构化来源审计](docs/content-expansion-audit.json)；书目数量包含不同条目对同一来源的复用。
 
 - **历史疆域**：Cliopatria v0.2.1 的欧洲衍生数据，7,623 条上游合并记录，按六个时代分区。由原始几何重新裁切、简化至 0.007°，保留五位坐标小数；35 组原有合并记录恢复区间内的不同几何。详见 [地图来源与方法](dist/assets/maps/README.md)。
 - **自然地理**：Natural Earth **1:10 million** 陆地、河流与湖泊，扩展西侧范围以完整显示冰岛。地形阴影使用 NOAA ETOPO1 / USGS GMTED2010，经 Mapzen / Tilezen Terrarium 分发。详见 [地理图层说明](dist/assets/geography/README.md)。
@@ -81,7 +91,7 @@ scripts/                         数据检查、交互测试与地理处理脚�
 - **冰岛分期**：按议会、政府和外交文献单独修正 930、1262—1264、1814、1918、1944 等节点，并区分战时驻军和主权。方法与来源见 [冰岛显示修正](dist/assets/maps/ICELAND.md)。
 - **表示方式**：历史疆域采用学术重建区间；自然地理采用现代参考数据。来源中的时间范围、争议与重建方法保存在对应数据说明中。
 
-`npm test` 检查史源关联、年代、唯一标识、坐标、分段几何、资源 SHA-256 与播放键默认对比度，并覆盖时间轴、图层、三语正文、地点目录、多会场定位、人物行程、寻址游戏和菜单动画状态。
+`npm test` 检查史源关联、年代、唯一标识、坐标、分段几何、资源 SHA-256 与播放键默认对比度，并覆盖时间轴、同年专题播放、古典至现代专题、事件与人物互访、图层、三语正文、地点目录、多会场定位、人物行程、寻址游戏和菜单动画状态。
 
 可选的地理重建脚本需要 Python、Shapely 2、NumPy 与 Pillow。缓存默认为 `.cache/geography/`，可用 `EUROPA_DATA_CACHE` 指定位置；重建会下载公开源文件并更新资源与元数据。日常运行和部署直接使用已提交的数据，无须重建。
 
@@ -112,6 +122,8 @@ Fork 部署时，在自己的仓库启用 Pages，并将首页、canonical 与 R
 **Europa Chronica** is an interactive historical atlas of Europe, covering **500 BCE–2024 CE**. Explore political territories, terrain and waterways, follow people through their lives, and read city histories and polity dossiers without leaving the map.
 
 The interface and historical content are available in Simplified Chinese, Traditional Chinese and English. Language changes preserve the current year, place and map view. The atlas is a static application built with JavaScript and D3, with locally hosted fonts and geographic assets.
+
+Explore **225 core events, 46 biographies, 162 places and 15 thematic reading paths**, from classical antiquity and medieval Europe through the Reformation, revolutions, both world wars and postwar integration. Events include background, consequences, sources and links to people and places. Topic playback visits individual events even when several occur in the same year. The November 2026 expansion adds 161 events and 38 biographies; its [coverage record](docs/content-expansion-2026-11.md) and [source audit](docs/content-expansion-audit.json) document the textbook comparison and evidence review.
 
 **Inspiration and acknowledgements:** The main product and interaction inspiration comes from [Chronicles of the Realm / 江山时序 (`jiangshan-map`)](https://github.com/DeanChensj/jiangshan-map) by [DeanChensj](https://github.com/DeanChensj), particularly its map-centred layout, linked timeline and reading panel, place histories, biographical journeys and layer controls. We gratefully acknowledge this influence. The visual palette also takes inspiration from the *Europa Universalis* series.
 

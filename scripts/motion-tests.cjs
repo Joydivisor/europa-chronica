@@ -3,7 +3,7 @@ const {JSDOM,VirtualConsole}=require('jsdom');
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const root=process.env.ATLAS_DIST||path.resolve(__dirname,'../dist');
 const errors=[],fetches=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));vc.on('error',e=>errors.push(String(e)));
-const dom=new JSDOM(fs.readFileSync(path.join(root,'index.html'),'utf8'),{url:'https://example.test/?year=1200',runScripts:'outside-only',pretendToBeVisual:true,virtualConsole:vc});
+const dom=new JSDOM(fs.readFileSync(path.join(root,'index.html'),'utf8'),{url:'https://example.test/?year=1200&topic=medieval',runScripts:'outside-only',pretendToBeVisual:true,virtualConsole:vc});
 const w=dom.window;w.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
 let resize;w.ResizeObserver=class{constructor(fn){resize=fn;}observe(){}disconnect(){}};
 let mapWidth=1100;Object.defineProperty(w.HTMLElement.prototype,'clientWidth',{get(){return this.classList.contains('map-stage')?mapWidth:352;}});Object.defineProperty(w.HTMLElement.prototype,'clientHeight',{get(){return this.classList.contains('map-stage')?650:400;}});
@@ -20,6 +20,7 @@ async function year(value){w.atlasAPI.setYear(value);await wait(45);}
 function names(){return w.atlasAPI.inspect().polities.map(p=>p.name).join(' ');}
 
 async function test(){
+ assert.equal(w.atlasAPI.inspect().topic,'medieval');assert.equal(w.atlasAPI.inspect().view,'events');assert($('[data-nav="events"]').classList.contains('active'));assert($$('#side-content .event-card').length>=40);click('[data-nav="map"]');assert($('#side-content .topic-shortcuts [data-topic="medieval"]'),'Overview recommends topics from the current period');
  await ready();click('#layers-button');assert(!$('#layers-menu').hidden);assert(motions.some(m=>m.element.id==='layers-menu'&&m.frames[0].transform.includes('translateY')));
  click('#close-layers');click('#layers-button');await wait(50);assert(!$('#layers-menu').hidden,'A closing animation must not hide a reopened menu');assert.equal($('#layers-button').getAttribute('aria-expanded'),'true');
  click('#close-layers');await wait(50);assert($('#layers-menu').hidden);assert.equal($('#layers-button').getAttribute('aria-expanded'),'false');

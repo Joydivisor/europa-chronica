@@ -5,6 +5,9 @@
   const clone=value=>JSON.parse(JSON.stringify(value));
   const convert=OpenCC.Converter({from:'cn',to:'tw'});
   const english={
+    '收录年代':'Years covered','定位类型':'Location type','城市参考点':'City reference point',
+    '搜索人物、地点、史事或专题':'Search people, places, events or topics','搜索人物、地点、史事和专题':'Search people, places, events and topics','未找到已收录内容。试试“凡尔登”“一战”或“1916”。':'No entries found. Try Verdun, World War I or 1916.','搜索地点、人物、事件、专题或年份。':'Search places, people, events, topics or years.','试试：凡尔登 · 诺曼底 · 一战':'Try: Verdun · Normandy · World War I',
+    '专题导读':'Explore a topic','选择专题':'Choose a topic','专题':'Topic','全部人物':'All people','相关人物':'People in this story','相关史事':'Related events','继续探索':'Continue exploring','走近人物':'Meet the people','从事件出发，连接人物、地点与历史前后。':'Connect events with the people, places and developments around them.','资料整理：2026年11月16日。':'Sources reviewed: 16 November 2026.',
     '阅读详解 ›':'Read the full account ›','地点':'Places','地点索引':'Place index','从城市、会址与战场走进历史。':'Enter history through cities, meeting places and battlefields.','本时代':'This era','全部地点':'All places','附近年代':'Nearby years','展开本时代编年史 →':'Explore this era’s chronicle →','历史背景':'Historical context','后续影响':'What followed','事件地点':'Event locations','关联地点':'Related places','同期史事':'Events around this time',
     '欧陆纪年 · Europa Chronica':'Europa Chronica · Historical Atlas','欧陆纪年首页':'Europa Chronica home','欧陆纪年':'Europa Chronica','欧洲历史地图':'Historical Atlas of Europe','古典至现代':'Antiquity to the present',
     '图层':'Layers','资料馆':'Library','分享当前地图':'Share the current map','分享':'Share','在 GitHub 上为项目加星标':'Star this project on GitHub','更多操作':'More actions','项目菜单':'Project menu','选择语言':'Choose language','简体中文':'Simplified Chinese','繁體中文':'Traditional Chinese',
@@ -40,6 +43,7 @@
     s=s.replace(/公元前(\d+)年/g,'$1 BCE').replace(/公元(\d+)年/g,'$1 CE').replace(/(\d+)年/g,'$1');
     s=s.replace(/^(\d+) 则精选史事$/,'$1 entries').replace(/^(\d+) 处生平节点$/,'$1 moments').replace(/^(\d+) 则 · (.+)起$/,'$1 entries · from $2').replace(/^另 (\d+) 个政权/,'$1 more polities').replace(/^(.+)的政权$/,'Polities in $1');
     s=s.replace(/^(\d+) 则史事$/,'$1 events').replace(/^(\d+) 处地点/,'$1 places');
+    s=s.replace(/(\d+) 位人物/g,'$1 people').replace(/(\d+) 则史事/g,'$1 events');
     s=s.replace(/^距离约 (\d+) 公里$/,'About $1 km away').replace(/^本题 (\d+) 分 · 累计 (\d+) 分$/,'$1 points · Total $2').replace(/^(.+)，阅读此地历史$/,'$1 · Read the history of this place');
     s=s.replace(/^当前图层收录 (\d+) 个政权或政治体系。点击查看记录与来源。$/,'Explore $1 polities on this map. Select one to read its profile.');
     s=s.replace(/^(.+)的(.+)在地图中包含 (\d+) 片区域。拖动时间轴可逐年查看其疆域变化。$/,'$2 is shown in $3 geographic areas in $1. Move along the timeline to explore changes.');
@@ -67,7 +71,7 @@
         D.events.push({id:`city-${profile.id}-${m.year}-${i}`,year:m.year,date:m.date||String(m.year),title:`${profile.name} · ${m.title}`,city:profile.id,category:/战|围|攻|占|征服|解放/.test(title)?'战争':/大学|教堂|典礼|圣物|建筑/.test(title)?'文化':'政权',summary:m.text,body:m.text,sources:ids});
       });
     });
-    D.events.sort((a,b)=>a.year-b.year);return {D,C};
+    D.events.sort((a,b)=>a.year-b.year||(a.sortOrder||0)-(b.sortOrder||0)||a.id.localeCompare(b.id));return {D,C};
   }
   function data(language=locale){
     if(!cache.has(language)){

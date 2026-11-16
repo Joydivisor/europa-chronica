@@ -93,6 +93,24 @@ async function test(){
  for(const p of w.EUROPA.people){w.atlasAPI.openPerson(p.id);await wait(35);noChinese(`English journey ${p.id}`);click(`[data-person-info="${p.id}"]`);noChinese(`English biography ${p.id}`);$('#detail-dialog').close();}click('[data-exit-journey]');click('[data-nav="map"]');
  click('#quiz-button');await wait(60);noChinese('English quiz');for(let i=0;i<5;i++){$('#map').dispatchEvent(new w.MouseEvent('click',{bubbles:true,clientX:500,clientY:320}));click('[data-quiz-confirm]');noChinese('English quiz answer');click('[data-quiz-next]');await wait(35);}noChinese('English quiz result');click('[data-quiz-exit]');
  input('#search','Rome');noChinese('English search');assert(w.atlasAPI.search('罗马').some(r=>r.type==='city'));assert(w.atlasAPI.search('Budapest').some(r=>r.type==='city'));$('#search-results').hidden=true;
+ // Research expansion: topic -> event -> person/place -> related history, in all languages.
+ const canonical=w.EUROPA_I18N.canonical().D,verdun=canonical.events.find(e=>e.year===1916&&e.title.includes('凡尔登')),stalingrad=canonical.events.find(e=>e.year===1942&&e.title.includes('斯大林格勒'));
+ assert(verdun&&stalingrad,'Both world wars must have detailed battle entries');
+ assert(w.atlasAPI.search('WWI').some(r=>r.type==='topic'&&r.id==='ww1'));assert(w.atlasAPI.search('二战').some(r=>r.type==='topic'&&r.id==='ww2'));
+ for(const language of ['zh-CN','zh-TW','en']){
+  w.atlasAPI.setLanguage(language);w.atlasAPI.openTopic('ww1');await wait(45);assert.equal(w.atlasAPI.inspect().topic,'ww1');assert.equal(w.atlasAPI.inspect().view,'events');assert($$('#side-content .event-card').length>=20);assert.equal(new URL(w.location.href).searchParams.get('topic'),'ww1');
+  assert(Number($('#year-slider').min)>=1914&&Number($('#year-slider').max)<=1920,'WWI timeline zoom must stay within its topic');
+  click(`#side-content [data-event="${verdun.id}"]`);await wait(35);assert.equal(w.atlasAPI.inspect().year,1916);assert.equal($$('#detail-content .event-explanation').length,2);assert($('#detail-content .source-details'));assert($('#detail-content .event-people [data-person]'),'Verdun connects to a documented commander');
+  if(language==='en')noChinese('English Verdun and topic view');
+  click('#next-year');assert.equal(w.atlasAPI.inspect().year,1916);assert.equal(w.atlasAPI.inspect().event,'jutland-battle-1916','Topic playback must visit distinct events in the same year');click('#next-year');assert.equal(w.atlasAPI.inspect().event,'brusilov-offensive-1916');click('#prev-year');assert.equal(w.atlasAPI.inspect().event,'jutland-battle-1916');w.atlasAPI.openEvent(verdun.id);
+  click('#detail-content .event-people [data-person]');await wait(35);assert($$('.route-stop').length>=3);const selectedPerson=w.atlasAPI.inspect().persons[0];click(`[data-person-info="${selectedPerson}"]`);assert($('#detail-content [data-event]'),'Biography links back to events');
+  w.atlasAPI.openEvent(verdun.id);click('#detail-content [data-city="verdun"]');assert($('#detail-content').textContent.includes('843'));assert($('#detail-content').textContent.includes('1916'),'Place history connects treaty and battle');
+  w.atlasAPI.openTopic('ww2');await wait(35);assert($$('#side-content .event-card').length>=20);click(`#side-content [data-event="${stalingrad.id}"]`);assert.equal(w.atlasAPI.inspect().year,1942);if(language==='en')noChinese('English Stalingrad');
+  $('#detail-dialog').close();click('[data-nav="places"]');assert.equal(w.atlasAPI.inspect().topic,'ww2');assert($$('.place-index-card').length>=10);click('[data-place-scope="all"]');assert.equal(w.atlasAPI.inspect().topic,'');assert($$('.place-index-card').length>=100);
+  click('[data-nav="people"]');click('[data-people-scope="all"]');assert($$('#side-content .person-card').length>=40);if(language==='en')noChinese('English expanded people index');
+ }
+ for(const [id,minimum] of [['antiquity',20],['medieval',40],['reformation',15],['revolutions',30],['napoleonic',6]]){w.atlasAPI.openTopic(id);assert($$('#side-content .event-card').length>=minimum,id);click('#side-content [data-event]');assert.equal($$('#detail-content .event-explanation').length,2,id);assert($('#detail-content .source-details'),id);noChinese(`English historical topic ${id}`);$('#detail-dialog').close();}
+ w.atlasAPI.setLanguage('en');w.atlasAPI.openTopic('diplomacy');assert($$('#side-content .event-card').length>=20);click('[data-event-scope="all"]');assert.equal(w.atlasAPI.inspect().topic,'');assert($$('#side-content .event-card').length>=200);click('[data-nav="map"]');
  click('#speed-button');assert(!$('#speed-menu').hidden);click('[data-speed="1800"]');assert.equal($('#play-speed').value,'1800');assert($('#speed-menu').hidden);assert.equal($('#speed-button').textContent,'2×');assert.equal($('[data-speed="1800"]').getAttribute('aria-checked'),'true');
  await year(1200);click('#reset-map');await wait(40);const labels=w.EUROPA_UTILS.seaLabelAudit();assert(labels.find(s=>s.id==='black')?.visible,'Black Sea label remains visible');assert(labels.filter(s=>s.visible).every(s=>!s.onLand),'Sea labels must fit water');
  if(process.env.ATLAS_SVG_OUTPUT)fs.writeFileSync(process.env.ATLAS_SVG_OUTPUT.replace(/\.svg$/,'-en.svg'),$('#map').outerHTML);
@@ -101,7 +119,7 @@ async function test(){
  const geoFetches=fetches.filter(f=>f.includes('assets/maps/europe-'));assert.equal(new Set(geoFetches).size,geoFetches.length,'Era data should be cached');
  await year(1200);click('#reset-map');await wait(40);if(process.env.ATLAS_SVG_OUTPUT)fs.writeFileSync(process.env.ATLAS_SVG_OUTPUT,$('#map').outerHTML);
  assert.equal(errors.length,0,errors.join('\n'));
- console.log('PASS: native timeline input/change + rapid dragging, typed years, era zoom, map-layer independence, all city histories and polity dossiers in three languages, language persistence, sea-label land checks, custom speed menu, internal bibliography, camera resize, journeys, complete quiz, corrected dynasty endpoints, six-era caching, mobile panel state.');
+ console.log('PASS: timeline dragging, topic playback within the same year, classical/medieval/modern thematic reading, event-person-place links, all city histories and biographies, three languages, source panels, map layers, sea-label land checks, custom menus, camera resize, journeys, complete quiz, corrected dynasty endpoints, caching, mobile panel state.');
  console.log(`No runtime errors. ${w.atlasAPI.inspect().polities.length} visible political groups at 1200. DOM checks do not substitute for browser layout/touch verification.`);
  dom.window.close();
 }

@@ -11,6 +11,11 @@ vm.runInNewContext(fs.readFileSync(path.join(dir,'data.js'),'utf8'),sandbox);
 const data=sandbox.window.EUROPA;
 for(const collection of ['events','cities','people'])assert.equal(new Set(data[collection].map(x=>x.id)).size,data[collection].length,`${collection}: duplicate id`);
 const cities=new Set(data.cities.map(c=>c.id));
+const eventIds=new Set(data.events.map(e=>e.id)),personIds=new Set(data.people.map(p=>p.id)),topicIds=new Set((data.topics||[]).map(t=>t.id));
+assert.equal(topicIds.size,data.topics.length,'Duplicate topic');
+for(const t of data.topics){assert(t.title&&t.description&&t.subtitle,t.id);assert(t.start<t.end,t.id);assert(data.events.some(e=>(e.topics||[]).includes(t.id)),`Empty topic ${t.id}`);}
+for(const e of data.events){for(const id of e.topics||[])assert(topicIds.has(id),`${e.id}: topic ${id}`);for(const id of e.people||[])assert(personIds.has(id),`${e.id}: person ${id}`);if(e.endYear!==undefined)assert(e.endYear>=e.year,`${e.id}: inverted range`);}
+for(const p of data.people){for(const id of p.topics||[])assert(topicIds.has(id),`${p.id}: topic ${id}`);for(const id of p.relatedEvents||[])assert(eventIds.has(id),`${p.id}: event ${id}`);for(const s of p.stops){assert(Number.isInteger(s.year)&&s.year!==0,`${p.id}: stop year`);for(const id of s.sources||[])assert(data.sources[id],`${p.id}: stop source ${id}`);for(const id of s.relatedEvents||[])assert(eventIds.has(id),`${p.id}: stop event ${id}`);}}
 const coordinates=point=>assert(Array.isArray(point)&&point.length===2&&point.every(Number.isFinite)&&point[0]>=-26&&point[0]<=55&&point[1]>=28&&point[1]<=74,'Geographic point outside the atlas');
 const located=item=>{for(const point of item.eventLocations||[]){coordinates(point.coord);assert(point.name&&point.precision);assert(point.sourceIds?.length);for(const id of point.sourceIds)assert(data.sources[id],`${item.id||item.title}: ${id}`);}};
 for(const c of data.cities){coordinates(c.coord);assert(c.coordPrecision,c.id);assert(c.coordSources?.length,c.id);for(const id of c.coordSources)assert(data.sources[id],`${c.id}: ${id}`);}
@@ -83,7 +88,7 @@ for(const file of ['locales/en-core.js','locales/en-content.js'])vm.runInNewCont
 function assertTranslation(original,translated,key='root'){
   if(typeof original==='string'){
     assert.equal(typeof translated,'string',key);
-    if(['id','category','url','matchPattern','sourceId','aliases','sourceIds','sources','city','event','person','datePrecision','relatedPlaces','coordSources'].includes(key))assert.equal(translated,original,key);
+    if(['id','category','url','matchPattern','sourceId','aliases','sourceIds','sources','city','event','person','datePrecision','relatedPlaces','coordSources','topics','people','relatedEvents'].includes(key))assert.equal(translated,original,key);
     else assert(!/[\u3400-\u9fff]/.test(translated),`Untranslated English: ${key}`);
   }else if(Array.isArray(original)){assert(Array.isArray(translated),key);assert.equal(translated.length,original.length,key);original.forEach((v,i)=>assertTranslation(v,translated[i],key));}
   else if(original&&typeof original==='object'){assert.deepEqual(Object.keys(translated).sort(),Object.keys(original).sort(),key);for(const k of Object.keys(original))assertTranslation(original[k],translated[k],k);}

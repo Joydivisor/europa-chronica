@@ -119,6 +119,48 @@ html[lang=en] .event-site text{font:600 13px Cormorant,serif}
 
 .chronicle-row .text-button{margin-right:12px}
 
+/* Thematic reading paths keep the growing archive connected. */
+.topic-shortcuts,.topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.topic-shortcuts{margin:10px 0}
+.topic-chip,.topic-card{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0;padding:10px 11px;text-align:left;border:1px solid #ddd4be;border-radius:13px;background:#f4efdf;color:#58634a;transition:background .18s,border-color .18s,transform .18s}
+.topic-chip strong{font:600 11px/1.6 var(--serif)}
+.topic-chip>span,.topic-card>span{min-width:0}
+.topic-chip em,.topic-card em{font:11px Cinzel,serif;font-style:normal;color:#957a4c;flex-shrink:0}
+.topic-chip:hover,.topic-card:hover{background:#e9dfc8;border-color:#c4ac78;transform:translateY(-1px)}
+.topic-chip.active,.topic-card.active{background:#e3dcc4;border-color:#ad9564;color:#6c532c}
+.topic-picker{margin:10px 0 18px;border:1px solid #dcd5c5;border-radius:13px;background:#faf6eb}
+.topic-picker>summary{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;cursor:pointer;list-style:none;color:#685b40;font:11px/1.6 var(--serif);border-radius:12px}
+.topic-picker>summary::-webkit-details-marker{display:none}
+.topic-picker>summary small{font:9px var(--serif);color:#8d8168;white-space:nowrap}
+.topic-picker[open]>summary{border-radius:12px 12px 0 0;border-bottom:1px solid #e4dccb}
+.topic-picker>.topic-grid{padding:8px;max-height:360px;overflow:auto;scrollbar-width:thin}
+.topic-picker[open]>.topic-grid{animation:topic-reveal .22s ease-out}
+@keyframes topic-reveal{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.topic-picker .topic-chip{padding:8px;min-height:42px}
+.chronicle-stats{display:flex;align-items:center;gap:17px;margin:12px 0 16px;font:10px var(--serif);color:#72745c}
+.chronicle-stats b{font:18px Cinzel,serif;color:#59624b}
+.chronicle-stats button{font:inherit;padding:3px 0;color:#78613d}
+.chronicle-stats button:hover{color:#8b4537}
+.scope-filters{padding-top:11px;border-top:1px solid #dfd8c8}
+.related-people-inline{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.related-people-inline small{font:10px var(--serif);color:#8b8068;margin-right:3px}
+.related-people-inline button,.event-topics button{border-radius:99px;padding:5px 9px;border:1px solid #d9ceb5;background:#eee6d1;color:#7c653e;font:10px/1.5 var(--serif)}
+.related-people-inline button:hover,.event-topics button:hover{background:#e3d4b2;border-color:#baa16d}
+.event-topics{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 19px}
+.event-people .person-card{padding:10px 6px}
+.event-people .person-medallion{width:31px;height:35px;font-size:17px}
+.library-topics{margin:10px 0 28px}
+.topic-card{min-height:74px;padding:13px}
+.topic-card strong{display:block;font:600 14px/1.5 var(--serif)}
+.topic-card small{display:block;font:10px/1.7 var(--serif);color:#8b816b;margin-top:3px}
+html[lang=en] .topic-chip strong{font:10px/1.5 Cinzel,serif}
+html[lang=en] .topic-card strong{font:12px/1.45 Cinzel,serif}
+html[lang=en] .topic-card small{font:14px/1.3 Cormorant,serif}
+html[lang=en] .topic-picker>summary,html[lang=en] .topic-picker>summary small{font-family:Cinzel,serif;font-size:9px}
+html[lang=en] .chronicle-stats{gap:12px;font:13px Cormorant,serif}
+html[lang=en] .related-people-inline button,html[lang=en] .event-topics button{font:10px/1.5 Cinzel,serif}
+@media(max-width:600px){.topic-chip{padding:9px}.topic-card{padding:10px}.topic-card strong{font-size:12px}.topic-card small{font-size:9px}.topic-picker>.topic-grid{max-height:290px}}
+
 /* Repository link and its compact share menu. */
 .github-control{position:relative;flex-shrink:0}
 .github-pill{display:flex;align-items:stretch;height:34px;border:1px solid #dcd6c7;border-radius:999px;background:#fcf9f0;box-shadow:inset 0 1px #fff9}
