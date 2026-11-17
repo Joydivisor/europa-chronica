@@ -9,7 +9,7 @@ let resize;w.ResizeObserver=class{constructor(fn){resize=fn;}observe(){}disconne
 let mapWidth=1100;Object.defineProperty(w.HTMLElement.prototype,'clientWidth',{get(){return this.classList.contains('map-stage')?mapWidth:352;}});Object.defineProperty(w.HTMLElement.prototype,'clientHeight',{get(){return this.classList.contains('map-stage')?650:400;}});
 w.HTMLDialogElement.prototype.show=w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
 w.fetch=async url=>{fetches.push(url);try{const data=fs.readFileSync(path.join(root,url),'utf8');return {ok:true,json:async()=>JSON.parse(data)};}catch(e){return {ok:false,status:404};}};
-for(const file of ['assets/d3.min.js','data.js','content.js','assets/opencc-cn2t.js','locales/en-core.js','locales/en-content.js','i18n.js','app.js'])w.eval(fs.readFileSync(path.join(root,file),'utf8'));
+for(const file of ['assets/d3.min.js','data.js','content.js','assets/opencc-cn2t.js','locales/en-core.js','locales/en-content.js','i18n.js','music-data.js','music.js','app.js'])w.eval(fs.readFileSync(path.join(root,file),'utf8'));
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const $=s=>w.document.querySelector(s),$$=s=>[...w.document.querySelectorAll(s)];
 function click(s){const el=$(s);assert(el,`Missing ${s}`);el.click();}

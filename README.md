@@ -22,6 +22,8 @@
 - **随人物行旅**：按年代追随生平节点，也可同时选择多位人物，比较他们的足迹。
 - **切换三种语言**：正文、地图、菜单与书目同步切换；当前年份、地点和视角保持不变，分享链接保留语言。
 - **试试舆图寻址**：根据五则历史线索在地图上落针，按距离计分。
+- **从推荐开始探索**：点开搜索框，直接选择专题、人物、地点和史事；也能一键开启多人同看与寻址挑战，支持方向键、Enter 与 Escape。
+- **让音乐陪你阅读**：底部音符打开「欧陆乐馆」，可选巴赫、莫扎特和文艺复兴风格器乐，独立播放、调节音量和单曲循环。默认静音，点击播放才加载音频，记住偏好而不自动恢复播放。
 
 界面使用羊皮纸、灰蓝海面与低饱和政权色；圆角控件与滑动面板搭配 Noto Serif SC、Cinzel、Uncial Antiqua 和 Cormorant Garamond。
 
@@ -85,6 +87,8 @@ scripts/                         数据检查、交互测试与地理处理脚�
 
 本轮以 OpenStax《World History》两卷和 Christopher Brooks 的开放教材《Western Civilization: A Concise History》核对主题覆盖，再用专题研究、档案、博物馆和机构原始材料核查日期、人物活动及地点。已读取来源的条目关联与取舍记录保存在 [结构化来源审计](docs/content-expansion-audit.json)；书目数量包含不同条目对同一来源的复用。
 
+背景音乐采用许可明确的录音：Kimiko Ishizaka 演奏的巴赫《哥德堡变奏曲·咏叹调》（CC0）、Brendan Kinsella／Musopen 的莫扎特 K.333 第二乐章（公有领域释放，保留 Musopen 署名），以及 Kevin MacLeod 的《Angevin》（CC BY 4.0，文艺复兴风格现代原创）。音频随站托管，完整曲目按需加载；来源、转码说明和文件校验值见 [音乐许可记录](dist/assets/music/README.md) 与 [manifest.json](dist/assets/music/manifest.json)。原语音朗读功能已由音乐播放器替换。
+
 - **历史疆域**：Cliopatria v0.2.1 的欧洲衍生数据，7,623 条上游合并记录，按六个时代分区。由原始几何重新裁切、简化至 0.007°，保留五位坐标小数；35 组原有合并记录恢复区间内的不同几何。详见 [地图来源与方法](dist/assets/maps/README.md)。
 - **自然地理**：Natural Earth **1:10 million** 陆地、河流与湖泊，扩展西侧范围以完整显示冰岛。地形阴影使用 NOAA ETOPO1 / USGS GMTED2010，经 Mapzen / Tilezen Terrarium 分发。详见 [地理图层说明](dist/assets/geography/README.md)。
 - **地点核查**：区分城市参考点、遗址范围、战场范围与具体会场，另列事件定位。1789 年的凡尔赛与巴黎、1945 年的兰斯与柏林分别标注。核对记录见 [地理审计](docs/geographic-audit.md) 与 [历史增补来源](docs/history-evidence-audit.md)。
@@ -124,6 +128,8 @@ Fork 部署时，在自己的仓库启用 Pages，并将首页、canonical 与 R
 The interface and historical content are available in Simplified Chinese, Traditional Chinese and English. Language changes preserve the current year, place and map view. The atlas is a static application built with JavaScript and D3, with locally hosted fonts and geographic assets.
 
 Explore **225 core events, 46 biographies, 162 places and 15 thematic reading paths**, from classical antiquity and medieval Europe through the Reformation, revolutions, both world wars and postwar integration. Events include background, consequences, sources and links to people and places. Topic playback visits individual events even when several occur in the same year. The November 2026 expansion adds 161 events and 38 biographies; its [coverage record](docs/content-expansion-2026-11.md) and [source audit](docs/content-expansion-audit.json) document the textbook comparison and evidence review.
+
+The search panel offers clickable topics, people, places, events and map challenges. The **Music Room** replaces speech narration with three locally hosted, openly usable recordings: Bach performed by Kimiko Ishizaka, Mozart performed by Brendan Kinsella / Musopen, and Kevin MacLeod’s Renaissance-inspired *Angevin*. Playback starts only on request; volume, selection and repeat preferences are remembered without autoplay. Recording rights and credits remain separate from the application’s GPL licence; see the [music licence record](dist/assets/music/README.md).
 
 **Inspiration and acknowledgements:** The main product and interaction inspiration comes from [Chronicles of the Realm / 江山时序 (`jiangshan-map`)](https://github.com/DeanChensj/jiangshan-map) by [DeanChensj](https://github.com/DeanChensj), particularly its map-centred layout, linked timeline and reading panel, place histories, biographical journeys and layer controls. We gratefully acknowledge this influence. The visual palette also takes inspiration from the *Europa Universalis* series.
 

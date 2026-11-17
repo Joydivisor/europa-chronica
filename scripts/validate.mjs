@@ -98,4 +98,19 @@ assertTranslation(data,sandbox.window.EUROPA_EN_CORE);
 assertTranslation(content.cities,sandbox.window.EUROPA_EN_CONTENT.cities);
 assertTranslation(content.polities,sandbox.window.EUROPA_EN_CONTENT.polities);
 assert(fs.existsSync(path.join(dir,'assets/OPENCC-LICENSE.txt')));assert(fs.existsSync(path.join(dir,'assets/OPENCC-DATA-LICENSE.txt')));
+const musicManifest=JSON.parse(fs.readFileSync(path.join(dir,'assets/music/manifest.json'),'utf8'));
+vm.runInNewContext(fs.readFileSync(path.join(dir,'music-data.js'),'utf8'),sandbox);
+const tracks=sandbox.window.EUROPA_MUSIC_TRACKS;
+assert.equal(tracks.length,musicManifest.tracks.length);assert.equal(new Set(tracks.map(t=>t.id)).size,tracks.length);
+for(const t of tracks){
+  const evidence=musicManifest.tracks.find(r=>r.id===t.id);assert(evidence,t.id);
+  for(const key of Object.keys(t))assert.equal(t[key],evidence[key],`${t.id}: ${key}`);
+  assert(t.file===path.basename(t.file)&&t.file.endsWith('.mp3'));const raw=fs.readFileSync(path.join(dir,'assets/music',t.file));
+  assert.equal(raw.length,evidence.bytes,t.id);assert.equal(crypto.createHash('sha256').update(raw).digest('hex'),evidence.sha256,t.id);
+  assert(t.duration>0&&t.performer&&t.attribution&&evidence.proof&&evidence.changes,t.id);
+  for(const key of ['sourceUrl','licenseUrl'])assert.equal(new URL(t[key]).protocol,'https:');
+  for(const key of ['title','composer','group','description']){assert(t[key+'Zh']);assert(t[key+'En']);assert(!/[\u3400-\u9fff]/.test(t[key+'En']));}
+}
+assert(!/speechSynthesis|SpeechSynthesisUtterance|id="narration"/.test(html+fs.readFileSync(path.join(dir,'app.js'),'utf8')),'Narration must be removed');
 console.log(`PASS: ${data.events.length} core events, ${content.cities.length} city histories, ${content.polities.length} polity dossiers, ${data.people.length} people, ${data.quiz.length} quiz questions; historical geometry, physical geography, hillshade assets, and source references validated.`);
+console.log(`PASS: ${tracks.length} locally hosted music recordings, checksums, licensing metadata and bilingual catalogue.`);

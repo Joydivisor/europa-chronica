@@ -22,7 +22,7 @@
   const icon = name => `<svg aria-hidden="true"><use href="#i-${name}"/></svg>`;
   const params = new URLSearchParams(location.search);
   const initialTopic=topic(params.get('topic'))?.id||'';
-  const state = {reader:null,year: clampYear(params.get('year') || (initialTopic?topicEvents(initialTopic)[0]?.year:1200)),view:initialTopic?'events':'map',topicId:initialTopic,eventScope:'era',peopleScope:'all',eventId:'',cityId:'',eventLocation:0,placeScope:'era',persons:[],stop:0,playing:false,narration:false,filter:'全部',quiz:null,range:[-500,2024],legendOpen:false,mode:'political',opacity:65,layers:{...layerDefaults}};
+  const state = {reader:null,year: clampYear(params.get('year') || (initialTopic?topicEvents(initialTopic)[0]?.year:1200)),view:initialTopic?'events':'map',topicId:initialTopic,eventScope:'era',peopleScope:'all',eventId:'',cityId:'',eventLocation:0,placeScope:'era',persons:[],stop:0,playing:false,filter:'全部',quiz:null,range:[-500,2024],legendOpen:false,mode:'political',opacity:65,layers:{...layerDefaults}};
   if(initialTopic){const entries=topicEvents(initialTopic),from=Math.min(...entries.map(e=>e.year)),to=Math.max(...entries.map(e=>e.endYear||e.year));if(entries.length)state.range=[Math.max(-500,from),Math.min(2024,Math.max(from+1,to))];}
   let geo, land, modern, rivers, lakes, projection, path, planarPath, zoom, mapRoot, realmGroup, labelGroup, cityGroup, routeGroup, quizGroup, eventSiteGroup, waterGroup, seaGroup, terrainImage, changingLanguage=false, currentFeatures = [], currentGroups = [], playingTimer, toastTimer, renderFrame, mapReady = false, width = 0, height = 0, dataRequest = 0;
   const geometryCache = new Map(),polygonCache=new WeakMap();
@@ -163,7 +163,7 @@
     pause(); state.quiz = null; state.eventId = ''; state.cityId = ''; state.persons = [...new Set((Array.isArray(ids)?ids:[ids]).filter(id=>person(id)))].slice(0,3);
     if (!state.persons.length) return;
     state.stop = Math.max(0,Math.min(Number(stop)||0,journeyStops().length-1)); activateView('people');
-    $('#detail-dialog').close(); $('#search-results').hidden = true;
+    $('#detail-dialog').close(); closeSearch();
     goStop(state.stop); toggleSidebar(true);
   }
   function renderJourney() {
@@ -200,24 +200,42 @@
     if(['小试','寻址','quiz'].some(s=>q.includes(s)))result.push({type:'quiz',name:'舆图寻址',detail:'开始五题地图挑战'});
     return result.slice(0,14).map(r=>({...r,name:L.text(r.name),detail:L.text(r.detail)}));
   }
-  function showSearch() { const q=$('#search').value, results=search(q), el=$('#search-results');const wasHidden=el.hidden;el.hidden=false;if(wasHidden)reveal(el,'up');el.innerHTML=q.trim()?(results.map(r=>`<button class="search-result" data-search-type="${r.type}" data-search-id="${esc(r.ids?.join(',')||r.id||'')}">${icon(r.type==='person'||r.type==='multi'?'route':r.type==='event'||r.type==='topic'?'book':'pin')}<span><strong>${esc(r.name)}</strong><small>${esc(r.detail)}</small></span></button>`).join('')||'<div class="search-hint">未找到已收录内容。试试“凡尔登”“一战”或“1916”。</div>'):'<div class="search-hint">搜索地点、人物、事件、专题或年份。<br>试试：凡尔登 · 诺曼底 · 一战<br>多人同看：查理曼 奥托</div>'; }
-  function selectSearch(type,id) { $('#search-results').hidden=true;$('#search').blur();if(type==='topic')openTopic(id);else if(type==='person'||type==='multi')openPerson(id.split(','));else if(type==='event')openEvent(id);else if(type==='city'){const c=city(id);if(c&&state.year<c.since)setYear(c.since);openCity(id);}else if(type==='year'){if(state.quiz)exitQuiz();$('#detail-dialog').close();leaveJourney();setYear(id);}else if(type==='realm'){openRealm(id);focusRealm(id);}else if(type==='quiz')startQuiz(); }
+  function searchRecommendations(){
+    const current=state.year<476?'antiquity':state.year<1500?'medieval':state.year<1789?'reformation':state.year<1914?'revolutions':state.year<1946?'ww2':'cold-war';
+    const topicIds=[...new Set([current,'antiquity','ww1','ww2','diplomacy'])].slice(0,4);
+    const chip=(type,id,name)=>`<button class="search-suggestion" data-search-type="${type}" data-search-id="${esc(id)}">${icon(type==='person'?'route':type==='city'?'pin':'book')}<span>${esc(name)}</span></button>`;
+    const group=(title,items)=>`<section class="search-suggestion-group"><h3>${title}</h3><div class="search-suggestion-grid">${items.join('')}</div></section>`;
+    return `<div class="search-discovery"><div class="search-discovery-heading"><strong>从这里开始</strong><span>点击即可探索</span></div>${group('专题导读',topicIds.map(id=>topic(id)).filter(Boolean).map(t=>chip('topic',t.id,t.title)))}${group('人物足迹',['charlemagne','joan','napoleon'].map(person).filter(Boolean).map(p=>chip('person',p.id,p.name)))}${group('地点与史事',[...['rome','constantinople'].map(city).filter(Boolean).map(c=>chip('city',c.id,c.name)),...['magna-carta','verdun-battle-1916'].map(event).filter(Boolean).map(e=>chip('event',e.id,e.title))])}<div class="search-experiences"><button data-search-type="multi" data-search-id="charlemagne,otto"><strong>多人同看</strong><small>${esc(person('charlemagne').name)} × ${esc(person('otto').name)}</small></button><button data-search-type="quiz" data-search-id="locate"><strong>舆图寻址</strong><small>五道题，走遍欧陆</small></button></div><p class="search-keyboard-hint">↑↓ 选择 · Enter 打开 · Esc 收起</p></div>`;
+  }
+  function closeSearch(){setMenu($('#search-results'),false,$('#search'));}
+  function showSearch() {
+    const q=$('#search').value,results=search(q),el=$('#search-results');
+    setMenu(el,true,$('#search'));
+    el.innerHTML=q.trim()?(results.map(r=>`<button class="search-result" data-search-type="${r.type}" data-search-id="${esc(r.ids?.join(',')||r.id||'')}">${icon(r.type==='person'||r.type==='multi'?'route':r.type==='event'||r.type==='topic'?'book':'pin')}<span><strong>${esc(r.name)}</strong><small>${esc(r.detail)}</small></span></button>`).join('')||'<p class="search-empty">未找到匹配内容，试试下面的推荐。</p>'+searchRecommendations()):searchRecommendations();
+  }
+  function selectSearch(type,id) {
+    closeSearch();$('#search').blur();
+    if(type==='topic')openTopic(id);else if(type==='person'||type==='multi')openPerson(id.split(','));else if(type==='event')openEvent(id);
+    else if(type==='city'){const c=city(id);if(c&&state.year<c.since)setYear(c.since);openCity(id);}
+    else if(type==='year'){if(state.quiz)exitQuiz();$('#detail-dialog').close();leaveJourney();setYear(id);}
+    else if(type==='realm'){openRealm(id);focusRealm(id);}else if(type==='quiz')startQuiz();
+    const target=$('#detail-dialog').open?$('#detail-dialog .dialog-close'):$('#side-content');if(target.id==='side-content')target.tabIndex=-1;target.focus({preventScroll:true});
+  }
 
-  function speak(text) { if(!state.narration || !('speechSynthesis' in window))return;speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang=L.locale==='en'?'en-GB':L.locale;utterance.rate=.88;speechSynthesis.speak(utterance); }
   function step(direction) {
     if(state.quiz)return;$('#detail-dialog').close();
-    if(state.persons.length){const stops=journeyStops(),next=state.stop+direction;if(next<0||next>=stops.length){pause();return;}goStop(next);speak(`${formatYear(stops[next].year)}，${stops[next].person.name}，${stops[next].title}。${stops[next].text}`);return;}
+    if(state.persons.length){const stops=journeyStops(),next=state.stop+direction;if(next<0||next>=stops.length){pause();return;}goStop(next);return;}
     if(state.topicId){
       const entries=topicEvents(state.topicId),index=entries.findIndex(e=>e.id===state.eventId),next=index>=0?entries[index+direction]:direction>0?entries.find(e=>e.year>=state.year):entries.findLast(e=>e.year<=state.year);
       if(!next){pause();return;}state.eventId=next.id;state.cityId=next.city;state.eventLocation=0;setYear(next.year,{preserveSelection:true});
       if(next.eventLocations?.length)focusEventLocation(next.id,0);else focusCity(next.city);
-      $(`#side-content [data-event="${next.id}"]`)?.scrollIntoView?.({block:'nearest',behavior:reducedMotion?'instant':'smooth'});speak(`${next.date||formatYear(next.year)}，${next.title}。${next.body}`);return;
+      $(`#side-content [data-event="${next.id}"]`)?.scrollIntoView?.({block:'nearest',behavior:reducedMotion?'instant':'smooth'});return;
     }
     const entries=state.topicId?topicEvents(state.topicId):D.events,years=[...new Set([...entries.map(e=>e.year),...(state.topicId?[]:[800,1000,1200,1450])])].sort((a,b)=>a-b),next=direction>0?years.find(y=>y>state.year):[...years].reverse().find(y=>y<state.year);
-    if(next===undefined){pause();return;}setYear(next);const e=entries.find(e=>e.year===next);speak(`${formatYear(next)}，${e?e.title+'。'+e.body:era(next).summary}`);
+    if(next===undefined){pause();return;}setYear(next);
   }
   function play() {if(state.quiz)return;$('#detail-dialog').close();clearInterval(playingTimer);state.playing=true;renderTimeline();if(state.persons.length)renderJourney();playingTimer=setInterval(()=>step(1),Number($('#play-speed').value));}
-  function pause({redraw=true}={}) {state.playing=false;clearInterval(playingTimer);if('speechSynthesis'in window)speechSynthesis.cancel();if(redraw){renderTimeline();if(state.persons.length&&!state.quiz)renderJourney();}else{$('#play').textContent='▶';$('#play').setAttribute('aria-label',L.text('播放历史演进'));$('#play').setAttribute('aria-pressed','false');}}
+  function pause({redraw=true}={}) {state.playing=false;clearInterval(playingTimer);if(redraw){renderTimeline();if(state.persons.length&&!state.quiz)renderJourney();}else{$('#play').textContent='▶';$('#play').setAttribute('aria-label',L.text('播放历史演进'));$('#play').setAttribute('aria-pressed','false');}}
   function togglePlay() {state.playing?pause():play();}
 
   function startQuiz() {
@@ -470,6 +488,7 @@
     if(libraryOpen)openSources();
     L.localize();$('#side-content').scrollTop=sidebarScroll;$('#detail-content').scrollTop=readingScroll;changingLanguage=false;updateURL();
     if($('#share-url'))$('#share-url').value=location.href;
+    window.EUROPA_MUSIC.localize();
     if(!$('#search-results').hidden)showSearch();
     reveal($('#detail-dialog').open?$('#detail-content'):$('#side-content'),'right');
   }
@@ -512,8 +531,20 @@
     else if(b.hasAttribute('data-retry-map'))loadPeriod();
     else if(b.hasAttribute('data-retry-init'))initializeMap();
   });
-  $('#search').addEventListener('input',showSearch);$('#search').addEventListener('focus',showSearch);$('#search').addEventListener('keydown',e=>{if(e.key==='Escape'){$('#search-results').hidden=true;$('#search').blur();}if(e.key==='Enter'){const b=$('.search-result');if(b){e.preventDefault();selectSearch(b.dataset.searchType,b.dataset.searchId);}}if(e.key==='ArrowDown'){e.preventDefault();$('.search-result')?.focus();}});
-  document.addEventListener('click',e=>{if(!e.target.closest('.search-box'))setMenu($('#search-results'),false);if(!e.target.closest('.speed-control'))setMenu($('#speed-menu'),false,$('#speed-button'));if(!e.target.closest('.github-control'))setMenu($('#project-menu'),false,$('#project-menu-button'));if(!e.target.closest('.layers-menu')&&!e.target.closest('#layers-button')){setMenu($('#layers-menu'),false,$('#layers-button'));}});
+  $('#search').addEventListener('input',showSearch);$('#search').addEventListener('focus',showSearch);$('#search').addEventListener('click',()=>{if($('#search').getAttribute('aria-expanded')!=='true')showSearch();});
+  $('.search-box').addEventListener('focusout',e=>{if(!e.currentTarget.contains(e.relatedTarget))closeSearch();});
+  $('.search-box').addEventListener('keydown',e=>{
+    if(e.key==='Escape'){e.preventDefault();e.stopPropagation();$('#search').focus();closeSearch();return;}
+    if(['ArrowLeft','ArrowRight',' ','Enter'].includes(e.key))e.stopPropagation();
+    if(e.key==='Enter'&&e.target===$('#search')){e.preventDefault();e.stopPropagation();const b=$('#search-results [data-search-type]');if(b)selectSearch(b.dataset.searchType,b.dataset.searchId);return;}
+    if(['ArrowDown','ArrowUp'].includes(e.key)){
+      e.preventDefault();e.stopPropagation();if($('#search').getAttribute('aria-expanded')!=='true')showSearch();
+      const buttons=$$('#search-results [data-search-type]'),i=buttons.indexOf(document.activeElement);
+      if(i===0&&e.key==='ArrowUp'){$('#search').focus();return;}
+      buttons[i<0?(e.key==='ArrowDown'?0:buttons.length-1):(i+(e.key==='ArrowDown'?1:buttons.length-1))%buttons.length]?.focus();
+    }
+  });
+  document.addEventListener('click',e=>{if(!e.target.closest('.search-box'))closeSearch();if(!e.target.closest('.speed-control'))setMenu($('#speed-menu'),false,$('#speed-button'));if(!e.target.closest('.github-control'))setMenu($('#project-menu'),false,$('#project-menu-button'));if(!e.target.closest('.layers-menu')&&!e.target.closest('#layers-button')){setMenu($('#layers-menu'),false,$('#layers-button'));}});
   function scrubYear(value) {
     const restoreSide=state.persons.length||state.quiz;pause({redraw:false});state.persons=[];state.quiz=null;$('#detail-dialog').close();cancelAnimationFrame(renderFrame);
     renderFrame=requestAnimationFrame(()=>setYear(value,{keepSide:!restoreSide}));
@@ -526,7 +557,6 @@
   $('.timeline-track').addEventListener('dblclick',zoomTimeline);$('#timeline-zoom').onclick=zoomTimeline;
   $('#prev-year').onclick=()=>{pause();step(-1);};$('#next-year').onclick=()=>{pause();step(1);};$('#play').onclick=togglePlay;
   $('#play-speed').onchange=()=>{if(state.playing){pause();play();}};
-  $('#narration').onclick=()=>{if(!('speechSynthesis'in window)){toast('此浏览器不支持语音讲解，文字史事仍可阅读。');return;}state.narration=!state.narration;$('#narration').setAttribute('aria-pressed',String(state.narration));$('#narration').setAttribute('aria-label',state.narration?'关闭语音讲解':'开启语音讲解');if(!state.narration)speechSynthesis.cancel();toast(state.narration?'已开启语音讲解，播放时朗读史事':'已关闭语音讲解');};
   $('#sources-button').onclick=openSources;$('#map-note').onclick=openSources;$('#quiz-button').onclick=startQuiz;
   function toggleProjectMenu(open){
     setMenu($('#project-menu'),open,$('#project-menu-button'));
@@ -560,7 +590,7 @@
   $('#legend').addEventListener('pointerover',e=>{const b=e.target.closest('[data-realm]');if(b)highlightRealm(b.dataset.realm);});$('#legend').addEventListener('pointerleave',()=>highlightRealm(null));
   document.addEventListener('keydown',e=>{
     const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
-    if(e.key==='Escape'){pause();setMenu($('#speed-menu'),false,$('#speed-button'));setMenu($('#layers-menu'),false,$('#layers-button'));toggleProjectMenu(false);$('#search-results').hidden=true;if($('#detail-dialog').open)$('#detail-dialog').close();else if(window.innerWidth<=850)toggleSidebar(false);return;}
+    if(e.key==='Escape'){pause();setMenu($('#speed-menu'),false,$('#speed-button'));setMenu($('#layers-menu'),false,$('#layers-button'));toggleProjectMenu(false);closeSearch();window.EUROPA_MUSIC.close();if($('#detail-dialog').open)$('#detail-dialog').close();else if(window.innerWidth<=850)toggleSidebar(false);return;}
     if((e.key==='/'&&!typing)||((e.ctrlKey||e.metaKey)&&e.key==='k')){e.preventDefault();toggleSidebar(true);$('#search').focus();return;}
     if(typing||$('dialog[open]'))return;
     if(e.key===' '&&!['BUTTON','A'].includes(document.activeElement?.tagName)){e.preventDefault();togglePlay();}
@@ -573,7 +603,7 @@
   // Small public API for integrations and reproducible checks, mirroring the source project's deep-link model.
   window.atlasAPI={setLanguage,search,openTopic,openEvent,locate({year,place}){if(year!==undefined)setYear(year);const c=D.cities.find(c=>[c.id,c.name,c.modern,c.latin].includes(place));if(c)openCity(c.id);return c||null;},openPerson:(id,stop=0)=>openPerson(String(id).split(','),stop),inspect(){return {language:L.locale,year:state.year,era:era(state.year).name,topic:state.topicId,view:state.view,persons:[...state.persons],stop:state.stop,place:state.cityId,event:state.eventId,eventLocation:state.eventLocation,layers:{...state.layers},opacity:state.opacity,mode:state.mode,polities:currentGroups.map(g=>({id:g.id,name:g.name})),quiz:state.quiz?{index:state.quiz.index,score:state.quiz.score,revealed:state.quiz.revealed,complete:state.quiz.complete}:null};},setYear:y=>setYear(y),ready:()=>mapReady&&!!geo};
   window.EUROPA_UTILS={clampYear,era,selectFeatures,parentNames,formatYear,seaLabelAudit};
-  L.localize();updateLanguageButtons();renderTimeline();activateView(state.view);
+  L.localize();updateLanguageButtons();renderTimeline();activateView(state.view);window.EUROPA_MUSIC.init({setMenu});
   const initialPersons=(params.get('person')||'').split(',').filter(id=>person(id));
   if(initialPersons.length)openPerson(initialPersons,params.get('stop'));
   else if(params.get('event')&&event(params.get('event')))openEvent(params.get('event'));

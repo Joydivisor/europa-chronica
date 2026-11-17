@@ -10,7 +10,7 @@ let mapWidth=1100;Object.defineProperty(w.HTMLElement.prototype,'clientWidth',{g
 w.HTMLDialogElement.prototype.show=w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
 w.fetch=async url=>{fetches.push(url);try{const data=fs.readFileSync(path.join(root,url),'utf8');return {ok:true,json:async()=>JSON.parse(data)};}catch(e){return {ok:false,status:404};}};
 const motions=[];w.HTMLElement.prototype.animate=function(frames,options){let resolve,reject;const finished=new Promise((a,b)=>{resolve=a;reject=b;});const animation={finished,cancel(){reject(new Error('cancelled'));},finish:resolve};motions.push({element:this,frames,options,animation});setTimeout(resolve,25);return animation;};
-for(const file of ['assets/d3.min.js','data.js','content.js','assets/opencc-cn2t.js','locales/en-core.js','locales/en-content.js','i18n.js','app.js'])w.eval(fs.readFileSync(path.join(root,file),'utf8'));
+for(const file of ['assets/d3.min.js','data.js','content.js','assets/opencc-cn2t.js','locales/en-core.js','locales/en-content.js','i18n.js','music-data.js','music.js','app.js'])w.eval(fs.readFileSync(path.join(root,file),'utf8'));
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const $=s=>w.document.querySelector(s),$$=s=>[...w.document.querySelectorAll(s)];
 function click(s){const el=$(s);assert(el,`Missing ${s}`);el.click();}
@@ -20,6 +20,8 @@ async function year(value){w.atlasAPI.setYear(value);await wait(45);}
 function names(){return w.atlasAPI.inspect().polities.map(p=>p.name).join(' ');}
 
 async function test(){
+ click('#music-button');assert(motions.some(m=>m.element.id==='music-panel'));click('#music-close');click('#music-button');await wait(50);assert(!$('#music-panel').hidden,'A closing animation must not hide a reopened music panel');click('#music-close');await wait(50);
+ $('#search').focus();assert($('#search-results [data-search-type="topic"]'));click('#music-button');$('#search').focus();await wait(50);assert(!$('#search-results').hidden,'A closing animation must not hide reopened search recommendations');$('#search').dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));await wait(50);assert($('#search-results').hidden);
  assert.equal(w.atlasAPI.inspect().topic,'medieval');assert.equal(w.atlasAPI.inspect().view,'events');assert($('[data-nav="events"]').classList.contains('active'));assert($$('#side-content .event-card').length>=40);click('[data-nav="map"]');assert($('#side-content .topic-shortcuts [data-topic="medieval"]'),'Overview recommends topics from the current period');
  await ready();click('#layers-button');assert(!$('#layers-menu').hidden);assert(motions.some(m=>m.element.id==='layers-menu'&&m.frames[0].transform.includes('translateY')));
  click('#close-layers');click('#layers-button');await wait(50);assert(!$('#layers-menu').hidden,'A closing animation must not hide a reopened menu');assert.equal($('#layers-button').getAttribute('aria-expanded'),'true');
