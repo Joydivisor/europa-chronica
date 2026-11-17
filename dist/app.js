@@ -45,7 +45,7 @@
     if (state.quiz) p.set('quiz', 'locate');
     history.replaceState(null, '', `${location.pathname}?${p}`);
   }
-  function toggleSidebar(open) { $('#sidebar').classList.toggle('open', open); $('.atlas-shell').classList.toggle('panel-collapsed',!open && window.innerWidth>850); $('#mobile-panel-toggle').textContent=open?'收起历史':'阅读历史'; $('#mobile-panel-toggle').setAttribute('aria-expanded',String(open)); $('#panel-toggle').textContent=open?'›':'‹'; $('#panel-toggle').setAttribute('aria-expanded',String(open)); $('#panel-toggle').setAttribute('aria-label',open?'收起阅读面板':'展开阅读面板'); }
+  function toggleSidebar(open) { $('#sidebar').classList.toggle('open', open); $('.atlas-shell').classList.toggle('panel-collapsed',!open && window.innerWidth>850); $('#mobile-panel-toggle').textContent=open?'收起历史':'阅读历史'; $('#mobile-panel-toggle').setAttribute('aria-expanded',String(open)); $('#panel-toggle use').setAttribute('href',open?'#i-right':'#i-left'); $('#panel-toggle').setAttribute('aria-expanded',String(open)); $('#panel-toggle').setAttribute('aria-label',open?'收起阅读面板':'展开阅读面板'); }
   function activateView(view) { $('#detail-dialog').close(); state.reader=null;state.view = view;if(view==='map')state.topicId='';$('.main-nav').style.setProperty('--active-tab',['map','events','places','people'].indexOf(view)); $$('.nav-link').forEach(el => el.classList.toggle('active', el.dataset.nav === view)); renderSide();updateURL();reveal($('#side-content'),'right'); }
   function setYear(value, opts = {}) {
     const previous = state.year;
@@ -72,7 +72,7 @@
     const ticks = min === -500 ? [-500,1,500,1000,1500,2024] : d3.ticks(min,max,7).filter(y => y !== 0);
     $('#timeline-ticks').innerHTML = ticks.map(y => `<span style="left:${100*(y-min)/(max-min)}%">${shortYear(y)}</span>`).join('');
     $('#event-dots').innerHTML = D.events.filter(x=>x.year>=min&&x.year<=max).map(x=>`<span style="left:${100*(x.year-min)/(max-min)}%"></span>`).join('');
-    $('#play').textContent = state.playing ? 'Ⅱ' : '▶'; $('#play').setAttribute('aria-label', state.playing?'暂停历史演进':'播放历史演进');$('#play').setAttribute('aria-pressed',String(state.playing));
+    $('#play use').setAttribute('href',state.playing?'#i-pause':'#i-play'); $('#play').setAttribute('aria-label', state.playing?'暂停历史演进':'播放历史演进');$('#play').setAttribute('aria-pressed',String(state.playing));
   }
   function eventPlaceIds(e){return [...new Set([e.city,...(e.relatedPlaces||[])])].filter(id=>city(id));}
   function eventsAtPlace(id){return D.events.filter(e=>eventPlaceIds(e).includes(id));}
@@ -235,7 +235,7 @@
     if(next===undefined){pause();return;}setYear(next);
   }
   function play() {if(state.quiz)return;$('#detail-dialog').close();clearInterval(playingTimer);state.playing=true;renderTimeline();if(state.persons.length)renderJourney();playingTimer=setInterval(()=>step(1),Number($('#play-speed').value));}
-  function pause({redraw=true}={}) {state.playing=false;clearInterval(playingTimer);if(redraw){renderTimeline();if(state.persons.length&&!state.quiz)renderJourney();}else{$('#play').textContent='▶';$('#play').setAttribute('aria-label',L.text('播放历史演进'));$('#play').setAttribute('aria-pressed','false');}}
+  function pause({redraw=true}={}) {state.playing=false;clearInterval(playingTimer);if(redraw){renderTimeline();if(state.persons.length&&!state.quiz)renderJourney();}else{$('#play use').setAttribute('href','#i-play');$('#play').setAttribute('aria-label',L.text('播放历史演进'));$('#play').setAttribute('aria-pressed','false');}}
   function togglePlay() {state.playing?pause():play();}
 
   function startQuiz() {

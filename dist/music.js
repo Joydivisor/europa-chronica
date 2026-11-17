@@ -27,7 +27,7 @@
     $('#music-subtitle').textContent=L.text('让音乐陪你读历史。');
     if(renderedLanguage!==L.locale){$('#music-tracks').innerHTML=tracks.map((t,i)=>`<button class="music-track" data-music-track="${escape(t.id)}" aria-label="${escape(L.text('播放曲目')+' · '+label(t,'title'))}"><span class="music-track-number">${String(i+1).padStart(2,'0')}</span><span><strong>${escape(label(t,'title'))}</strong><small>${escape(label(t,'composer'))} · ${escape(label(t,'group'))}</small></span><span class="music-track-duration">${time(t.duration)}</span></button>`).join('');renderedLanguage=L.locale;}
     $$('[data-music-track]').forEach(b=>{b.classList.toggle('selected',b.dataset.musicTrack===state.track);b.setAttribute('aria-pressed',String(b.dataset.musicTrack===state.track));});
-    $('#music-toggle').textContent=active?'Ⅱ':'▶';
+    $('#music-toggle use').setAttribute('href',active?'#i-pause':'#i-play');
     $('#music-toggle').setAttribute('aria-label',L.text(active?'暂停音乐':'播放音乐'));
     $('#music-toggle').setAttribute('aria-pressed',String(active));
     $('#music-loop').setAttribute('aria-pressed',String(state.loop));

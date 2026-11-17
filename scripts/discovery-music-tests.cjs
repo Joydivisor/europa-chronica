@@ -5,6 +5,7 @@ const root=path.resolve(__dirname,'../dist'),wait=ms=>new Promise(r=>setTimeout(
 function setup(saved){
   const errors=[],calls=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));
   const dom=new JSDOM(fs.readFileSync(path.join(root,'index.html'),'utf8'),{url:'https://example.test/?year=1200',runScripts:'outside-only',pretendToBeVisual:true,virtualConsole:vc}),w=dom.window;
+  const styles=w.document.createElement('style');styles.textContent=fs.readFileSync(path.join(root,'style.css'),'utf8');w.document.head.append(styles);
   if(saved)w.localStorage.setItem('europa-music',saved);
   w.matchMedia=()=>({matches:true});w.ResizeObserver=class{observe(){}};
   w.HTMLDialogElement.prototype.show=w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
@@ -44,6 +45,15 @@ async function test(){
     w.atlasAPI.openEvent('magna-carta');assert.equal(w.EUROPA_MUSIC.inspect().status,'playing','Reading history does not pause music');$('#detail-dialog').close();
     for(const language of ['zh-CN','zh-TW','en']){
       w.atlasAPI.setLanguage(language);click('#music-button');if($('#music-panel').hidden)click('#music-button');
+      // The same SVG geometry must survive language/font and playback-state changes.
+      for(const id of ['music-button','music-toggle','music-close','music-loop','play','prev-year','next-year','panel-toggle','close-layers','close-sidebar','zoom-in','zoom-out']){
+        const svg=$(`#${id} svg.control-icon`);assert(svg,`${language}: ${id}`);assert.equal(svg.getAttribute('viewBox'),'0 0 24 24');assert.equal(svg.getAttribute('aria-hidden'),'true');
+        assert.equal([...$(`#${id}`).childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent.trim()).join(''),'',`${id}: no font-based icon`);
+      }
+      const buttonStyle=w.getComputedStyle($('#music-button')),iconStyle=w.getComputedStyle($('#music-button svg'));
+      assert.equal(buttonStyle.width,'30px');assert.equal(buttonStyle.height,'30px');assert.equal(buttonStyle.paddingTop,'0px');assert.equal(iconStyle.width,'17px');assert.equal(iconStyle.height,'17px');assert.equal(iconStyle.display,'block');
+      assert.equal($('#music-button use').getAttribute('href'),'#i-music');assert.equal($('#music-toggle use').getAttribute('href'),'#i-pause');
+      click('#play');assert.equal($('#play use').getAttribute('href'),'#i-pause');click('#play');assert.equal($('#play use').getAttribute('href'),'#i-play');
       assert.equal($('#background-music').getAttribute('src'),source);assert.equal(a.calls.length,playCount,'Language changes do not restart sound');
       assert.equal(w.EUROPA_MUSIC.inspect().volume,.22);
       if(language==='en')assert(!/[\u3400-\u9fff]/.test($('#music-panel').textContent),'Music panel fully translated');

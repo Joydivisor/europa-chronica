@@ -32,7 +32,7 @@ async function test(){
  // Regression: capture native range/number values before pause redraws controls.
  input('#year-slider',1350);await wait(70);assert.equal(w.atlasAPI.inspect().year,1350);assert.equal($('#year-slider').value,'1350');assert.equal($('#year-input').value,'1350');
  input('#year-slider',1215,'change');await wait(60);assert.equal(w.atlasAPI.inspect().year,1215);
- click('#play');input('#year-slider',1230);await wait(60);assert.equal(w.atlasAPI.inspect().year,1230);assert.equal($('#play').textContent,'▶');
+ click('#play');input('#year-slider',1230);await wait(60);assert.equal(w.atlasAPI.inspect().year,1230);assert.equal($('#play use').getAttribute('href'),'#i-play');
  for(const value of [1450,1900,-150,800,2024,1200])input('#year-slider',value);await wait(80);assert.equal(w.atlasAPI.inspect().year,1200,'Latest drag input must win');assert.equal($('#year-input').value,'1200');
  for(const value of [1205,1210,1216,1220,1230]){input('#year-slider',value);await wait(25);assert.equal(w.atlasAPI.inspect().year,value);}
  input('#year-input',-27,'change');await wait(60);assert.equal(w.atlasAPI.inspect().year,-27);assert.equal($('#year-prefix').textContent,'ANTE CHRISTUM');

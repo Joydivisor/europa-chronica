@@ -41,13 +41,21 @@
     <symbol id="i-crown" viewBox="0 0 24 24"><path d="m3 5 4 5 5-7 5 7 4-5-2 13H5L3 5ZM5 21h14"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22S4 15 4 9a8 8 0 0 1 16 0c0 6-8 13-8 13Z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V6l11-3v12M9 9l11-3"/><ellipse cx="6" cy="18" rx="3" ry="2" fill="currentColor" stroke="none"/><ellipse cx="17" cy="15" rx="3" ry="2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7Z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m16 3 4 4-4 4M20 7H7a4 4 0 0 0-4 4m5 10-4-4 4-4M4 17h13a4 4 0 0 0 4-4"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
   </defs></svg>
   <header class="masthead">
     <a class="brand" href="./" aria-label="欧陆纪年首页"><span class="brand-seal">E</span><span><strong>欧陆纪年</strong><small>Europa Chronica</small></span></a>
     <span class="header-context">欧洲历史地图 <span>·</span> 古典至现代</span>
     <div class="header-actions">
       <div class="language-switch" role="group" aria-label="选择语言"><span class="language-indicator" aria-hidden="true"></span><button data-lang="zh-CN" class="active" aria-pressed="true" data-no-i18n title="简体中文">简</button><button data-lang="zh-TW" aria-pressed="false" data-no-i18n title="繁體中文">繁</button><button data-lang="en" aria-pressed="false" data-no-i18n title="English">EN</button></div>
-      <button id="layers-button" class="header-button" aria-label="图层" title="图层" aria-expanded="false" aria-controls="layers-menu"><svg><use href="#i-layers"/></svg><span class="button-label">图层</span><span class="chevron">⌄</span></button>
+      <button id="layers-button" class="header-button" aria-label="图层" title="图层" aria-expanded="false" aria-controls="layers-menu"><svg><use href="#i-layers"/></svg><span class="button-label">图层</span><svg class="chevron control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button>
       <button class="header-button" id="sources-button" aria-label="资料馆" title="资料馆"><svg><use href="#i-book"/></svg><span>资料馆</span></button>
       <div class="github-control">
         <div class="github-pill">
@@ -62,7 +70,7 @@
     <section class="map-stage" aria-label="可拖动和缩放的欧洲历史地图">
       <div class="search-box"><svg><use href="#i-search"/></svg><input id="search" type="search" autocomplete="off" placeholder="搜索人物、地点、史事…" aria-label="搜索人物、地点、史事和专题" role="combobox" aria-autocomplete="list" aria-haspopup="dialog" aria-expanded="false" aria-controls="search-results"><div id="search-results" class="search-results" role="dialog" aria-label="搜索与推荐" hidden></div></div>
       <div class="layers-menu" id="layers-menu" hidden>
-        <div class="layer-menu-heading"><strong>地图图层</strong><button class="icon-button" id="close-layers" aria-label="关闭图层菜单">×</button></div>
+        <div class="layer-menu-heading"><strong>地图图层</strong><button class="icon-button" id="close-layers" aria-label="关闭图层菜单"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button></div>
         <div class="map-mode-switch" role="group" aria-label="地图模式"><button data-map-mode="political" class="active" aria-pressed="true">政权图</button><button data-map-mode="terrain" aria-pressed="false">地形图</button></div>
         <div class="layer-section"><h3>自然地理</h3><label><span>山地阴影</span><input type="checkbox" id="layer-terrain" checked></label><label><span>河流</span><input type="checkbox" id="layer-rivers" checked></label><label><span>湖泊</span><input type="checkbox" id="layer-lakes" checked></label></div>
         <div class="layer-section"><h3>历史信息</h3><label><span>历史疆域</span><input type="checkbox" id="layer-realms" checked></label><label><span>疆域边线</span><input type="checkbox" id="layer-borders" checked></label><div class="opacity-control"><span>疆域浓度</span><output id="opacity-value" for="realm-opacity">65%</output><input id="realm-opacity" type="range" min="15" max="95" value="65" aria-label="疆域颜色浓度"></div><label><span>城市标记</span><input type="checkbox" id="layer-cities" checked></label><label><span>地名标注</span><input type="checkbox" id="layer-labels" checked></label><label><span>人物行迹</span><input type="checkbox" id="layer-routes" checked></label></div>
@@ -72,28 +80,28 @@
       <svg id="map" role="group" aria-label="欧洲历史地图"></svg>
       <div class="map-loading" id="map-loading"><span></span>正在展开地图</div>
       <span id="map-period" hidden></span>
-      <button id="panel-toggle" class="panel-toggle" aria-label="收起阅读面板" aria-expanded="true" title="收起阅读面板">›</button>
-      <div class="map-tools"><button id="zoom-in" aria-label="放大地图" title="放大">+</button><button id="zoom-out" aria-label="缩小地图" title="缩小">−</button><button id="reset-map" aria-label="回到欧洲全图" title="复位视图"><svg><use href="#i-compass"/></svg></button></div>
-      <div class="legend-wrap" id="legend-wrap"><button class="legend-toggle" id="legend-toggle" aria-expanded="false"><span class="legend-swatch"></span>政权图例 <span id="legend-count"></span><span class="chevron">⌄</span></button><div class="map-legend" id="legend" hidden></div></div>
+      <button id="panel-toggle" class="panel-toggle" aria-label="收起阅读面板" aria-expanded="true" title="收起阅读面板"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-right"/></svg></button>
+      <div class="map-tools"><button id="zoom-in" aria-label="放大地图" title="放大"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg></button><button id="zoom-out" aria-label="缩小地图" title="缩小"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-minus"/></svg></button><button id="reset-map" aria-label="回到欧洲全图" title="复位视图"><svg><use href="#i-compass"/></svg></button></div>
+      <div class="legend-wrap" id="legend-wrap"><button class="legend-toggle" id="legend-toggle" aria-expanded="false"><span class="legend-swatch"></span>政权图例 <span id="legend-count"></span><svg class="chevron control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button><div class="map-legend" id="legend" hidden></div></div>
       <div class="map-footer"><button id="map-note">地图资料</button><span>Cliopatria · Natural Earth</span><a href="https://github.com/Joydivisor/europa-chronica" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
       <div class="map-scale" id="map-scale"><i></i><span>500 km</span></div>
       <button id="mobile-panel-toggle" class="mobile-panel-toggle" aria-expanded="false">阅读历史</button>
       <div id="map-tooltip" class="map-tooltip" hidden></div>
     </section>
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-top"><nav class="main-nav" aria-label="阅读内容"><span class="nav-indicator" aria-hidden="true"></span><button class="nav-link active" data-nav="map">时代概览</button><button class="nav-link" data-nav="events">编年史</button><button class="nav-link" data-nav="places">地点</button><button class="nav-link" data-nav="people">人物</button></nav><button class="sidebar-close icon-button" id="close-sidebar" aria-label="收起阅读面板">×</button></div>
+      <div class="sidebar-top"><nav class="main-nav" aria-label="阅读内容"><span class="nav-indicator" aria-hidden="true"></span><button class="nav-link active" data-nav="map">时代概览</button><button class="nav-link" data-nav="events">编年史</button><button class="nav-link" data-nav="places">地点</button><button class="nav-link" data-nav="people">人物</button></nav><button class="sidebar-close icon-button" id="close-sidebar" aria-label="收起阅读面板"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button></div>
       <div class="side-scroll" id="side-content"></div>
       <dialog id="detail-dialog"><button class="dialog-close back-button" aria-label="返回时代概览">← 返回</button><div id="detail-content"></div></dialog>
       <button class="challenge-callout" id="quiz-button"><svg><use href="#i-compass"/></svg><span>舆图寻址</span><small>五道题，走遍欧陆</small><span>›</span></button>
     </aside>
     <section class="timeline" aria-label="历史时间轴">
-      <div class="playback"><button class="play-button" id="play" aria-pressed="false" title="播放或暂停（空格）" aria-label="播放历史演进">▶</button><div class="speed-control"><button id="speed-button" class="speed-button" aria-label="播放速度" aria-expanded="false" aria-controls="speed-menu">1×</button><div id="speed-menu" class="speed-menu" role="menu" aria-label="播放速度" hidden><button role="menuitemradio" aria-checked="false" data-speed="6000">½×</button><button role="menuitemradio" aria-checked="true" data-speed="3500">1×</button><button role="menuitemradio" aria-checked="false" data-speed="1800">2×</button></div><select id="play-speed" aria-label="播放速度" hidden><option value="3500">1×</option><option value="1800">2×</option><option value="6000">½×</option></select></div><div class="music-control">
-        <button class="sound-button" id="music-button" aria-label="欧陆乐馆" title="欧陆乐馆" aria-haspopup="dialog" aria-expanded="false" aria-controls="music-panel">♫<span class="music-indicator" aria-hidden="true"></span></button>
+      <div class="playback"><button class="play-button" id="play" aria-pressed="false" title="播放或暂停（空格）" aria-label="播放历史演进"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-play"/></svg></button><div class="speed-control"><button id="speed-button" class="speed-button" aria-label="播放速度" aria-expanded="false" aria-controls="speed-menu">1×</button><div id="speed-menu" class="speed-menu" role="menu" aria-label="播放速度" hidden><button role="menuitemradio" aria-checked="false" data-speed="6000">½×</button><button role="menuitemradio" aria-checked="true" data-speed="3500">1×</button><button role="menuitemradio" aria-checked="false" data-speed="1800">2×</button></div><select id="play-speed" aria-label="播放速度" hidden><option value="3500">1×</option><option value="1800">2×</option><option value="6000">½×</option></select></div><div class="music-control">
+        <button class="sound-button" id="music-button" aria-label="欧陆乐馆" title="欧陆乐馆" aria-haspopup="dialog" aria-expanded="false" aria-controls="music-panel"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-music"/></svg><span class="music-indicator" aria-hidden="true"></span></button>
         <section id="music-panel" class="music-panel" role="dialog" aria-labelledby="music-title" hidden>
-          <div class="music-heading"><div><span class="music-eyebrow">MUSICA EUROPAE</span><h2 id="music-title">欧陆乐馆</h2></div><button id="music-close" class="icon-button" aria-label="关闭音乐面板">×</button></div>
+          <div class="music-heading"><div><span class="music-eyebrow">MUSICA EUROPAE</span><h2 id="music-title">欧陆乐馆</h2></div><button id="music-close" class="icon-button" aria-label="关闭音乐面板"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button></div>
           <p id="music-subtitle">让音乐陪你读历史。</p>
           <div id="music-tracks" class="music-tracks" role="group" aria-label="选择音乐"></div>
-          <div class="music-controls"><button id="music-toggle" class="music-play" aria-label="播放音乐" aria-pressed="false">▶</button><div class="music-volume-wrap"><label for="music-volume">音量 <output id="music-volume-value" for="music-volume">30%</output></label><input id="music-volume" type="range" min="0" max="100" step="1" value="30"></div><button id="music-loop" class="music-loop" aria-label="关闭单曲循环" aria-pressed="true">↻<span>循环</span></button></div>
+          <div class="music-controls"><button id="music-toggle" class="music-play" aria-label="播放音乐" aria-pressed="false"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-play"/></svg></button><div class="music-volume-wrap"><label for="music-volume">音量 <output id="music-volume-value" for="music-volume">30%</output></label><input id="music-volume" type="range" min="0" max="100" step="1" value="30"></div><button id="music-loop" class="music-loop" aria-label="关闭单曲循环" aria-pressed="true"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-repeat"/></svg><span>循环</span></button></div>
           <p id="music-status" class="music-status" role="status" aria-live="polite">选择一首，开始聆听</p>
           <p id="music-performer" class="music-performer"></p>
           <details class="music-credits"><summary>演奏与许可</summary><div id="music-credits-content"></div></details>
@@ -101,7 +109,7 @@
         <audio id="background-music" preload="none"></audio>
       </div></div>
       <div class="timeline-center"><div class="timeline-context"><span id="era-tag">中世纪盛期</span><span id="year-summary">王国、城市与信仰交织的欧陆</span><button id="timeline-zoom" title="放大当前时代">放大时代</button></div><div class="era-navigation" id="era-navigation"></div><div class="timeline-track"><div id="event-dots" aria-hidden="true"></div><input type="range" min="-500" max="2024" value="1200" id="year-slider" aria-label="拖动穿越历史年份"><div id="timeline-ticks"></div></div></div>
-      <div class="year-controls"><span id="year-prefix">ANNO DOMINI</span><div><button class="icon-button" id="prev-year" title="上一历史节点（←）" aria-label="上一历史节点">‹</button><input id="year-input" type="number" min="-500" max="2024" value="1200" aria-label="历史年份"><button class="icon-button" id="next-year" title="下一历史节点（→）" aria-label="下一历史节点">›</button></div><span class="year-unit">公元纪年</span></div>
+      <div class="year-controls"><span id="year-prefix">ANNO DOMINI</span><div><button class="icon-button" id="prev-year" title="上一历史节点（←）" aria-label="上一历史节点"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-left"/></svg></button><input id="year-input" type="number" min="-500" max="2024" value="1200" aria-label="历史年份"><button class="icon-button" id="next-year" title="下一历史节点（→）" aria-label="下一历史节点"><svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-right"/></svg></button></div><span class="year-unit">公元纪年</span></div>
       <small id="snapshot-note" hidden></small>
     </section>
   </main>
